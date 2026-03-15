@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -12,9 +13,9 @@
 
 <style>
 
-/* =========================
+/* =====================
 GLOBAL
-========================= */
+===================== */
 
 *{
 margin:0;
@@ -28,46 +29,43 @@ scroll-behavior:smooth;
 }
 
 body{
-color:white;
 background:#020617;
+color:white;
 overflow-x:hidden;
 }
 
-/* =========================
-BACKGROUND IMAGE SLIDER
-========================= */
+/* =====================
+ANIMATED BACKGROUND
+===================== */
 
-.background{
+.bg{
 
 position:fixed;
+
 width:100%;
 height:100%;
 
-background-size:cover;
-background-position:center;
+background:linear-gradient(120deg,#020617,#0f172a,#020617);
+
+background-size:400% 400%;
+
+animation:bgmove 15s infinite alternate;
 
 z-index:-3;
 
-transition:1s;
+}
+
+@keyframes bgmove{
+
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 
 }
 
-.overlay{
-
-position:fixed;
-
-width:100%;
-height:100%;
-
-background:rgba(0,0,0,0.6);
-
-z-index:-2;
-
-}
-
-/* =========================
+/* =====================
 GLOW EFFECT
-========================= */
+===================== */
 
 .glow1{
 
@@ -78,14 +76,14 @@ height:400px;
 
 background:#3b82f6;
 
-filter:blur(180px);
+filter:blur(160px);
 
-opacity:.2;
+opacity:.25;
 
 top:10%;
 left:5%;
 
-z-index:-1;
+z-index:-2;
 
 }
 
@@ -98,27 +96,28 @@ height:400px;
 
 background:#06b6d4;
 
-filter:blur(180px);
+filter:blur(160px);
 
-opacity:.2;
+opacity:.25;
 
 bottom:10%;
 right:5%;
 
-z-index:-1;
+z-index:-2;
 
 }
 
-/* =========================
+/* =====================
 HEADER
-========================= */
+===================== */
 
 header{
 
 position:fixed;
 
-width:100%;
 top:0;
+
+width:100%;
 
 padding:20px 8%;
 
@@ -127,9 +126,9 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 
-background:rgba(0,0,0,0.4);
+background:rgba(0,0,0,0.35);
 
-backdrop-filter:blur(12px);
+backdrop-filter:blur(14px);
 
 border-bottom:1px solid rgba(255,255,255,0.05);
 
@@ -142,21 +141,51 @@ z-index:10;
 font-size:26px;
 font-weight:700;
 
+letter-spacing:2px;
+
 }
 
 .logo span{
+
 color:#38bdf8;
+
 }
+
+/* =====================
+NAVIGATION
+===================== */
 
 nav a{
 
 color:white;
 
-margin-left:25px;
+margin-left:30px;
 
 text-decoration:none;
 
-opacity:.8;
+opacity:.85;
+
+font-size:15px;
+
+position:relative;
+
+transition:.3s;
+
+}
+
+nav a::after{
+
+content:"";
+
+position:absolute;
+
+width:0;
+height:2px;
+
+background:#38bdf8;
+
+left:0;
+bottom:-6px;
 
 transition:.3s;
 
@@ -169,9 +198,15 @@ color:#38bdf8;
 
 }
 
-/* =========================
-HERO
-========================= */
+nav a:hover::after{
+
+width:100%;
+
+}
+
+/* =====================
+HERO SECTION
+===================== */
 
 .hero{
 
@@ -179,6 +214,7 @@ height:100vh;
 
 display:flex;
 flex-direction:column;
+
 justify-content:center;
 align-items:center;
 
@@ -188,73 +224,116 @@ padding:0 10%;
 
 }
 
+/* =====================
+TITLE
+===================== */
+
 .hero h1{
 
-font-size:90px;
+font-size:95px;
 
 letter-spacing:4px;
 
-margin-bottom:15px;
+margin-bottom:10px;
 
 }
 
-.hero h1 span{
+.hero span{
+
 color:#38bdf8;
+
 }
+
+/* =====================
+TAGLINE
+===================== */
 
 .tagline{
 
 font-size:22px;
 
-opacity:.9;
+opacity:.85;
+
+max-width:700px;
 
 margin-bottom:40px;
 
 }
 
-/* =========================
-BUTTON
-========================= */
+/* =====================
+CTA BUTTON
+===================== */
 
 .cta{
 
-padding:18px 45px;
+padding:18px 50px;
 
 border-radius:40px;
 
-font-size:18px;
+border:none;
 
 background:linear-gradient(45deg,#3b82f6,#06b6d4);
 
-border:none;
+color:white;
+
+font-size:18px;
 
 cursor:pointer;
 
-color:white;
+transition:.4s;
 
-transition:0.4s;
+position:relative;
 
-box-shadow:0 10px 40px rgba(0,0,0,0.5);
+overflow:hidden;
+
+box-shadow:0 10px 40px rgba(0,0,0,0.6);
+
+}
+
+.cta::before{
+
+content:"";
+
+position:absolute;
+
+width:120%;
+height:100%;
+
+background:rgba(255,255,255,0.2);
+
+top:0;
+
+left:-120%;
+
+transform:skewX(-20deg);
+
+transition:.6s;
+
+}
+
+.cta:hover::before{
+
+left:120%;
 
 }
 
 .cta:hover{
 
-transform:translateY(-5px);
+transform:translateY(-4px);
 
-box-shadow:0 25px 60px rgba(0,0,0,0.8);
+box-shadow:0 20px 60px rgba(0,0,0,0.8);
 
 }
 
-/* =========================
+/* =====================
 LIVE USERS
-========================= */
+===================== */
 
 .live{
 
 margin-top:25px;
 
-opacity:.8;
+opacity:.85;
 
 font-size:15px;
 
@@ -285,9 +364,128 @@ animation:pulse 1.5s infinite;
 
 }
 
-/* =========================
-FEATURES
-========================= */
+/* =====================
+SCROLL TEXT
+===================== */
+
+.scroll{
+
+position:absolute;
+
+bottom:40px;
+
+font-size:14px;
+
+opacity:.7;
+
+animation:scroll 2s infinite;
+
+}
+
+@keyframes scroll{
+
+0%{transform:translateY(0)}
+50%{transform:translateY(8px)}
+100%{transform:translateY(0)}
+
+}
+
+/* =====================
+RESPONSIVE
+===================== */
+
+@media(max-width:900px){
+
+.hero h1{
+font-size:55px;
+}
+
+.tagline{
+font-size:18px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="glow1"></div>
+<div class="glow2"></div>
+
+<header>
+
+<div class="logo">
+CHAT<span>GRAM</span>
+</div>
+
+<nav>
+
+<a href="index.html">Home</a>
+
+<a href="ft.html">Features</a>
+
+<a href="tc.html">Terms</a>
+
+<a href="contact.html">Contact</a>
+
+</nav>
+
+</header>
+
+<!-- =====================
+PART 1 HERO
+===================== -->
+
+<section class="hero">
+
+<h1>CHAT<span>GRAM</span></h1>
+
+<p class="tagline">
+
+Meet strangers. Make friends.
+Start conversations instantly anywhere in the world.
+
+</p>
+
+<button class="cta" onclick="location.href='login.html'">
+
+Start Chatting
+
+</button>
+
+<div class="live">
+
+<span class="dot"></span>
+
+<span id="users">4281</span> people online
+
+</div>
+
+<div class="scroll">
+
+scroll to explore ↓
+
+</div>
+
+</section>
+
+<!-- =====================
+PART 2 PASTE BELOW THIS
+===================== -->
+<!-- =====================
+PART 2 FEATURES + COMMUNITY
+Paste this below PART 1
+===================== -->
+
+<style>
+
+/* =====================
+FEATURE SECTION
+===================== */
 
 .features{
 
@@ -295,53 +493,133 @@ padding:120px 10%;
 
 text-align:center;
 
+background:#020617;
+
 }
 
 .features h2{
 
-font-size:42px;
+font-size:48px;
 
-margin-bottom:60px;
+margin-bottom:20px;
 
 }
 
-.grid{
+.features p{
+
+opacity:.7;
+
+margin-bottom:70px;
+
+font-size:18px;
+
+}
+
+/* GRID */
+
+.feature-grid{
 
 display:grid;
 
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 
 gap:35px;
 
 }
 
-.card{
+/* CARD */
 
-background:rgba(255,255,255,0.05);
+.feature-card{
+
+background:#0f172a;
+
+padding:40px 35px;
 
 border-radius:18px;
 
-padding:40px;
+border:1px solid rgba(255,255,255,0.05);
 
-border:1px solid rgba(255,255,255,0.08);
+transition:.4s;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+/* HOVER LIGHT */
+
+.feature-card::before{
+
+content:"";
+
+position:absolute;
+
+width:200%;
+height:200%;
+
+background:radial-gradient(circle,#38bdf8,transparent 70%);
+
+top:-50%;
+left:-50%;
+
+opacity:0;
 
 transition:.4s;
 
 }
 
-.card:hover{
+.feature-card:hover{
 
 transform:translateY(-12px);
 
-background:rgba(255,255,255,0.08);
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
 
 }
 
-/* =========================
-AI GIRLS SECTION
-========================= */
+.feature-card:hover::before{
 
-.girls{
+opacity:.08;
+
+}
+
+/* ICON */
+
+.icon{
+
+font-size:42px;
+
+margin-bottom:20px;
+
+color:#38bdf8;
+
+}
+
+/* TITLE */
+
+.feature-card h3{
+
+font-size:22px;
+
+margin-bottom:12px;
+
+}
+
+/* TEXT */
+
+.feature-card p{
+
+font-size:15px;
+
+opacity:.75;
+
+}
+
+/* =====================
+COMMUNITY SECTION
+===================== */
+
+.community{
 
 padding:120px 10%;
 
@@ -349,27 +627,31 @@ text-align:center;
 
 }
 
-.girls h2{
+.community h2{
 
-font-size:42px;
+font-size:46px;
 
-margin-bottom:50px;
+margin-bottom:60px;
 
 }
 
-.girl-grid{
+/* PROFILE GRID */
+
+.profile-grid{
 
 display:grid;
 
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 
 gap:25px;
 
 }
 
-.girl{
+/* PROFILE CARD */
 
-height:300px;
+.profile{
+
+height:260px;
 
 border-radius:18px;
 
@@ -377,47 +659,268 @@ background-size:cover;
 
 background-position:center;
 
+position:relative;
+
+overflow:hidden;
+
 transition:.4s;
 
 }
 
-.girl:hover{
+/* DARK OVERLAY */
 
-transform:scale(1.08);
+.profile::after{
+
+content:"";
+
+position:absolute;
+
+width:100%;
+height:100%;
+
+background:linear-gradient(transparent,rgba(0,0,0,0.6));
+
+bottom:0;
+
+left:0;
 
 }
 
-/* =========================
-STATS
-========================= */
+/* NAME */
+
+.profile span{
+
+position:absolute;
+
+bottom:15px;
+
+left:15px;
+
+font-size:16px;
+
+z-index:2;
+
+}
+
+/* HOVER */
+
+.profile:hover{
+
+transform:scale(1.08);
+
+box-shadow:0 25px 80px rgba(0,0,0,0.8);
+
+}
+
+/* =====================
+RESPONSIVE
+===================== */
+
+@media(max-width:900px){
+
+.features h2{
+font-size:34px;
+}
+
+.community h2{
+font-size:32px;
+}
+
+}
+
+</style>
+
+<!-- =====================
+FEATURES SECTION
+===================== -->
+
+<section class="features">
+
+<h2>Why People Love CHATGRAM</h2>
+
+<p>
+
+Experience the fastest and most exciting way to meet new people online.
+
+</p>
+
+<div class="feature-grid">
+
+<div class="feature-card">
+
+<div class="icon">⚡</div>
+
+<h3>Instant Random Chat</h3>
+
+<p>
+
+Get matched with a stranger within seconds and start chatting instantly.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">🌍</div>
+
+<h3>Global Community</h3>
+
+<p>
+
+Connect with people from more than 150 countries around the world.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">🔒</div>
+
+<h3>Private Conversations</h3>
+
+<p>
+
+Stay anonymous and chat safely without sharing personal information.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">🚀</div>
+
+<h3>Ultra Fast Servers</h3>
+
+<p>
+
+Enjoy real-time messaging powered by modern infrastructure.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">💡</div>
+
+<h3>Smart Matching</h3>
+
+<p>
+
+Our intelligent system pairs you with interesting people faster.
+
+</p>
+
+</div>
+
+<div class="feature-card">
+
+<div class="icon">🎯</div>
+
+<h3>Simple & Clean UI</h3>
+
+<p>
+
+Focus on conversations with a distraction-free experience.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================
+COMMUNITY PROFILES
+===================== -->
+
+<section class="community">
+
+<h2>Meet People From Around The World</h2>
+
+<div class="profile-grid">
+
+<div class="profile" style="background-image:url('https://media.createimg.com/app/uploads/2025/06/01113958/girl-generator.jpg')">
+<span>Emily</span>
+</div>
+
+<div class="profile" style="background-image:url('https://file.aitubo.ai/assets/doc/2024/08/---1.png')">
+<span>Sophia</span>
+</div>
+
+<div class="profile" style="background-image:url('https://aitubo.ai/_next/static/media/fantasy.bb5a4441.webp')">
+<span>Luna</span>
+</div>
+
+<div class="profile" style="background-image:url('https://png.pngtree.com/background/20250105/original/pngtree-cosplay-beautiful-young-girl-3d-ai-picture-image_15464662.jpg')">
+<span>Ava</span>
+</div>
+
+</div>
+
+</section>
+
+<!-- =====================
+PART 3 PASTE BELOW
+===================== -->
+<!-- =====================
+PART 3 STATS + TESTIMONIALS + FOOTER
+Paste below PART 2
+===================== -->
+
+<style>
+
+/* =====================
+STATS SECTION
+===================== */
 
 .stats{
 
-padding:100px 10%;
+padding:120px 10%;
 
 display:flex;
 
 justify-content:space-around;
 
+flex-wrap:wrap;
+
+text-align:center;
+
 background:#020617;
+
+}
+
+.stat{
+
+margin:20px;
 
 }
 
 .stat h2{
 
-font-size:45px;
+font-size:55px;
 
 color:#38bdf8;
+
+margin-bottom:10px;
 
 }
 
 .stat p{
+
 opacity:.8;
+
+font-size:16px;
+
 }
 
-/* =========================
+/* =====================
 TESTIMONIALS
-========================= */
+===================== */
 
 .testimonials{
 
@@ -427,37 +930,75 @@ text-align:center;
 
 }
 
+.testimonials h2{
+
+font-size:46px;
+
+margin-bottom:60px;
+
+}
+
 .testimonial-grid{
 
 display:grid;
 
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
 
 gap:30px;
-
-margin-top:60px;
 
 }
 
 .testimonial{
 
-background:#020617;
+background:#0f172a;
 
-padding:30px;
+padding:35px;
 
-border-radius:15px;
+border-radius:16px;
+
+border:1px solid rgba(255,255,255,0.05);
+
+transition:.4s;
 
 }
 
-/* =========================
+.testimonial:hover{
+
+transform:translateY(-10px);
+
+box-shadow:0 20px 60px rgba(0,0,0,0.6);
+
+}
+
+.testimonial p{
+
+opacity:.8;
+
+font-size:15px;
+
+margin-bottom:15px;
+
+}
+
+.user{
+
+font-size:14px;
+
+opacity:.6;
+
+}
+
+/* =====================
 FOOTER
-========================= */
+===================== */
 
 footer{
 
-padding:80px 10%;
+padding:90px 10%;
 
 background:#020617;
+
+border-top:1px solid rgba(255,255,255,0.05);
 
 }
 
@@ -465,254 +1006,247 @@ background:#020617;
 
 display:grid;
 
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 
 gap:40px;
 
 }
 
-footer p{
-opacity:.7;
-margin-top:8px;
+footer h3{
+
+margin-bottom:15px;
+
 }
 
-/* =========================
-MOBILE
-========================= */
+footer a{
+
+display:block;
+
+text-decoration:none;
+
+color:white;
+
+opacity:.7;
+
+margin-bottom:8px;
+
+transition:.3s;
+
+}
+
+footer a:hover{
+
+opacity:1;
+
+color:#38bdf8;
+
+}
+
+/* COPYRIGHT */
+
+.copyright{
+
+text-align:center;
+
+margin-top:50px;
+
+opacity:.6;
+
+font-size:14px;
+
+}
+
+/* =====================
+RESPONSIVE
+===================== */
 
 @media(max-width:900px){
 
-.hero h1{
-font-size:60px;
-}
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.girl-grid{
-grid-template-columns:1fr 1fr;
-}
-
-.testimonial-grid{
-grid-template-columns:1fr;
-}
-
 .stats{
-flex-direction:column;
-gap:30px;
-}
 
-.footer-grid{
-grid-template-columns:1fr;
+flex-direction:column;
+
+align-items:center;
+
 }
 
 }
 
 </style>
-</head>
 
-<body>
-
-<div class="background" id="bg"></div>
-<div class="overlay"></div>
-<div class="glow1"></div>
-<div class="glow2"></div>
-
-<header>
-
-<div class="logo">CHAT<span>GRAM</span></div>
-
-<nav>
-<a href="#">Home</a>
-<a href="#features">Features</a>
-<a href="#girls">Community</a>
-<a href="#contact">Contact</a>
-</nav>
-
-</header>
-
-<section class="hero">
-
-<h1>CHAT<span>GRAM</span></h1>
-
-<p class="tagline">
-Meet strangers. Make friends. Start conversations instantly.
-</p>
-
-<button class="cta" onclick="goLogin()">
-Start Chatting
-</button>
-
-<div class="live">
-<span class="dot"></span>
-<span id="users">4281</span> users online
-</div>
-
-</section>
-
-<section class="features" id="features">
-
-<h2>Why People Love CHATGRAM</h2>
-
-<div class="grid">
-
-<div class="card">
-<h3>Instant Random Chat</h3>
-<p>Connect with someone new instantly.</p>
-</div>
-
-<div class="card">
-<h3>Smart Matching</h3>
-<p>AI pairs you with interesting people.</p>
-</div>
-
-<div class="card">
-<h3>Private Messaging</h3>
-<p>Move from random chat to private messages.</p>
-</div>
-
-</div>
-
-</section>
-
-<section class="girls" id="girls">
-
-<h2>Meet People Around The World</h2>
-
-<div class="girl-grid">
-
-<div class="girl" style="background-image:url('https://media.createimg.com/app/uploads/2025/06/01113958/girl-generator.jpg')"></div>
-
-<div class="girl" style="background-image:url('https://file.aitubo.ai/assets/doc/2024/08/---1.png')"></div>
-
-<div class="girl" style="background-image:url('https://aitubo.ai/_next/static/media/fantasy.bb5a4441.webp')"></div>
-
-<div class="girl" style="background-image:url('https://png.pngtree.com/background/20250105/original/pngtree-cosplay-beautiful-young-girl-3d-ai-picture-image_15464662.jpg')"></div>
-</div>
-
-</section>
+<!-- =====================
+STATS
+===================== -->
 
 <section class="stats">
 
 <div class="stat">
-<h2>120K+</h2>
-<p>Users</p>
+
+<h2 id="usersCount">120K+</h2>
+
+<p>Registered Users</p>
+
 </div>
 
 <div class="stat">
-<h2>80K+</h2>
-<p>Daily Chats</p>
+
+<h2 id="chatCount">80K+</h2>
+
+<p>Daily Conversations</p>
+
 </div>
 
 <div class="stat">
-<h2>150+</h2>
-<p>Countries</p>
+
+<h2 id="countryCount">150+</h2>
+
+<p>Countries Connected</p>
+
 </div>
 
 </section>
 
+<!-- =====================
+TESTIMONIALS
+===================== -->
+
 <section class="testimonials">
 
-<h2>What Users Say</h2>
+<h2>What Our Users Say</h2>
 
 <div class="testimonial-grid">
 
 <div class="testimonial">
-<p>"I met amazing people here."</p>
+
+<p>
+CHATGRAM helped me meet amazing people around the world.
+</p>
+
+<div class="user">— Alex</div>
+
 </div>
 
 <div class="testimonial">
-<p>"Super clean and fun chat."</p>
+
+<p>
+The clean design and instant matching makes chatting fun.
+</p>
+
+<div class="user">— Maria</div>
+
 </div>
 
 <div class="testimonial">
-<p>"Best random chat site."</p>
+
+<p>
+Best random chat platform I have used so far.
+</p>
+
+<div class="user">— Daniel</div>
+
 </div>
 
 </div>
 
 </section>
 
-<footer id="contact">
+<!-- =====================
+FOOTER
+===================== -->
+
+<footer>
 
 <div class="footer-grid">
 
 <div>
+
 <h3>CHATGRAM</h3>
-<p>Meet new people instantly.</p>
-</div>
 
-<div>
-<h4>Product</h4>
-<p>Random Chat</p>
-<p>Private Chat</p>
-</div>
+<p style="opacity:.7">
 
-<div>
-<h4>Company</h4>
-<p>About</p>
-<p>Contact</p>
-</div>
+Meet new people instantly from anywhere in the world.
 
-</div>
-
-<p style="text-align:center;margin-top:40px">
-© 2026 CHATGRAM
 </p>
+
+</div>
+
+<div>
+
+<h3>Product</h3>
+
+<a href="ft.html">Features</a> <a href="index.html">Random Chat</a> <a href="index.html">Community</a>
+
+</div>
+
+<div>
+
+<h3>Legal</h3>
+
+<a href="tc.html">Terms & Conditions</a> <a href="contact.html">Contact</a>
+
+</div>
+
+</div>
+
+<div class="copyright">
+
+© 2026 CHATGRAM — All rights reserved.
+
+</div>
 
 </footer>
 
+<!-- =====================
+JS
+===================== -->
+
 <script>
 
-/* LOGIN REDIRECT */
+/* Live users counter animation */
 
-function goLogin(){
-window.location.href="login.html"
-}
-
-/* LIVE USERS */
+let users=4281;
 
 setInterval(()=>{
 
-let u=document.getElementById("users")
+users += Math.floor(Math.random()*5);
 
-let n=parseInt(u.innerText)
+document.getElementById("users").innerText=users;
 
-n += Math.floor(Math.random()*4)
+},3000);
 
-u.innerText=n
+/* stats animation */
 
-},3000)
+function animateValue(id,start,end,duration){
 
-/* BACKGROUND IMAGE SLIDER */
+let range=end-start;
 
-const images=[
+let current=start;
 
-"https://media.createimg.com/app/uploads/2025/06/01113958/girl-generator.jpg",
-"https://file.aitubo.ai/assets/doc/2024/08/---1.png",
-"https://aitubo.ai/_next/static/media/fantasy.bb5a4441.webp",
-"https://png.pngtree.com/background/20250105/original/pngtree-cosplay-beautiful-young-girl-3d-ai-picture-image_15464662.jpg"
+let increment=end>start?1:-1;
 
-]
+let stepTime=Math.abs(Math.floor(duration/range));
 
-let i=0
+let obj=document.getElementById(id);
 
-function changeBg(){
+let timer=setInterval(function(){
 
-document.getElementById("bg").style.backgroundImage="url("+images[i]+")"
+current+=increment;
 
-i++
+obj.innerText=current+"+";
 
-if(i>=images.length){
-i=0
-}
+if(current==end){
+
+clearInterval(timer);
 
 }
 
-changeBg()
+},stepTime);
 
-setInterval(changeBg,6000)
+}
+
+animateValue("usersCount",100,120,2000);
+animateValue("chatCount",60,80,2000);
+animateValue("countryCount",100,150,2000);
 
 </script>
 
