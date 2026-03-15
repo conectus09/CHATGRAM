@@ -2,6 +2,7 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
+const path = require("path");
 
 const app = express();
 const server = http.createServer(app);
@@ -15,8 +16,11 @@ const io = new Server(server, {
 app.use(cors());
 app.use(express.json());
 
+// Serve frontend
+app.use(express.static(path.join(__dirname, "../public")));
+
 app.get("/", (req, res) => {
-    res.send("CHATGRAM Server Running 🚀");
+    res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 let waitingUser = null;
@@ -26,7 +30,6 @@ io.on("connection", (socket) => {
 
     console.log("User connected:", socket.id);
 
-    // Random match system
     if (waitingUser) {
 
         users[socket.id] = waitingUser;
@@ -42,7 +45,6 @@ io.on("connection", (socket) => {
         socket.emit("waiting");
     }
 
-    // Message receive
     socket.on("message", (msg) => {
 
         const partner = users[socket.id];
@@ -53,7 +55,6 @@ io.on("connection", (socket) => {
 
     });
 
-    // Next user
     socket.on("next", () => {
 
         const partner = users[socket.id];
@@ -86,7 +87,6 @@ io.on("connection", (socket) => {
 
     });
 
-    // Disconnect
     socket.on("disconnect", () => {
 
         console.log("User disconnected:", socket.id);
