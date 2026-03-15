@@ -23,16 +23,18 @@ box-sizing:border-box;
 font-family:'Poppins',sans-serif;
 }
 
+html{
+scroll-behavior:smooth;
+}
+
 body{
-
-background:#0f172a;
 color:white;
+background:#020617;
 overflow-x:hidden;
-
 }
 
 /* =========================
-ANIMATED BACKGROUND
+BACKGROUND IMAGE SLIDER
 ========================= */
 
 .background{
@@ -41,32 +43,69 @@ position:fixed;
 width:100%;
 height:100%;
 
-background:linear-gradient(120deg,#020617,#0f172a,#1e293b);
+background-size:cover;
+background-position:center;
+
+z-index:-3;
+
+transition:1s;
+
+}
+
+.overlay{
+
+position:fixed;
+
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,0.6);
+
+z-index:-2;
+
+}
+
+/* =========================
+GLOW EFFECT
+========================= */
+
+.glow1{
+
+position:fixed;
+
+width:400px;
+height:400px;
+
+background:#3b82f6;
+
+filter:blur(180px);
+
+opacity:.2;
+
+top:10%;
+left:5%;
+
 z-index:-1;
 
 }
 
-.background::after{
+.glow2{
 
-content:"";
+position:fixed;
 
-position:absolute;
+width:400px;
+height:400px;
 
-width:200%;
-height:200%;
+background:#06b6d4;
 
-background:radial-gradient(circle,#3b82f620 1px, transparent 1px);
+filter:blur(180px);
 
-background-size:40px 40px;
+opacity:.2;
 
-animation:moveBg 20s linear infinite;
+bottom:10%;
+right:5%;
 
-}
-
-@keyframes moveBg{
-
-0%{transform:translate(0,0);}
-100%{transform:translate(-200px,-200px);}
+z-index:-1;
 
 }
 
@@ -90,7 +129,7 @@ align-items:center;
 
 background:rgba(0,0,0,0.4);
 
-backdrop-filter:blur(10px);
+backdrop-filter:blur(12px);
 
 border-bottom:1px solid rgba(255,255,255,0.05);
 
@@ -103,14 +142,10 @@ z-index:10;
 font-size:26px;
 font-weight:700;
 
-letter-spacing:2px;
-
 }
 
 .logo span{
-
 color:#38bdf8;
-
 }
 
 nav a{
@@ -157,35 +192,33 @@ padding:0 10%;
 
 font-size:90px;
 
-margin-bottom:10px;
-
 letter-spacing:4px;
+
+margin-bottom:15px;
 
 }
 
 .hero h1 span{
-
 color:#38bdf8;
-
 }
 
 .tagline{
 
 font-size:22px;
 
-opacity:.85;
+opacity:.9;
 
-margin-bottom:30px;
+margin-bottom:40px;
 
 }
 
 /* =========================
-CTA BUTTON
+BUTTON
 ========================= */
 
 .cta{
 
-padding:18px 40px;
+padding:18px 45px;
 
 border-radius:40px;
 
@@ -199,17 +232,17 @@ cursor:pointer;
 
 color:white;
 
-transition:.3s;
+transition:0.4s;
 
-box-shadow:0 15px 40px rgba(0,0,0,0.4);
+box-shadow:0 10px 40px rgba(0,0,0,0.5);
 
 }
 
 .cta:hover{
 
-transform:translateY(-4px);
+transform:translateY(-5px);
 
-box-shadow:0 20px 50px rgba(0,0,0,0.7);
+box-shadow:0 25px 60px rgba(0,0,0,0.8);
 
 }
 
@@ -217,13 +250,13 @@ box-shadow:0 20px 50px rgba(0,0,0,0.7);
 LIVE USERS
 ========================= */
 
-.live-users{
+.live{
 
 margin-top:25px;
 
-font-size:15px;
-
 opacity:.8;
+
+font-size:15px;
 
 }
 
@@ -253,20 +286,20 @@ animation:pulse 1.5s infinite;
 }
 
 /* =========================
-FEATURE SECTION
+FEATURES
 ========================= */
 
 .features{
 
 padding:120px 10%;
 
+text-align:center;
+
 }
 
 .features h2{
 
-text-align:center;
-
-font-size:40px;
+font-size:42px;
 
 margin-bottom:60px;
 
@@ -290,31 +323,67 @@ border-radius:18px;
 
 padding:40px;
 
-text-align:center;
-
-transition:.3s;
-
 border:1px solid rgba(255,255,255,0.08);
+
+transition:.4s;
 
 }
 
 .card:hover{
 
-transform:translateY(-10px);
+transform:translateY(-12px);
 
-background:rgba(255,255,255,0.07);
-
-}
-
-.card h3{
-
-margin-bottom:15px;
+background:rgba(255,255,255,0.08);
 
 }
 
-.card p{
+/* =========================
+AI GIRLS SECTION
+========================= */
 
-opacity:.75;
+.girls{
+
+padding:120px 10%;
+
+text-align:center;
+
+}
+
+.girls h2{
+
+font-size:42px;
+
+margin-bottom:50px;
+
+}
+
+.girl-grid{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:25px;
+
+}
+
+.girl{
+
+height:300px;
+
+border-radius:18px;
+
+background-size:cover;
+
+background-position:center;
+
+transition:.4s;
+
+}
+
+.girl:hover{
+
+transform:scale(1.08);
 
 }
 
@@ -334,12 +403,6 @@ background:#020617;
 
 }
 
-.stat{
-
-text-align:center;
-
-}
-
 .stat h2{
 
 font-size:45px;
@@ -349,9 +412,7 @@ color:#38bdf8;
 }
 
 .stat p{
-
 opacity:.8;
-
 }
 
 /* =========================
@@ -386,36 +447,6 @@ padding:30px;
 
 border-radius:15px;
 
-opacity:.9;
-
-}
-
-/* =========================
-CTA SECTION
-========================= */
-
-.final-cta{
-
-padding:120px 10%;
-
-text-align:center;
-
-background:linear-gradient(45deg,#3b82f6,#06b6d4);
-
-}
-
-.final-cta h2{
-
-font-size:42px;
-
-margin-bottom:20px;
-
-}
-
-.final-cta p{
-
-margin-bottom:35px;
-
 }
 
 /* =========================
@@ -424,14 +455,25 @@ FOOTER
 
 footer{
 
-padding:50px;
+padding:80px 10%;
 
 background:#020617;
 
-text-align:center;
+}
 
-opacity:.6;
+.footer-grid{
 
+display:grid;
+
+grid-template-columns:repeat(3,1fr);
+
+gap:40px;
+
+}
+
+footer p{
+opacity:.7;
+margin-top:8px;
 }
 
 /* =========================
@@ -448,6 +490,10 @@ font-size:60px;
 grid-template-columns:1fr;
 }
 
+.girl-grid{
+grid-template-columns:1fr 1fr;
+}
+
 .testimonial-grid{
 grid-template-columns:1fr;
 }
@@ -457,15 +503,21 @@ flex-direction:column;
 gap:30px;
 }
 
+.footer-grid{
+grid-template-columns:1fr;
+}
+
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div class="background"></div>
+<div class="background" id="bg"></div>
+<div class="overlay"></div>
+<div class="glow1"></div>
+<div class="glow2"></div>
 
 <header>
 
@@ -473,9 +525,9 @@ gap:30px;
 
 <nav>
 <a href="#">Home</a>
-<a href="#">Features</a>
-<a href="#">Chat</a>
-<a href="#">About</a>
+<a href="#features">Features</a>
+<a href="#girls">Community</a>
+<a href="#contact">Contact</a>
 </nav>
 
 </header>
@@ -485,24 +537,21 @@ gap:30px;
 <h1>CHAT<span>GRAM</span></h1>
 
 <p class="tagline">
-
 Meet strangers. Make friends. Start conversations instantly.
-
 </p>
 
-<button class="cta">Start Chatting Now</button>
+<button class="cta" onclick="goLogin()">
+Start Chatting
+</button>
 
-<div class="live-users">
-
+<div class="live">
 <span class="dot"></span>
-
-4,281 people online right now
-
+<span id="users">4281</span> users online
 </div>
 
 </section>
 
-<section class="features">
+<section class="features" id="features">
 
 <h2>Why People Love CHATGRAM</h2>
 
@@ -510,33 +559,33 @@ Meet strangers. Make friends. Start conversations instantly.
 
 <div class="card">
 <h3>Instant Random Chat</h3>
-<p>Connect with someone new anywhere in the world in seconds.</p>
+<p>Connect with someone new instantly.</p>
 </div>
 
 <div class="card">
 <h3>Smart Matching</h3>
-<p>Our algorithm pairs you with interesting people.</p>
+<p>AI pairs you with interesting people.</p>
 </div>
 
 <div class="card">
-<h3>Private Conversations</h3>
-<p>Move from random chat to private messaging easily.</p>
+<h3>Private Messaging</h3>
+<p>Move from random chat to private messages.</p>
 </div>
 
-<div class="card">
-<h3>Global Community</h3>
-<p>Meet people from 150+ countries.</p>
 </div>
 
-<div class="card">
-<h3>Safe Platform</h3>
-<p>Moderation and reporting tools keep conversations respectful.</p>
-</div>
+</section>
 
-<div class="card">
-<h3>Mobile Friendly</h3>
-<p>Use CHATGRAM anywhere from your phone.</p>
-</div>
+<section class="girls" id="girls">
+
+<h2>Meet People Around The World</h2>
+
+<div class="girl-grid">
+
+<div class="girl" style="background-image:url('https://i.imgur.com/8Km9tLL.jpg')"></div>
+<div class="girl" style="background-image:url('https://i.imgur.com/2DhmtJ4.jpg')"></div>
+<div class="girl" style="background-image:url('https://i.imgur.com/7D7I6dI.jpg')"></div>
+<div class="girl" style="background-image:url('https://i.imgur.com/d1bX4Xn.jpg')"></div>
 
 </div>
 
@@ -568,39 +617,102 @@ Meet strangers. Make friends. Start conversations instantly.
 <div class="testimonial-grid">
 
 <div class="testimonial">
-<p>"I met amazing people here. Way better than random chat apps."</p>
+<p>"I met amazing people here."</p>
 </div>
 
 <div class="testimonial">
-<p>"Super clean interface and fun conversations."</p>
+<p>"Super clean and fun chat."</p>
 </div>
 
 <div class="testimonial">
-<p>"I literally spend hours chatting with new friends."</p>
+<p>"Best random chat site."</p>
 </div>
 
 </div>
 
 </section>
 
-<section class="final-cta">
+<footer id="contact">
 
-<h2>Ready To Meet Someone New?</h2>
+<div class="footer-grid">
 
-<p>Join thousands of people chatting right now.</p>
+<div>
+<h3>CHATGRAM</h3>
+<p>Meet new people instantly.</p>
+</div>
 
-<button class="cta">Start Chatting</button>
+<div>
+<h4>Product</h4>
+<p>Random Chat</p>
+<p>Private Chat</p>
+</div>
 
-</section>
+<div>
+<h4>Company</h4>
+<p>About</p>
+<p>Contact</p>
+</div>
 
-<footer>
+</div>
 
-© 2026 CHATGRAM — Meet new people online.
+<p style="text-align:center;margin-top:40px">
+© 2026 CHATGRAM
+</p>
 
 </footer>
 
+<script>
+
+/* LOGIN REDIRECT */
+
+function goLogin(){
+window.location.href="login.html"
+}
+
+/* LIVE USERS */
+
+setInterval(()=>{
+
+let u=document.getElementById("users")
+
+let n=parseInt(u.innerText)
+
+n += Math.floor(Math.random()*4)
+
+u.innerText=n
+
+},3000)
+
+/* BACKGROUND IMAGE SLIDER */
+
+const images=[
+
+"https://i.imgur.com/8Km9tLL.jpg",
+"https://i.imgur.com/2DhmtJ4.jpg",
+"https://i.imgur.com/7D7I6dI.jpg",
+"https://i.imgur.com/d1bX4Xn.jpg"
+
+]
+
+let i=0
+
+function changeBg(){
+
+document.getElementById("bg").style.backgroundImage="url("+images[i]+")"
+
+i++
+
+if(i>=images.length){
+i=0
+}
+
+}
+
+changeBg()
+
+setInterval(changeBg,6000)
+
+</script>
+
 </body>
 </html>
-
-
-
