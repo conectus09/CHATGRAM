@@ -25,11 +25,17 @@ app.get("/", (req, res) => {
 
 let waitingUser = null;
 let users = {};
+let onlineUsers = 0;
 
 io.on("connection", (socket) => {
 
     console.log("User connected:", socket.id);
 
+    onlineUsers++;
+    io.emit("online-users", onlineUsers);
+
+
+    // RANDOM MATCHING
     if (waitingUser) {
 
         users[socket.id] = waitingUser;
@@ -41,10 +47,14 @@ io.on("connection", (socket) => {
         waitingUser = null;
 
     } else {
+
         waitingUser = socket.id;
         socket.emit("waiting");
+
     }
 
+
+    // MESSAGE
     socket.on("message", (msg) => {
 
         const partner = users[socket.id];
@@ -55,21 +65,50 @@ io.on("connection", (socket) => {
 
     });
 
+
+    // TYPING INDICATOR
+    socket.on("typing", () => {
+
+        const partner = users[socket.id];
+
+        if (partner) {
+            io.to(partner).emit("typing");
+        }
+
+    });
+
+
+    socket.on("stop-typing", () => {
+
+        const partner = users[socket.id];
+
+        if (partner) {
+            io.to(partner).emit("stop-typing");
+        }
+
+    });
+
+
+    // NEXT STRANGER
     socket.on("next", () => {
 
         const partner = users[socket.id];
 
         if (partner) {
+
             io.to(partner).emit("stranger-disconnected");
 
             delete users[partner];
             delete users[socket.id];
+
         }
 
         if (waitingUser === socket.id) {
             waitingUser = null;
         }
 
+
+        // FIND NEW MATCH
         if (waitingUser) {
 
             users[socket.id] = waitingUser;
@@ -81,23 +120,32 @@ io.on("connection", (socket) => {
             waitingUser = null;
 
         } else {
+
             waitingUser = socket.id;
             socket.emit("waiting");
+
         }
 
     });
 
+
+    // DISCONNECT
     socket.on("disconnect", () => {
 
         console.log("User disconnected:", socket.id);
 
+        onlineUsers--;
+        io.emit("online-users", onlineUsers);
+
         const partner = users[socket.id];
 
         if (partner) {
+
             io.to(partner).emit("stranger-disconnected");
 
             delete users[partner];
             delete users[socket.id];
+
         }
 
         if (waitingUser === socket.id) {
