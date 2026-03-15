@@ -1,6 +1,8 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,49 +12,96 @@
 
 <script src="/socket.io/socket.io.js"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 <style>
 
-/* RESET */
+/* =====================================================
+GLOBAL RESET
+===================================================== */
 
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family: "Segoe UI", sans-serif;
+font-family:"Poppins",sans-serif;
 }
 
-/* BODY */
+/* =====================================================
+BODY
+===================================================== */
 
 body{
 
 height:100vh;
-background:linear-gradient(135deg,#020617,#0f172a);
-color:white;
 
 display:flex;
 justify-content:center;
 align-items:center;
 
+background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
+
+color:white;
+
 overflow:hidden;
 
 }
 
-/* CHAT CONTAINER */
+/* =====================================================
+ANIMATED BACKGROUND PARTICLES
+===================================================== */
+
+body::before{
+
+content:"";
+
+position:absolute;
+
+width:100%;
+height:100%;
+
+background-image:
+radial-gradient(circle at 20% 20%,#38bdf8 1px,transparent 1px),
+radial-gradient(circle at 80% 70%,#06b6d4 1px,transparent 1px);
+
+background-size:200px 200px;
+
+opacity:.15;
+
+animation:moveBg 40s linear infinite;
+
+}
+
+@keyframes moveBg{
+
+0%{transform:translate(0,0);}
+100%{transform:translate(-200px,-200px);}
+
+}
+
+/* =====================================================
+CHAT CONTAINER
+===================================================== */
 
 .chat-container{
 
+position:relative;
+
 width:95%;
 max-width:1100px;
+
 height:92vh;
+
+display:flex;
+flex-direction:column;
 
 background:rgba(255,255,255,0.05);
 
 border-radius:20px;
 
-backdrop-filter:blur(20px);
+backdrop-filter:blur(18px);
 
-display:flex;
-flex-direction:column;
+border:1px solid rgba(255,255,255,0.1);
 
 box-shadow:0 0 40px rgba(0,0,0,0.6);
 
@@ -60,48 +109,43 @@ overflow:hidden;
 
 }
 
-/* HEADER */
+/* =====================================================
+HEADER
+===================================================== */
 
 .header{
 
 height:70px;
 
-padding:20px;
-
 display:flex;
-
 justify-content:space-between;
-
 align-items:center;
 
-border-bottom:1px solid rgba(255,255,255,0.08);
+padding:0 25px;
 
 background:rgba(255,255,255,0.03);
 
-}
+border-bottom:1px solid rgba(255,255,255,0.08);
 
-/* LOGO */
+}
 
 .logo{
 
 font-size:20px;
-font-weight:bold;
+font-weight:600;
 
 color:#00e5ff;
 
-}
+letter-spacing:1px;
 
-/* STATUS */
+}
 
 .status{
 
 font-size:14px;
-
 color:#aaa;
 
 }
-
-/* ONLINE USERS */
 
 .online{
 
@@ -109,7 +153,9 @@ font-size:14px;
 
 }
 
-/* CHAT BOX */
+/* =====================================================
+CHAT AREA
+===================================================== */
 
 .chat-box{
 
@@ -120,10 +166,9 @@ overflow-y:auto;
 padding:20px;
 
 display:flex;
-
 flex-direction:column;
 
-gap:10px;
+gap:12px;
 
 }
 
@@ -133,17 +178,19 @@ gap:10px;
 
 padding:12px 14px;
 
-border-radius:10px;
+border-radius:12px;
 
 max-width:65%;
 
 font-size:14px;
 
-word-wrap:break-word;
+line-height:1.5;
+
+animation:fadeIn .25s ease;
 
 }
 
-/* YOU MESSAGE */
+/* YOU */
 
 .you{
 
@@ -155,7 +202,7 @@ color:black;
 
 }
 
-/* STRANGER MESSAGE */
+/* STRANGER */
 
 .stranger{
 
@@ -165,7 +212,7 @@ background:rgba(255,255,255,0.1);
 
 }
 
-/* SYSTEM MESSAGE */
+/* SYSTEM */
 
 .system{
 
@@ -173,13 +220,33 @@ align-self:center;
 
 background:rgba(255,255,255,0.08);
 
-font-size:13px;
-
 color:#aaa;
+
+font-size:13px;
 
 }
 
-/* TYPING INDICATOR */
+/* =====================================================
+ANIMATION
+===================================================== */
+
+@keyframes fadeIn{
+
+from{
+opacity:0;
+transform:translateY(6px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+/* =====================================================
+TYPING
+===================================================== */
 
 .typing{
 
@@ -195,17 +262,21 @@ display:none;
 
 }
 
-/* INPUT AREA */
+/* =====================================================
+INPUT AREA
+===================================================== */
 
 .input-area{
 
 display:flex;
 
-padding:15px;
-
 gap:10px;
 
+padding:15px;
+
 border-top:1px solid rgba(255,255,255,0.08);
+
+background:rgba(255,255,255,0.03);
 
 }
 
@@ -241,11 +312,13 @@ border-radius:10px;
 
 cursor:pointer;
 
-font-weight:bold;
+font-weight:500;
+
+transition:.2s;
 
 }
 
-/* SEND BUTTON */
+/* SEND */
 
 .send{
 
@@ -255,7 +328,7 @@ color:black;
 
 }
 
-/* NEXT BUTTON */
+/* NEXT */
 
 .next{
 
@@ -265,7 +338,15 @@ color:white;
 
 }
 
-/* SCROLLBAR */
+button:hover{
+
+transform:translateY(-2px);
+
+}
+
+/* =====================================================
+SCROLLBAR
+===================================================== */
 
 .chat-box::-webkit-scrollbar{
 width:6px;
@@ -274,6 +355,23 @@ width:6px;
 .chat-box::-webkit-scrollbar-thumb{
 background:#00ffff;
 border-radius:10px;
+}
+
+/* =====================================================
+MOBILE
+===================================================== */
+
+@media(max-width:700px){
+
+.chat-container{
+height:100vh;
+border-radius:0;
+}
+
+.logo{
+font-size:18px;
+}
+
 }
 
 </style>
@@ -296,28 +394,30 @@ border-radius:10px;
 
 </div>
 
-
-<!-- CHAT AREA -->
+<!-- CHAT -->
 
 <div class="chat-box" id="chatBox">
 
-<div class="message system">Connecting to random stranger...</div>
-
+<div class="message system">
+Connecting to random stranger...
 </div>
 
+</div>
 
 <div class="typing" id="typing">
-
 Stranger is typing...
-
 </div>
-
 
 <!-- INPUT -->
 
 <div class="input-area">
 
-<input type="text" id="messageInput" placeholder="Type a message...">
+<input
+type="text"
+id="messageInput"
+placeholder="Type a message..."
+autocomplete="off"
+/>
 
 <button class="send" id="sendBtn">Send</button>
 
@@ -329,43 +429,46 @@ Stranger is typing...
 
 <script>
 
+/* =====================================================
+SOCKET
+===================================================== */
+
 const socket = io();
 
-const chatBox = document.getElementById("chatBox");
+/* ELEMENTS */
 
-const messageInput = document.getElementById("messageInput");
-
-const sendBtn = document.getElementById("sendBtn");
-
-const nextBtn = document.getElementById("nextBtn");
-
-const status = document.getElementById("status");
-
-const typing = document.getElementById("typing");
-
-const online = document.getElementById("online");
+const chatBox=document.getElementById("chatBox");
+const messageInput=document.getElementById("messageInput");
+const sendBtn=document.getElementById("sendBtn");
+const nextBtn=document.getElementById("nextBtn");
+const status=document.getElementById("status");
+const typing=document.getElementById("typing");
+const online=document.getElementById("online");
 
 let typingTimeout;
 
-/* ADD MESSAGE FUNCTION */
+/* =====================================================
+MESSAGE FUNCTION
+===================================================== */
 
 function addMessage(text,type){
 
-const msg = document.createElement("div");
+const msg=document.createElement("div");
 
 msg.classList.add("message");
-
 msg.classList.add(type);
 
-msg.innerText = text;
+msg.innerText=text;
 
 chatBox.appendChild(msg);
 
-chatBox.scrollTop = chatBox.scrollHeight;
+chatBox.scrollTop=chatBox.scrollHeight;
 
 }
 
-/* SOCKET EVENTS */
+/* =====================================================
+SOCKET EVENTS
+===================================================== */
 
 socket.on("connect",()=>{
 
@@ -389,6 +492,8 @@ addMessage("You are now chatting with a stranger","system");
 
 });
 
+/* MESSAGE */
+
 socket.on("message",(msg)=>{
 
 typing.style.display="none";
@@ -396,6 +501,8 @@ typing.style.display="none";
 addMessage("Stranger: "+msg,"stranger");
 
 });
+
+/* TYPING */
 
 socket.on("typing",()=>{
 
@@ -409,6 +516,8 @@ typing.style.display="none";
 
 });
 
+/* DISCONNECT */
+
 socket.on("stranger-disconnected",()=>{
 
 status.innerText="Stranger disconnected";
@@ -417,13 +526,17 @@ addMessage("Stranger disconnected","system");
 
 });
 
+/* ONLINE USERS */
+
 socket.on("online-users",(count)=>{
 
 online.innerText=count;
 
 });
 
-/* SEND MESSAGE */
+/* =====================================================
+SEND MESSAGE
+===================================================== */
 
 sendBtn.onclick=sendMessage;
 
