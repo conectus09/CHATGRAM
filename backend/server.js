@@ -1,0 +1,115 @@
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+const cors = require("cors");
+
+const app = express();
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: "*"
+    }
+});
+
+app.use(cors());
+app.use(express.json());
+
+app.get("/", (req, res) => {
+    res.send("CHATGRAM Server Running 🚀");
+});
+
+let waitingUser = null;
+let users = {};
+
+io.on("connection", (socket) => {
+
+    console.log("User connected:", socket.id);
+
+    // Random match system
+    if (waitingUser) {
+
+        users[socket.id] = waitingUser;
+        users[waitingUser] = socket.id;
+
+        io.to(socket.id).emit("matched");
+        io.to(waitingUser).emit("matched");
+
+        waitingUser = null;
+
+    } else {
+        waitingUser = socket.id;
+        socket.emit("waiting");
+    }
+
+    // Message receive
+    socket.on("message", (msg) => {
+
+        const partner = users[socket.id];
+
+        if (partner) {
+            io.to(partner).emit("message", msg);
+        }
+
+    });
+
+    // Next user
+    socket.on("next", () => {
+
+        const partner = users[socket.id];
+
+        if (partner) {
+            io.to(partner).emit("stranger-disconnected");
+
+            delete users[partner];
+            delete users[socket.id];
+        }
+
+        if (waitingUser === socket.id) {
+            waitingUser = null;
+        }
+
+        if (waitingUser) {
+
+            users[socket.id] = waitingUser;
+            users[waitingUser] = socket.id;
+
+            io.to(socket.id).emit("matched");
+            io.to(waitingUser).emit("matched");
+
+            waitingUser = null;
+
+        } else {
+            waitingUser = socket.id;
+            socket.emit("waiting");
+        }
+
+    });
+
+    // Disconnect
+    socket.on("disconnect", () => {
+
+        console.log("User disconnected:", socket.id);
+
+        const partner = users[socket.id];
+
+        if (partner) {
+            io.to(partner).emit("stranger-disconnected");
+
+            delete users[partner];
+            delete users[socket.id];
+        }
+
+        if (waitingUser === socket.id) {
+            waitingUser = null;
+        }
+
+    });
+
+});
+
+const PORT = process.env.PORT || 10000;
+
+server.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`);
+});
