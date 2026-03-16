@@ -22,7 +22,7 @@ const server = http.createServer(app)
 const io = new Server(server, {
     cors: {
         origin: "*",
-        methods: ["GET","POST"]
+        methods: ["GET", "POST"]
     }
 })
 
@@ -37,10 +37,10 @@ app.use(express.json())
    SERVE FRONTEND
    ========================================= */
 
-app.use(express.static(path.join(__dirname,"../public")))
+app.use(express.static(path.join(__dirname, "../public")))
 
-app.get("/", (req,res)=>{
-    res.sendFile(path.join(__dirname,"../public/index.html"))
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/index.html"))
 })
 
 /* =========================================
@@ -55,26 +55,26 @@ let onlineUsers = 0
    SOCKET CONNECTION
    ========================================= */
 
-io.on("connection",(socket)=>{
+io.on("connection", (socket) => {
 
-    console.log("User connected:",socket.id)
+    console.log("User connected:", socket.id)
 
     /* =========================================
        ONLINE USER COUNTER
        ========================================= */
 
     onlineUsers++
-    io.emit("online-users",onlineUsers)
+    io.emit("online-users", onlineUsers)
 
     /* =========================================
-       USER START MATCHING
+       JOIN VIDEO CHAT
        ========================================= */
 
-    socket.on("join-video",()=>{
+    socket.on("join-video", () => {
 
-        console.log("User searching:",socket.id)
+        console.log("Searching partner:", socket.id)
 
-        if(waitingUser){
+        if (waitingUser && waitingUser !== socket.id) {
 
             users[socket.id] = waitingUser
             users[waitingUser] = socket.id
@@ -84,7 +84,7 @@ io.on("connection",(socket)=>{
 
             waitingUser = null
 
-        }else{
+        } else {
 
             waitingUser = socket.id
             socket.emit("waiting")
@@ -97,12 +97,12 @@ io.on("connection",(socket)=>{
        TEXT MESSAGE
        ========================================= */
 
-    socket.on("message",(msg)=>{
+    socket.on("message", (msg) => {
 
         const partner = users[socket.id]
 
-        if(partner){
-            io.to(partner).emit("message",msg)
+        if (partner) {
+            io.to(partner).emit("message", msg)
         }
 
     })
@@ -111,21 +111,21 @@ io.on("connection",(socket)=>{
        TYPING INDICATOR
        ========================================= */
 
-    socket.on("typing",()=>{
+    socket.on("typing", () => {
 
         const partner = users[socket.id]
 
-        if(partner){
+        if (partner) {
             io.to(partner).emit("typing")
         }
 
     })
 
-    socket.on("stop-typing",()=>{
+    socket.on("stop-typing", () => {
 
         const partner = users[socket.id]
 
-        if(partner){
+        if (partner) {
             io.to(partner).emit("stop-typing")
         }
 
@@ -135,32 +135,32 @@ io.on("connection",(socket)=>{
        WEBRTC SIGNALING
        ========================================= */
 
-    socket.on("offer",(offer)=>{
+    socket.on("offer", (offer) => {
 
         const partner = users[socket.id]
 
-        if(partner){
-            io.to(partner).emit("offer",offer)
+        if (partner) {
+            io.to(partner).emit("offer", offer)
         }
 
     })
 
-    socket.on("answer",(answer)=>{
+    socket.on("answer", (answer) => {
 
         const partner = users[socket.id]
 
-        if(partner){
-            io.to(partner).emit("answer",answer)
+        if (partner) {
+            io.to(partner).emit("answer", answer)
         }
 
     })
 
-    socket.on("ice",(candidate)=>{
+    socket.on("ice", (candidate) => {
 
         const partner = users[socket.id]
 
-        if(partner){
-            io.to(partner).emit("ice",candidate)
+        if (partner) {
+            io.to(partner).emit("ice", candidate)
         }
 
     })
@@ -169,11 +169,11 @@ io.on("connection",(socket)=>{
        NEXT STRANGER
        ========================================= */
 
-    socket.on("next",()=>{
+    socket.on("next", () => {
 
         const partner = users[socket.id]
 
-        if(partner){
+        if (partner) {
 
             io.to(partner).emit("stranger-disconnected")
 
@@ -182,11 +182,12 @@ io.on("connection",(socket)=>{
 
         }
 
-        if(waitingUser === socket.id){
+        if (waitingUser === socket.id) {
             waitingUser = null
         }
 
-        if(waitingUser){
+        // Start searching again
+        if (waitingUser && waitingUser !== socket.id) {
 
             users[socket.id] = waitingUser
             users[waitingUser] = socket.id
@@ -196,7 +197,7 @@ io.on("connection",(socket)=>{
 
             waitingUser = null
 
-        }else{
+        } else {
 
             waitingUser = socket.id
             socket.emit("waiting")
@@ -209,16 +210,16 @@ io.on("connection",(socket)=>{
        DISCONNECT
        ========================================= */
 
-    socket.on("disconnect",()=>{
+    socket.on("disconnect", () => {
 
-        console.log("User disconnected:",socket.id)
+        console.log("User disconnected:", socket.id)
 
-        onlineUsers = Math.max(0,onlineUsers - 1)
-        io.emit("online-users",onlineUsers)
+        onlineUsers = Math.max(0, onlineUsers - 1)
+        io.emit("online-users", onlineUsers)
 
         const partner = users[socket.id]
 
-        if(partner){
+        if (partner) {
 
             io.to(partner).emit("stranger-disconnected")
 
@@ -227,7 +228,7 @@ io.on("connection",(socket)=>{
 
         }
 
-        if(waitingUser === socket.id){
+        if (waitingUser === socket.id) {
             waitingUser = null
         }
 
@@ -241,8 +242,8 @@ io.on("connection",(socket)=>{
 
 const PORT = process.env.PORT || 10000
 
-server.listen(PORT,()=>{
+server.listen(PORT, () => {
 
-    console.log("🚀 CHATGRAM server running on port:",PORT)
+    console.log("🚀 CHATGRAM server running on port:", PORT)
 
 })
