@@ -12,7 +12,9 @@
 
 <style>
 
-/* GLOBAL */
+/* =====================================================
+GLOBAL RESET
+===================================================== */
 
 *{
 margin:0;
@@ -27,21 +29,36 @@ color:white;
 overflow-x:hidden;
 }
 
-/* BACKGROUND IMAGE */
+/* =====================================================
+BACKGROUND SLIDER
+===================================================== */
 
-.bg{
+.bg-slider{
 position:fixed;
+top:0;
+left:0;
 width:100%;
 height:100%;
-background-image:url("https://media.easy-peasy.ai/e17007d5-87ea-4d8d-9417-eef2306d0be2/609be68c-05d0-4a53-92f3-4679e92723ba_medium.webp");
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
-opacity:0.35;
 z-index:-2;
 }
 
-/* HEADER */
+.bg-slide{
+position:absolute;
+width:100%;
+height:100%;
+background-size:cover;
+background-position:center;
+opacity:0;
+transition:opacity 1.5s ease-in-out;
+}
+
+.bg-slide.active{
+opacity:.35;
+}
+
+/* =====================================================
+HEADER
+===================================================== */
 
 header{
 position:fixed;
@@ -56,6 +73,8 @@ backdrop-filter:blur(12px);
 z-index:10;
 }
 
+/* LOGO */
+
 .logo{
 font-size:26px;
 font-weight:700;
@@ -66,7 +85,7 @@ letter-spacing:2px;
 color:#38bdf8;
 }
 
-/* NAV */
+/* NAVIGATION */
 
 nav a{
 color:white;
@@ -82,7 +101,9 @@ opacity:1;
 color:#38bdf8;
 }
 
-/* HERO */
+/* =====================================================
+HERO SECTION
+===================================================== */
 
 .hero{
 height:100vh;
@@ -111,6 +132,8 @@ max-width:700px;
 margin-bottom:40px;
 }
 
+/* CTA BUTTON */
+
 .cta{
 padding:18px 55px;
 border-radius:40px;
@@ -125,6 +148,8 @@ transition:.4s;
 .cta:hover{
 transform:translateY(-4px);
 }
+
+/* LIVE USERS */
 
 .live{
 margin-top:25px;
@@ -148,7 +173,9 @@ animation:pulse 1.5s infinite;
 100%{opacity:1}
 }
 
-/* CHAT DEMO */
+/* =====================================================
+DEMO CHAT
+===================================================== */
 
 .demo{
 padding:120px 10%;
@@ -213,7 +240,7 @@ background:#2563eb;
 margin-left:auto;
 }
 
-/* TYPING */
+/* TYPING ANIMATION */
 
 .typing{
 display:flex;
@@ -243,7 +270,9 @@ animation-delay:.4s;
 100%{opacity:.3}
 }
 
-/* STATS */
+/* =====================================================
+STATS
+===================================================== */
 
 .stats{
 padding:120px 10%;
@@ -263,7 +292,9 @@ color:#38bdf8;
 margin-bottom:10px;
 }
 
-/* TESTIMONIALS */
+/* =====================================================
+TESTIMONIALS
+===================================================== */
 
 .testimonials{
 padding:120px 10%;
@@ -311,7 +342,9 @@ height:35px;
 border-radius:50%;
 }
 
-/* FOOTER */
+/* =====================================================
+FOOTER
+===================================================== */
 
 footer{
 padding:90px 10%;
@@ -344,12 +377,43 @@ opacity:.6;
 font-size:14px;
 }
 
+/* =====================================================
+RESPONSIVE
+===================================================== */
+
+@media(max-width:900px){
+
+.hero h1{
+font-size:60px;
+}
+
+.demo{
+flex-direction:column;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="bg"></div>
+<!-- ===================================================
+BACKGROUND SLIDER
+=================================================== -->
+
+<div class="bg-slider">
+
+<div class="bg-slide active"
+style="background-image:url('https://media.easy-peasy.ai/e17007d5-87ea-4d8d-9417-eef2306d0be2/609be68c-05d0-4a53-92f3-4679e92723ba_medium.webp')">
+</div>
+
+
+</div>
+
+<!-- ===================================================
+HEADER
+=================================================== -->
 
 <header>
 
@@ -359,12 +423,16 @@ CHAT<span>GRAM</span>
 
 <nav>
 <a href="#">Home</a>
-<a href="#">Random Chat</a>
+<a href="random.html">Random Chat</a>
 <a href="#">Community</a>
-<a href="#">Contact</a>
+<a href="contact.html">Contact</a>
 </nav>
 
 </header>
+
+<!-- ===================================================
+HERO
+=================================================== -->
 
 <section class="hero">
 
@@ -385,6 +453,10 @@ Start Chatting
 
 </section>
 
+<!-- ===================================================
+DEMO CHAT
+=================================================== -->
+
 <section class="demo">
 
 <div class="demo-text">
@@ -392,11 +464,11 @@ Start Chatting
 <h2>Start Chatting Instantly</h2>
 
 <p>
-CHATGRAM connects you with strangers in seconds.  
+CHATGRAM connects you with strangers in seconds.
 No signup required. Just start talking.
 </p>
 
-<button onclick="location.href='login.html'">
+<button onclick="location.href='random.html'">
 Try Live Chat
 </button>
 
@@ -430,6 +502,10 @@ Same here 😄
 
 </section>
 
+<!-- ===================================================
+STATS
+=================================================== -->
+
 <section class="stats">
 
 <div class="stat">
@@ -448,6 +524,10 @@ Same here 😄
 </div>
 
 </section>
+
+<!-- ===================================================
+TESTIMONIALS
+=================================================== -->
 
 <section class="testimonials">
 
@@ -504,6 +584,10 @@ Best random chat platform I have used so far.
 
 </section>
 
+<!-- ===================================================
+FOOTER
+=================================================== -->
+
 <footer>
 
 <div class="footer-grid">
@@ -517,14 +601,15 @@ Meet new people instantly from anywhere in the world.
 
 <div>
 <h3>Product</h3>
-<a href="#">Random Chat</a>
+<a href="random.html">Random Chat</a>
 <a href="#">Community</a>
 </div>
 
 <div>
 <h3>Legal</h3>
-<a href="#">Terms</a>
-<a href="#">Contact</a>
+<a href="tc.html">Terms</a>
+<a href="ft.html">Features</a>
+<a href="contact.html">Contact</a>
 </div>
 
 </div>
@@ -535,9 +620,15 @@ Meet new people instantly from anywhere in the world.
 
 </footer>
 
+<!-- ===================================================
+SCRIPTS
+=================================================== -->
+
 <script>
 
-/* LIVE USERS COUNTER */
+/* ==============================================
+LIVE USERS COUNTER
+============================================== */
 
 let users=4281;
 
@@ -548,6 +639,49 @@ users+=Math.floor(Math.random()*5);
 document.getElementById("users").innerText=users;
 
 },3000);
+
+
+/* ==============================================
+BACKGROUND IMAGE SLIDER
+CHANGE EVERY 5 SECONDS
+============================================== */
+
+const slides=document.querySelectorAll(".bg-slide");
+
+let current=0;
+
+function changeBackground(){
+
+slides[current].classList.remove("active");
+
+current=(current+1)%slides.length;
+
+slides[current].classList.add("active");
+
+}
+
+setInterval(changeBackground,5000);
+
+
+/* ==============================================
+SMOOTH SCROLL (OPTIONAL)
+============================================== */
+
+document.querySelectorAll("a[href^='#']").forEach(anchor=>{
+
+anchor.addEventListener("click",function(e){
+
+e.preventDefault();
+
+document.querySelector(this.getAttribute("href")).scrollIntoView({
+
+behavior:"smooth"
+
+});
+
+});
+
+});
 
 </script>
 
