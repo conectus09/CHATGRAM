@@ -1,1 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CHATGRAM • Random Video Chat</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<style>
+
+/* ------------------------------------------------ */
+/* GLOBAL RESET */
+/* ------------------------------------------------ */
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+
+height:100vh;
+width:100%;
+
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+
+color:white;
+overflow:hidden;
+
+background-image:url("https://images.unsplash.com/photo-1515378791036-0648a3ef77b2");
+background-size:cover;
+background-position:center;
+
+}
+
+/* DARK OVERLAY */
+
+body::before{
+
+content:"";
+position:absolute;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+background:rgba(0,0,0,0.65);
+z-index:-1;
+
+}
+
+/* ------------------------------------------------ */
+/* HEADER */
+/* ------------------------------------------------ */
+
+.header{
+
+position:absolute;
+top:20px;
+
+font-size:32px;
+font-weight:700;
+letter-spacing:2px;
+
+}
+
+.header span{
+
+color:#38bdf8;
+
+}
+
+/* ------------------------------------------------ */
+/* STATUS BAR */
+/* ------------------------------------------------ */
+
+.status-bar{
+
+position:absolute;
+
+top:70px;
+
+font-size:14px;
+
+padding:6px 16px;
+
+border-radius:20px;
+
+background:rgba(255,255,255,0.1);
+
+backdrop-filter:blur(10px);
+
+}
+
+.online{
+
+color:#4ade80;
+
+}
+
+.searching{
+
+color:#facc15;
+
+}
+
+.offline{
+
+color:#ef4444;
+
+}
+
+/* ------------------------------------------------ */
+/* VIDEO AREA */
+/* ------------------------------------------------ */
+
+.video-container{
+
+display:flex;
+gap:25px;
+
+margin-top:50px;
+
+}
+
+/* ------------------------------------------------ */
+/* VIDEO BOX */
+/* ------------------------------------------------ */
+
+.video-box{
+
+width:420px;
+height:300px;
+
+background:black;
+
+border-radius:16px;
+
+overflow:hidden;
+
+position:relative;
+
+border:2px solid rgba(255,255,255,0.15);
+
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+
+transition:.3s;
+
+}
+
+.video-box:hover{
+
+transform:scale(1.02);
+
+}
+
+/* ------------------------------------------------ */
+/* VIDEO ELEMENT */
+/* ------------------------------------------------ */
+
+video{
+
+width:100%;
+height:100%;
+
+object-fit:cover;
+
+}
+
+/* USER LABEL */
+
+.label{
+
+position:absolute;
+
+bottom:10px;
+left:10px;
+
+background:rgba(0,0,0,0.5);
+
+padding:4px 10px;
+
+border-radius:6px;
+
+font-size:13px;
+
+}
+
+/* ------------------------------------------------ */
+/* CONTROLS */
+/* ------------------------------------------------ */
+
+.controls{
+
+margin-top:35px;
+
+display:flex;
+gap:18px;
+
+}
+
+/* BUTTON BASE */
+
+button{
+
+padding:14px 22px;
+
+border:none;
+border-radius:10px;
+
+font-size:16px;
+
+cursor:pointer;
+
+background:#38bdf8;
+
+color:white;
+
+transition:.25s;
+
+font-weight:500;
+
+}
+
+/* BUTTON HOVER */
+
+button:hover{
+
+background:#0ea5e9;
+transform:translateY(-2px);
+
+}
+
+/* BUTTON ACTIVE */
+
+button:active{
+
+transform:scale(.95);
+
+}
+
+/* NEXT BUTTON */
+
+.next{
+
+background:#6366f1;
+
+}
+
+.next:hover{
+
+background:#4f46e5;
+
+}
+
+/* END BUTTON */
+
+.end{
+
+background:#ef4444;
+
+}
+
+.end:hover{
+
+background:#dc2626;
+
+}
+
+/* ------------------------------------------------ */
+/* FOOTER */
+/* ------------------------------------------------ */
+
+.footer{
+
+position:absolute;
+
+bottom:20px;
+
+font-size:13px;
+
+opacity:.8;
+
+}
+
+/* ------------------------------------------------ */
+/* MOBILE RESPONSIVE */
+/* ------------------------------------------------ */
+
+@media(max-width:900px){
+
+.video-container{
+
+flex-direction:column;
+
+align-items:center;
+
+}
+
+.video-box{
+
+width:90vw;
+height:260px;
+
+}
+
+.controls{
+
+flex-wrap:wrap;
+justify-content:center;
+
+}
+
+}
+
+/* ------------------------------------------------ */
+/* LOADING SCREEN */
+/* ------------------------------------------------ */
+
+.loader{
+
+position:absolute;
+
+top:0;
+left:0;
+
+width:100%;
+height:100%;
+
+display:flex;
+
+align-items:center;
+justify-content:center;
+
+background:rgba(0,0,0,0.85);
+
+flex-direction:column;
+
+z-index:10;
+
+}
+
+.spinner{
+
+width:60px;
+height:60px;
+
+border:6px solid rgba(255,255,255,0.2);
+
+border-top:6px solid #38bdf8;
+
+border-radius:50%;
+
+animation:spin 1s linear infinite;
+
+margin-bottom:20px;
+
+}
+
+@keyframes spin{
+
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- LOADING -->
+
+<div class="loader" id="loader">
+
+<div class="spinner"></div>
+<p>Connecting Camera...</p>
+
+</div>
+
+<!-- HEADER -->
+
+<div class="header">
+CHAT<span>GRAM</span>
+</div>
+
+<!-- STATUS -->
+
+<div class="status-bar" id="status">
+Status: <span class="offline">Offline</span>
+</div>
+
+<!-- VIDEO AREA -->
+
+<div class="video-container">
+
+<div class="video-box">
+
+<video id="localVideo" autoplay muted></video>
+
+<div class="label">You</div>
+
+</div>
+
+<div class="video-box">
+
+<video id="remoteVideo" autoplay></video>
+
+<div class="label">Stranger</div>
+
+</div>
+
+</div>
+
+<!-- CONTROLS -->
+
+<div class="controls">
+
+<button onclick="startMatch()">Start</button>
+
+<button class="next" onclick="nextUser()">Next</button>
+
+<button class="end" onclick="endCall()">End</button>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+CHATGRAM Random Video Chat • Stay Respectful
+
+</div>
+
+<script>
+
+/* ------------------------------------------------ */
+/* SOCKET CONNECTION */
+/* ------------------------------------------------ */
+
+const socket = io();
+
+/* ------------------------------------------------ */
+/* VARIABLES */
+/* ------------------------------------------------ */
+
+let localStream;
+let peerConnection;
+
+const localVideo=document.getElementById("localVideo");
+const remoteVideo=document.getElementById("remoteVideo");
+
+const loader=document.getElementById("loader");
+const status=document.getElementById("status");
+
+/* ------------------------------------------------ */
+/* ICE SERVERS */
+/* ------------------------------------------------ */
+
+const servers={
+
+iceServers:[
+{urls:"stun:stun.l.google.com:19302"}
+]
+
+};
+
+/* ------------------------------------------------ */
+/* CAMERA START */
+/* ------------------------------------------------ */
+
+async function startCamera(){
+
+try{
+
+localStream=await navigator.mediaDevices.getUserMedia({
+video:true,
+audio:true
+});
+
+localVideo.srcObject=localStream;
+
+loader.style.display="none";
+
+status.innerHTML='Status: <span class="searching">Searching...</span>';
+
+}catch(e){
+
+alert("Camera access denied");
+
+}
+
+}
+
+/* ------------------------------------------------ */
+/* START MATCH */
+/* ------------------------------------------------ */
+
+async function startMatch(){
+
+await startCamera();
+
+socket.emit("join-video");
+
+}
+
+/* ------------------------------------------------ */
+/* MATCHED */
+/* ------------------------------------------------ */
+
+socket.on("matched",async()=>{
+
+status.innerHTML='Status: <span class="online">Connected</span>';
+
+peerConnection=new RTCPeerConnection(servers);
+
+/* SEND STREAM */
+
+localStream.getTracks().forEach(track=>{
+peerConnection.addTrack(track,localStream);
+});
+
+/* RECEIVE STREAM */
+
+peerConnection.ontrack=(event)=>{
+remoteVideo.srcObject=event.streams[0];
+};
+
+/* ICE */
+
+peerConnection.onicecandidate=(event)=>{
+
+if(event.candidate){
+
+socket.emit("ice",event.candidate);
+
+}
+
+};
+
+/* OFFER */
+
+const offer=await peerConnection.createOffer();
+
+await peerConnection.setLocalDescription(offer);
+
+socket.emit("offer",offer);
+
+});
+
+/* ------------------------------------------------ */
+/* RECEIVE OFFER */
+/* ------------------------------------------------ */
+
+socket.on("offer",async(offer)=>{
+
+peerConnection=new RTCPeerConnection(servers);
+
+localStream.getTracks().forEach(track=>{
+peerConnection.addTrack(track,localStream);
+});
+
+peerConnection.ontrack=(event)=>{
+remoteVideo.srcObject=event.streams[0];
+};
+
+peerConnection.onicecandidate=(event)=>{
+if(event.candidate){
+socket.emit("ice",event.candidate);
+}
+};
+
+await peerConnection.setRemoteDescription(offer);
+
+const answer=await peerConnection.createAnswer();
+
+await peerConnection.setLocalDescription(answer);
+
+socket.emit("answer",answer);
+
+});
+
+/* ------------------------------------------------ */
+/* RECEIVE ANSWER */
+/* ------------------------------------------------ */
+
+socket.on("answer",async(answer)=>{
+
+await peerConnection.setRemoteDescription(answer);
+
+});
+
+/* ------------------------------------------------ */
+/* ICE RECEIVE */
+/* ------------------------------------------------ */
+
+socket.on("ice",async(candidate)=>{
+
+try{
+
+await peerConnection.addIceCandidate(candidate);
+
+}catch(e){}
+
+});
+
+/* ------------------------------------------------ */
+/* NEXT USER */
+/* ------------------------------------------------ */
+
+function nextUser(){
+
+endCall();
+
+socket.emit("next");
+
+status.innerHTML='Status: <span class="searching">Searching...</span>';
+
+}
+
+/* ------------------------------------------------ */
+/* END CALL */
+/* ------------------------------------------------ */
+
+function endCall(){
+
+if(peerConnection){
+
+peerConnection.close();
+
+peerConnection=null;
+
+}
+
+remoteVideo.srcObject=null;
+
+status.innerHTML='Status: <span class="offline">Disconnected</span>';
+
+}
+
+</script>
+
+</body>
+</html>
