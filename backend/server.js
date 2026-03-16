@@ -1,163 +1,248 @@
-const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
-const cors = require("cors");
-const path = require("path");
+/* =========================================
+   CHATGRAM RANDOM CHAT SERVER
+   ========================================= */
 
-const app = express();
-const server = http.createServer(app);
+const express = require("express")
+const http = require("http")
+const { Server } = require("socket.io")
+const cors = require("cors")
+const path = require("path")
+
+/* =========================================
+   EXPRESS APP
+   ========================================= */
+
+const app = express()
+const server = http.createServer(app)
+
+/* =========================================
+   SOCKET.IO
+   ========================================= */
 
 const io = new Server(server, {
     cors: {
-        origin: "*"
+        origin: "*",
+        methods: ["GET","POST"]
     }
-});
+})
 
-app.use(cors());
-app.use(express.json());
+/* =========================================
+   MIDDLEWARE
+   ========================================= */
 
-// Serve frontend
-app.use(express.static(path.join(__dirname, "../public")));
+app.use(cors())
+app.use(express.json())
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "../public/index.html"));
-});
+/* =========================================
+   SERVE FRONTEND
+   ========================================= */
 
-let waitingUser = null;
-let users = {};
-let onlineUsers = 0;
+app.use(express.static(path.join(__dirname,"../public")))
 
-io.on("connection", (socket) => {
+app.get("/", (req,res)=>{
+    res.sendFile(path.join(__dirname,"../public/index.html"))
+})
 
-    console.log("User connected:", socket.id);
+/* =========================================
+   GLOBAL VARIABLES
+   ========================================= */
 
-    onlineUsers++;
-    io.emit("online-users", onlineUsers);
+let waitingUser = null
+let users = {}
+let onlineUsers = 0
 
+/* =========================================
+   SOCKET CONNECTION
+   ========================================= */
 
-    // RANDOM MATCHING
-    if (waitingUser) {
+io.on("connection",(socket)=>{
 
-        users[socket.id] = waitingUser;
-        users[waitingUser] = socket.id;
+    console.log("User connected:",socket.id)
 
-        io.to(socket.id).emit("matched");
-        io.to(waitingUser).emit("matched");
+    /* =========================================
+       ONLINE USER COUNTER
+       ========================================= */
 
-        waitingUser = null;
+    onlineUsers++
+    io.emit("online-users",onlineUsers)
 
-    } else {
+    /* =========================================
+       USER START MATCHING
+       ========================================= */
 
-        waitingUser = socket.id;
-        socket.emit("waiting");
+    socket.on("join-video",()=>{
 
-    }
+        console.log("User searching:",socket.id)
 
+        if(waitingUser){
 
-    // MESSAGE
-    socket.on("message", (msg) => {
+            users[socket.id] = waitingUser
+            users[waitingUser] = socket.id
 
-        const partner = users[socket.id];
+            io.to(socket.id).emit("matched")
+            io.to(waitingUser).emit("matched")
 
-        if (partner) {
-            io.to(partner).emit("message", msg);
-        }
+            waitingUser = null
 
-    });
+        }else{
 
-
-    // TYPING INDICATOR
-    socket.on("typing", () => {
-
-        const partner = users[socket.id];
-
-        if (partner) {
-            io.to(partner).emit("typing");
-        }
-
-    });
-
-
-    socket.on("stop-typing", () => {
-
-        const partner = users[socket.id];
-
-        if (partner) {
-            io.to(partner).emit("stop-typing");
-        }
-
-    });
-
-
-    // NEXT STRANGER
-    socket.on("next", () => {
-
-        const partner = users[socket.id];
-
-        if (partner) {
-
-            io.to(partner).emit("stranger-disconnected");
-
-            delete users[partner];
-            delete users[socket.id];
+            waitingUser = socket.id
+            socket.emit("waiting")
 
         }
 
-        if (waitingUser === socket.id) {
-            waitingUser = null;
+    })
+
+    /* =========================================
+       TEXT MESSAGE
+       ========================================= */
+
+    socket.on("message",(msg)=>{
+
+        const partner = users[socket.id]
+
+        if(partner){
+            io.to(partner).emit("message",msg)
         }
 
+    })
 
-        // FIND NEW MATCH
-        if (waitingUser) {
+    /* =========================================
+       TYPING INDICATOR
+       ========================================= */
 
-            users[socket.id] = waitingUser;
-            users[waitingUser] = socket.id;
+    socket.on("typing",()=>{
 
-            io.to(socket.id).emit("matched");
-            io.to(waitingUser).emit("matched");
+        const partner = users[socket.id]
 
-            waitingUser = null;
+        if(partner){
+            io.to(partner).emit("typing")
+        }
 
-        } else {
+    })
 
-            waitingUser = socket.id;
-            socket.emit("waiting");
+    socket.on("stop-typing",()=>{
+
+        const partner = users[socket.id]
+
+        if(partner){
+            io.to(partner).emit("stop-typing")
+        }
+
+    })
+
+    /* =========================================
+       WEBRTC SIGNALING
+       ========================================= */
+
+    socket.on("offer",(offer)=>{
+
+        const partner = users[socket.id]
+
+        if(partner){
+            io.to(partner).emit("offer",offer)
+        }
+
+    })
+
+    socket.on("answer",(answer)=>{
+
+        const partner = users[socket.id]
+
+        if(partner){
+            io.to(partner).emit("answer",answer)
+        }
+
+    })
+
+    socket.on("ice",(candidate)=>{
+
+        const partner = users[socket.id]
+
+        if(partner){
+            io.to(partner).emit("ice",candidate)
+        }
+
+    })
+
+    /* =========================================
+       NEXT STRANGER
+       ========================================= */
+
+    socket.on("next",()=>{
+
+        const partner = users[socket.id]
+
+        if(partner){
+
+            io.to(partner).emit("stranger-disconnected")
+
+            delete users[partner]
+            delete users[socket.id]
 
         }
 
-    });
+        if(waitingUser === socket.id){
+            waitingUser = null
+        }
 
+        if(waitingUser){
 
-    // DISCONNECT
-    socket.on("disconnect", () => {
+            users[socket.id] = waitingUser
+            users[waitingUser] = socket.id
 
-        console.log("User disconnected:", socket.id);
+            io.to(socket.id).emit("matched")
+            io.to(waitingUser).emit("matched")
 
-        onlineUsers--;
-        io.emit("online-users", onlineUsers);
+            waitingUser = null
 
-        const partner = users[socket.id];
+        }else{
 
-        if (partner) {
-
-            io.to(partner).emit("stranger-disconnected");
-
-            delete users[partner];
-            delete users[socket.id];
+            waitingUser = socket.id
+            socket.emit("waiting")
 
         }
 
-        if (waitingUser === socket.id) {
-            waitingUser = null;
+    })
+
+    /* =========================================
+       DISCONNECT
+       ========================================= */
+
+    socket.on("disconnect",()=>{
+
+        console.log("User disconnected:",socket.id)
+
+        onlineUsers = Math.max(0,onlineUsers - 1)
+        io.emit("online-users",onlineUsers)
+
+        const partner = users[socket.id]
+
+        if(partner){
+
+            io.to(partner).emit("stranger-disconnected")
+
+            delete users[partner]
+            delete users[socket.id]
+
         }
 
-    });
+        if(waitingUser === socket.id){
+            waitingUser = null
+        }
 
-});
+    })
 
-const PORT = process.env.PORT || 10000;
+})
 
-server.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-});
+/* =========================================
+   START SERVER
+   ========================================= */
+
+const PORT = process.env.PORT || 10000
+
+server.listen(PORT,()=>{
+
+    console.log("🚀 CHATGRAM server running on port:",PORT)
+
+})
