@@ -1,136 +1,235 @@
-const { Server } = require("socket.io");
+/* =========================================
+   CHATGRAM SOCKET HANDLER
+========================================= */
 
-let waitingUsers = [];
-let onlineUsers = 0;
+const { Server } = require("socket.io")
+
+let waitingUsers = []
+let onlineUsers = 0
 
 const socketHandler = (server) => {
 
-const io = new Server(server, {
-    cors: {
-        origin: "*"
+const io = new Server(server,{
+    cors:{
+        origin:"*",
+        methods:["GET","POST"]
     }
-});
+})
 
-io.on("connection", (socket) => {
+/* =========================================
+   CONNECTION
+========================================= */
 
-    console.log("User connected:", socket.id);
+io.on("connection",(socket)=>{
 
-    onlineUsers++;
+console.log("User connected:",socket.id)
 
-    io.emit("onlineUsers", onlineUsers);
+onlineUsers++
 
+io.emit("onlineUsers",onlineUsers)
 
-    // Find stranger
-    function findStranger() {
+/* =========================================
+   FIND STRANGER
+========================================= */
 
-        if (waitingUsers.length > 0) {
+function findStranger(){
 
-            const stranger = waitingUsers.shift();
+// remove user if already waiting
+waitingUsers = waitingUsers.filter(id => id !== socket.id)
 
-            socket.partner = stranger;
-            stranger.partner = socket;
+if(waitingUsers.length > 0){
 
-            socket.emit("connected");
-            stranger.emit("connected");
+const strangerId = waitingUsers.shift()
 
-        } else {
+const stranger = io.sockets.sockets.get(strangerId)
 
-            waitingUsers.push(socket);
+if(!stranger){
 
-            socket.emit("waiting");
+findStranger()
+return
 
-        }
+}
 
-    }
+socket.partner = stranger.id
+stranger.partner = socket.id
 
+socket.emit("connected")
+stranger.emit("connected")
 
-    // Start random chat
-    socket.on("startChat", () => {
+}else{
 
-        findStranger();
+waitingUsers.push(socket.id)
 
-    });
+socket.emit("waiting")
 
+}
 
-    // Send message
-    socket.on("message", (msg) => {
+}
 
-        if (socket.partner) {
+/* =========================================
+   START CHAT
+========================================= */
 
-            socket.partner.emit("message", msg);
+socket.on("startChat",()=>{
 
-        }
+findStranger()
 
-    });
+})
 
+/* =========================================
+   MESSAGE
+========================================= */
 
-    // Typing indicator
-    socket.on("typing", () => {
+socket.on("message",(msg)=>{
 
-        if (socket.partner) {
+if(socket.partner){
 
-            socket.partner.emit("typing");
+const partner = io.sockets.sockets.get(socket.partner)
 
-        }
+if(partner){
+partner.emit("message",msg)
+}
 
-    });
+}
 
+})
 
-    // Stop typing
-    socket.on("stopTyping", () => {
+/* =========================================
+   TYPING
+========================================= */
 
-        if (socket.partner) {
+socket.on("typing",()=>{
 
-            socket.partner.emit("stopTyping");
+if(socket.partner){
 
-        }
+const partner = io.sockets.sockets.get(socket.partner)
 
-    });
+if(partner){
+partner.emit("typing")
+}
 
+}
 
-    // Next stranger
-    socket.on("next", () => {
+})
 
-        if (socket.partner) {
+socket.on("stopTyping",()=>{
 
-            socket.partner.emit("strangerDisconnected");
+if(socket.partner){
 
-            socket.partner.partner = null;
+const partner = io.sockets.sockets.get(socket.partner)
 
-        }
+if(partner){
+partner.emit("stopTyping")
+}
 
-        socket.partner = null;
+}
 
-        findStranger();
+})
 
-    });
+/* =========================================
+   WEBRTC SIGNALING
+========================================= */
 
+socket.on("offer",(offer)=>{
 
-    // Disconnect
-    socket.on("disconnect", () => {
+if(socket.partner){
 
-        console.log("User disconnected:", socket.id);
+const partner = io.sockets.sockets.get(socket.partner)
 
-        onlineUsers--;
+if(partner){
+partner.emit("offer",offer)
+}
 
-        io.emit("onlineUsers", onlineUsers);
+}
 
+})
 
-        if (socket.partner) {
+socket.on("answer",(answer)=>{
 
-            socket.partner.emit("strangerDisconnected");
+if(socket.partner){
 
-            socket.partner.partner = null;
+const partner = io.sockets.sockets.get(socket.partner)
 
-        }
+if(partner){
+partner.emit("answer",answer)
+}
 
+}
 
-        waitingUsers = waitingUsers.filter(user => user.id !== socket.id);
+})
 
-    });
+socket.on("ice",(candidate)=>{
 
-});
+if(socket.partner){
 
-};
+const partner = io.sockets.sockets.get(socket.partner)
 
-module.exports = socketHandler;
+if(partner){
+partner.emit("ice",candidate)
+}
+
+}
+
+})
+
+/* =========================================
+   NEXT STRANGER
+========================================= */
+
+socket.on("next",()=>{
+
+if(socket.partner){
+
+const partner = io.sockets.sockets.get(socket.partner)
+
+if(partner){
+
+partner.emit("strangerDisconnected")
+
+partner.partner = null
+
+}
+
+socket.partner = null
+
+}
+
+findStranger()
+
+})
+
+/* =========================================
+   DISCONNECT
+========================================= */
+
+socket.on("disconnect",()=>{
+
+console.log("User disconnected:",socket.id)
+
+onlineUsers = Math.max(0,onlineUsers - 1)
+
+io.emit("onlineUsers",onlineUsers)
+
+if(socket.partner){
+
+const partner = io.sockets.sockets.get(socket.partner)
+
+if(partner){
+
+partner.emit("strangerDisconnected")
+
+partner.partner = null
+
+}
+
+}
+
+waitingUsers = waitingUsers.filter(id => id !== socket.id)
+
+})
+
+})
+
+}
+
+module.exports = socketHandler
