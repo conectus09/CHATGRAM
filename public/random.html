@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CHATGRAM Random Chat</title>
+<title>CHATGRAM — Random Chat 🔥</title>
 
 <link rel="icon" href="favicon.ico">
 
 <script src="/socket.io/socket.io.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
@@ -21,355 +21,755 @@ GLOBAL RESET
 ===================================================== */
 
 *{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:"Poppins",sans-serif;
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+font-family: 'Poppins', sans-serif;
 }
 
-/* =====================================================
-BODY
-===================================================== */
-
-body{
-
-height:100vh;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-background:linear-gradient(135deg,#020617,#0f172a,#1e293b);
-
-color:white;
-
-overflow:hidden;
-
+html {
+scroll-behavior: smooth;
 }
 
-/* =====================================================
-ANIMATED BACKGROUND PARTICLES
-===================================================== */
-
-body::before{
-
-content:"";
-
-position:absolute;
-
-width:100%;
-height:100%;
-
-background-image:
-radial-gradient(circle at 20% 20%,#38bdf8 1px,transparent 1px),
-radial-gradient(circle at 80% 70%,#06b6d4 1px,transparent 1px);
-
-background-size:200px 200px;
-
-opacity:.15;
-
-animation:moveBg 40s linear infinite;
-
-}
-
-@keyframes moveBg{
-
-0%{transform:translate(0,0);}
-100%{transform:translate(-200px,-200px);}
-
-}
-
-/* =====================================================
-CHAT CONTAINER
-===================================================== */
-
-.chat-container{
-
-position:relative;
-
-width:95%;
-max-width:1100px;
-
-height:92vh;
-
-display:flex;
-flex-direction:column;
-
-background:rgba(255,255,255,0.05);
-
-border-radius:20px;
-
-backdrop-filter:blur(18px);
-
-border:1px solid rgba(255,255,255,0.1);
-
-box-shadow:0 0 40px rgba(0,0,0,0.6);
-
-overflow:hidden;
-
+body {
+background: linear-gradient(135deg, #f0f4f8 0%, #e8f1f8 100%);
+height: 100vh;
+display: flex;
+flex-direction: column;
+overflow: hidden;
 }
 
 /* =====================================================
 HEADER
 ===================================================== */
 
-.header{
-
-height:70px;
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-padding:0 25px;
-
-background:rgba(255,255,255,0.03);
-
-border-bottom:1px solid rgba(255,255,255,0.08);
-
+.header {
+height: 70px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0 30px;
+background: white;
+border-bottom: 2px solid rgba(30, 144, 255, 0.15);
+box-shadow: 0 2px 15px rgba(30, 144, 255, 0.1);
 }
 
-.logo{
-
-font-size:20px;
-font-weight:600;
-
-color:#00e5ff;
-
-letter-spacing:1px;
-
+.header-left {
+display: flex;
+align-items: center;
+gap: 15px;
 }
 
-.status{
-
-font-size:14px;
-color:#aaa;
-
+.logo {
+font-size: 26px;
+font-weight: 800;
+letter-spacing: 2px;
+background: linear-gradient(135deg, #1e90ff, #00bfff);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
 }
 
-.online{
+.logo-emoji {
+font-size: 28px;
+}
 
-font-size:14px;
+.header-stats {
+display: flex;
+gap: 30px;
+align-items: center;
+}
 
+.stat {
+display: flex;
+align-items: center;
+gap: 8px;
+font-size: 13px;
+color: #555;
+font-weight: 600;
+}
+
+.stat-dot {
+width: 10px;
+height: 10px;
+background: #22c55e;
+border-radius: 50%;
+animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.4; }
+}
+
+.stat-value {
+color: #1e90ff;
+font-weight: 700;
+font-size: 14px;
+}
+
+.header-right {
+display: flex;
+align-items: center;
+gap: 15px;
+}
+
+.info-btn {
+background: none;
+border: none;
+font-size: 18px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.info-btn:hover {
+transform: scale(1.1);
+}
+
+/* =====================================================
+MAIN LAYOUT
+===================================================== */
+
+.main {
+flex: 1;
+display: flex;
+max-width: 1300px;
+margin: 0 auto;
+width: 100%;
+gap: 20px;
+padding: 20px;
+overflow: hidden;
+}
+
+/* =====================================================
+SIDEBAR
+===================================================== */
+
+.sidebar {
+width: 300px;
+background: white;
+border-radius: 20px;
+padding: 25px;
+box-shadow: 0 4px 20px rgba(30, 144, 255, 0.08);
+border: 1px solid rgba(30, 144, 255, 0.1);
+overflow-y: auto;
+}
+
+.sidebar h3 {
+font-size: 18px;
+font-weight: 700;
+margin-bottom: 15px;
+color: #1e90ff;
+}
+
+.sidebar p {
+font-size: 14px;
+color: #666;
+line-height: 1.7;
+margin-bottom: 20px;
+}
+
+.sidebar-divider {
+height: 1px;
+background: rgba(30, 144, 255, 0.1);
+margin: 20px 0;
+}
+
+.sidebar-features {
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+.feature-item {
+display: flex;
+gap: 12px;
+align-items: flex-start;
+padding: 12px;
+background: rgba(30, 144, 255, 0.05);
+border-radius: 12px;
+transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+background: rgba(30, 144, 255, 0.1);
+}
+
+.feature-icon {
+font-size: 20px;
+}
+
+.feature-text {
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+
+.feature-text h4 {
+font-size: 13px;
+font-weight: 700;
+color: #1e90ff;
+}
+
+.feature-text p {
+font-size: 12px;
+color: #777;
+margin: 0;
+}
+
+.sidebar-stats {
+margin-top: 20px;
+padding: 15px;
+background: linear-gradient(135deg, rgba(30, 144, 255, 0.08), rgba(0, 191, 255, 0.08));
+border-radius: 14px;
+border: 1px solid rgba(30, 144, 255, 0.15);
+}
+
+.sidebar-stat-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 10px;
+font-size: 13px;
+}
+
+.sidebar-stat-item:last-child {
+margin-bottom: 0;
+}
+
+.sidebar-stat-label {
+color: #666;
+font-weight: 600;
+}
+
+.sidebar-stat-value {
+color: #1e90ff;
+font-weight: 700;
+font-size: 14px;
 }
 
 /* =====================================================
 CHAT AREA
 ===================================================== */
 
-.chat-box{
-
-flex:1;
-
-overflow-y:auto;
-
-padding:20px;
-
-display:flex;
-flex-direction:column;
-
-gap:12px;
-
-}
-
-/* MESSAGE */
-
-.message{
-
-padding:12px 14px;
-
-border-radius:12px;
-
-max-width:65%;
-
-font-size:14px;
-
-line-height:1.5;
-
-animation:fadeIn .25s ease;
-
-}
-
-/* YOU */
-
-.you{
-
-align-self:flex-end;
-
-background:linear-gradient(45deg,#00bfff,#00ffff);
-
-color:black;
-
-}
-
-/* STRANGER */
-
-.stranger{
-
-align-self:flex-start;
-
-background:rgba(255,255,255,0.1);
-
-}
-
-/* SYSTEM */
-
-.system{
-
-align-self:center;
-
-background:rgba(255,255,255,0.08);
-
-color:#aaa;
-
-font-size:13px;
-
+.chat-area {
+flex: 1;
+display: flex;
+flex-direction: column;
+background: white;
+border-radius: 20px;
+box-shadow: 0 4px 20px rgba(30, 144, 255, 0.08);
+border: 1px solid rgba(30, 144, 255, 0.1);
+overflow: hidden;
 }
 
 /* =====================================================
-ANIMATION
+WELCOME SCREEN
 ===================================================== */
 
-@keyframes fadeIn{
-
-from{
-opacity:0;
-transform:translateY(6px);
+.welcome {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+padding: 40px;
+text-align: center;
+gap: 20px;
 }
 
-to{
-opacity:1;
-transform:translateY(0);
+.welcome-icon {
+font-size: 80px;
+animation: float 3s ease-in-out infinite;
 }
 
+@keyframes float {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-20px); }
+}
+
+.welcome h1 {
+font-size: 32px;
+font-weight: 800;
+color: #1e90ff;
+margin-bottom: 10px;
+}
+
+.welcome p {
+color: #666;
+font-size: 16px;
+margin-bottom: 5px;
+max-width: 500px;
+}
+
+.welcome-subtitle {
+font-size: 14px;
+color: #999;
+margin-bottom: 30px;
+}
+
+.start-btn {
+background: linear-gradient(135deg, #1e90ff, #00bfff);
+color: white;
+border: none;
+padding: 16px 50px;
+border-radius: 14px;
+cursor: pointer;
+font-size: 16px;
+font-weight: 700;
+box-shadow: 0 8px 25px rgba(30, 144, 255, 0.3);
+transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.start-btn:hover {
+transform: translateY(-4px);
+box-shadow: 0 12px 35px rgba(30, 144, 255, 0.4);
+}
+
+.start-btn:active {
+transform: translateY(-2px);
 }
 
 /* =====================================================
-TYPING
+CHAT BOX
 ===================================================== */
 
-.typing{
+.chat-header {
+padding: 20px 25px;
+background: linear-gradient(135deg, rgba(30, 144, 255, 0.05), rgba(0, 191, 255, 0.05));
+border-bottom: 2px solid rgba(30, 144, 255, 0.1);
+display: none;
+align-items: center;
+justify-content: space-between;
+}
 
-height:25px;
+.chat-header.active {
+display: flex;
+}
 
-font-size:13px;
+.stranger-info {
+display: flex;
+align-items: center;
+gap: 15px;
+}
 
-color:#aaa;
+.stranger-avatar {
+width: 50px;
+height: 50px;
+border-radius: 50%;
+background: linear-gradient(135deg, #1e90ff, #00bfff);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 24px;
+font-weight: bold;
+color: white;
+box-shadow: 0 4px 15px rgba(30, 144, 255, 0.3);
+}
 
-padding-left:20px;
+.stranger-details h3 {
+font-size: 15px;
+font-weight: 700;
+color: #1e90ff;
+margin-bottom: 3px;
+}
 
-display:none;
+.stranger-status {
+font-size: 12px;
+color: #999;
+display: flex;
+align-items: center;
+gap: 6px;
+}
 
+.status-indicator {
+width: 8px;
+height: 8px;
+background: #22c55e;
+border-radius: 50%;
+animation: pulse 2s infinite;
+}
+
+.chat-actions {
+display: flex;
+gap: 10px;
+}
+
+.action-btn {
+background: none;
+border: 2px solid rgba(30, 144, 255, 0.2);
+color: #1e90ff;
+width: 40px;
+height: 40px;
+border-radius: 50%;
+cursor: pointer;
+font-size: 18px;
+transition: all 0.3s ease;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.action-btn:hover {
+background: rgba(30, 144, 255, 0.1);
+border-color: rgba(30, 144, 255, 0.4);
+transform: scale(1.08);
+}
+
+.action-btn.next {
+background: linear-gradient(135deg, #1e90ff, #00bfff);
+border: none;
+color: white;
+}
+
+.action-btn.next:hover {
+box-shadow: 0 6px 20px rgba(30, 144, 255, 0.3);
+}
+
+.chat-box {
+flex: 1;
+overflow-y: auto;
+padding: 25px;
+display: none;
+flex-direction: column;
+gap: 14px;
+}
+
+.chat-box.active {
+display: flex;
+}
+
+/* =====================================================
+MESSAGES
+===================================================== */
+
+.message {
+max-width: 70%;
+padding: 12px 18px;
+border-radius: 16px;
+font-size: 15px;
+line-height: 1.5;
+word-wrap: break-word;
+animation: messageSlide 0.3s ease-out;
+}
+
+@keyframes messageSlide {
+from {
+opacity: 0;
+transform: translateY(10px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.message.you {
+align-self: flex-end;
+background: linear-gradient(135deg, #1e90ff, #00bfff);
+color: white;
+border-bottom-right-radius: 4px;
+box-shadow: 0 4px 12px rgba(30, 144, 255, 0.25);
+}
+
+.message.stranger {
+align-self: flex-start;
+background: #f0f4f8;
+color: #333;
+border-bottom-left-radius: 4px;
+border: 1px solid rgba(30, 144, 255, 0.1);
+}
+
+.message.system {
+align-self: center;
+font-size: 13px;
+background: #f9f9f9;
+color: #999;
+border: 1px solid #eee;
+margin: 10px 0;
+padding: 8px 16px;
+}
+
+/* =====================================================
+TYPING INDICATOR
+===================================================== */
+
+.typing {
+height: 24px;
+font-size: 13px;
+color: #999;
+padding: 0 25px;
+display: none;
+align-items: center;
+gap: 6px;
+}
+
+.typing.active {
+display: flex;
+}
+
+.typing-dot {
+width: 6px;
+height: 6px;
+background: #1e90ff;
+border-radius: 50%;
+animation: typingBounce 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) {
+animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+0%, 60%, 100% { opacity: 0.3; }
+30% { opacity: 1; }
 }
 
 /* =====================================================
 INPUT AREA
 ===================================================== */
 
-.input-area{
-
-display:flex;
-
-gap:10px;
-
-padding:15px;
-
-border-top:1px solid rgba(255,255,255,0.08);
-
-background:rgba(255,255,255,0.03);
-
+.input-area {
+display: none;
+padding: 20px 25px;
+border-top: 2px solid rgba(30, 144, 255, 0.1);
+background: white;
+gap: 10px;
 }
 
-/* INPUT */
-
-.input-area input{
-
-flex:1;
-
-padding:12px;
-
-border:none;
-
-border-radius:10px;
-
-background:rgba(255,255,255,0.08);
-
-color:white;
-
-outline:none;
-
+.input-area.active {
+display: flex;
 }
 
-/* BUTTON */
-
-button{
-
-padding:10px 18px;
-
-border:none;
-
-border-radius:10px;
-
-cursor:pointer;
-
-font-weight:500;
-
-transition:.2s;
-
+.input-row {
+display: flex;
+gap: 12px;
+align-items: flex-end;
 }
 
-/* SEND */
-
-.send{
-
-background:#00ffff;
-
-color:black;
-
+.message-input-wrapper {
+flex: 1;
+display: flex;
+align-items: center;
+border: 2px solid rgba(30, 144, 255, 0.2);
+border-radius: 14px;
+background: #f8fafc;
+padding: 0 14px;
+transition: all 0.3s ease;
 }
 
-/* NEXT */
-
-.next{
-
-background:#ff3b3b;
-
-color:white;
-
+.message-input-wrapper:focus-within {
+border-color: #1e90ff;
+background: white;
+box-shadow: 0 0 0 3px rgba(30, 144, 255, 0.1);
 }
 
-button:hover{
+.message-input {
+flex: 1;
+padding: 12px 0;
+border: none;
+background: transparent;
+font-size: 15px;
+outline: none;
+font-family: 'Poppins', sans-serif;
+}
 
-transform:translateY(-2px);
+.message-input::placeholder {
+color: #999;
+}
 
+.emoji-btn {
+background: none;
+border: none;
+font-size: 18px;
+cursor: pointer;
+transition: all 0.3s ease;
+}
+
+.emoji-btn:hover {
+transform: scale(1.15);
+}
+
+.btn {
+padding: 12px 24px;
+border: none;
+border-radius: 12px;
+cursor: pointer;
+font-size: 14px;
+font-weight: 700;
+transition: all 0.3s ease;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.send {
+background: linear-gradient(135deg, #1e90ff, #00bfff);
+color: white;
+box-shadow: 0 4px 15px rgba(30, 144, 255, 0.25);
+}
+
+.send:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 20px rgba(30, 144, 255, 0.35);
+}
+
+.next {
+background: white;
+color: #ff6b6b;
+border: 2px solid #ff6b6b;
+}
+
+.next:hover {
+background: rgba(255, 107, 107, 0.1);
+transform: translateY(-2px);
+}
+
+/* =====================================================
+FOOTER
+===================================================== */
+
+.footer {
+height: 50px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 13px;
+background: white;
+border-top: 1px solid rgba(30, 144, 255, 0.1);
+color: #999;
 }
 
 /* =====================================================
 SCROLLBAR
 ===================================================== */
 
-.chat-box::-webkit-scrollbar{
-width:6px;
+.chat-box::-webkit-scrollbar {
+width: 6px;
 }
 
-.chat-box::-webkit-scrollbar-thumb{
-background:#00ffff;
-border-radius:10px;
+.chat-box::-webkit-scrollbar-track {
+background: transparent;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+background: rgba(30, 144, 255, 0.2);
+border-radius: 3px;
+}
+
+.chat-box::-webkit-scrollbar-thumb:hover {
+background: rgba(30, 144, 255, 0.4);
+}
+
+.sidebar::-webkit-scrollbar {
+width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+background: rgba(30, 144, 255, 0.15);
+border-radius: 3px;
 }
 
 /* =====================================================
-MOBILE
+RESPONSIVE
 ===================================================== */
 
-@media(max-width:700px){
+@media(max-width: 1200px) {
 
-.chat-container{
-height:100vh;
-border-radius:0;
+.sidebar {
+width: 260px;
 }
 
-.logo{
-font-size:18px;
+}
+
+@media(max-width: 900px) {
+
+.sidebar {
+display: none;
+}
+
+.main {
+gap: 0;
+}
+
+}
+
+@media(max-width: 640px) {
+
+.header {
+padding: 0 15px;
+height: 60px;
+}
+
+.header-stats {
+gap: 15px;
+}
+
+.stat {
+font-size: 12px;
+}
+
+.main {
+padding: 15px;
+}
+
+.chat-area {
+border-radius: 15px;
+}
+
+.welcome {
+padding: 30px 20px;
+}
+
+.welcome-icon {
+font-size: 60px;
+}
+
+.welcome h1 {
+font-size: 24px;
+}
+
+.welcome p {
+font-size: 14px;
+}
+
+.start-btn {
+padding: 14px 35px;
+font-size: 14px;
+}
+
+.chat-box {
+padding: 15px;
+}
+
+.message {
+max-width: 85%;
+font-size: 14px;
+padding: 10px 14px;
+}
+
+.input-area {
+padding: 15px;
+}
+
+.btn {
+padding: 10px 16px;
+font-size: 12px;
+}
+
+.action-btn {
+width: 36px;
+height: 36px;
+font-size: 16px;
 }
 
 }
@@ -380,221 +780,360 @@ font-size:18px;
 
 <body>
 
-<div class="chat-container">
-
-<!-- HEADER -->
+<!-- ===================================================
+HEADER
+=================================================== -->
 
 <div class="header">
 
-<div class="logo">CHATGRAM</div>
+<div class="header-left">
+<div class="logo">
+<span class="logo-emoji">💬</span>
+<span>CHATGRAM</span>
+</div>
+</div>
 
-<div class="status" id="status">Connecting...</div>
+<div class="header-stats">
+<div class="stat">
+<span class="stat-dot"></span>
+<span id="online">0</span>
+<span>online</span>
+</div>
+<div class="stat">
+<span id="chats">0</span>
+<span>chats today</span>
+</div>
+</div>
 
-<div class="online">👥 <span id="online">0</span></div>
+<div class="header-right">
+<button class="info-btn" title="Help">ℹ️</button>
+</div>
 
 </div>
 
-<!-- CHAT -->
+<!-- ===================================================
+MAIN
+=================================================== -->
 
-<div class="chat-box" id="chatBox">
+<div class="main">
 
-<div class="message system">
-Connecting to random stranger...
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h3>💬 Random Chat</h3>
+
+<p>
+Talk to strangers instantly without registration. Meet new people from around the world and enjoy meaningful random conversations.
+</p>
+
+<div class="sidebar-divider"></div>
+
+<div class="sidebar-features">
+
+<div class="feature-item">
+<div class="feature-icon">⚡</div>
+<div class="feature-text">
+<h4>Instant Connection</h4>
+<p>Get matched in seconds</p>
+</div>
+</div>
+
+<div class="feature-item">
+<div class="feature-icon">🔒</div>
+<div class="feature-text">
+<h4>100% Anonymous</h4>
+<p>Your privacy is protected</p>
+</div>
+</div>
+
+<div class="feature-item">
+<div class="feature-icon">🌍</div>
+<div class="feature-text">
+<h4>Global Community</h4>
+<p>Chat with people worldwide</p>
+</div>
 </div>
 
 </div>
+
+<div class="sidebar-stats">
+
+<div class="sidebar-stat-item">
+<span class="sidebar-stat-label">Users Online</span>
+<span class="sidebar-stat-value" id="sidebarOnline">0</span>
+</div>
+
+<div class="sidebar-stat-item">
+<span class="sidebar-stat-label">Messages Today</span>
+<span class="sidebar-stat-value">2.5M+</span>
+</div>
+
+<div class="sidebar-stat-item">
+<span class="sidebar-stat-label">Avg Response</span>
+<span class="sidebar-stat-value">&lt;1s</span>
+</div>
+
+</div>
+
+</div>
+
+<!-- CHAT AREA -->
+
+<div class="chat-area">
+
+<!-- WELCOME -->
+
+<div class="welcome" id="welcome">
+
+<div class="welcome-icon">💬</div>
+
+<h1>Random Chat</h1>
+
+<p>Connect with a random stranger and start a conversation</p>
+
+<p class="welcome-subtitle">No registration needed. Click below to begin.</p>
+
+<button class="start-btn" id="startBtn">
+Start Chatting 🔥
+</button>
+
+</div>
+
+<!-- CHAT HEADER -->
+
+<div class="chat-header" id="chatHeader">
+
+<div class="stranger-info">
+<div class="stranger-avatar" id="strangerAvatar">👤</div>
+<div class="stranger-details">
+<h3 id="strangerName">Stranger</h3>
+<div class="stranger-status">
+<span class="status-indicator"></span>
+<span>Online</span>
+</div>
+</div>
+</div>
+
+<div class="chat-actions">
+<button class="action-btn" title="Report">🚩</button>
+<button class="action-btn next" id="nextBtn" title="Next Stranger">⏭️</button>
+</div>
+
+</div>
+
+<!-- CHAT BOX -->
+
+<div class="chat-box" id="chatBox"></div>
 
 <div class="typing" id="typing">
-Stranger is typing...
+<span class="typing-dot"></span>
+<span class="typing-dot"></span>
+<span class="typing-dot"></span>
+<span>Stranger is typing...</span>
 </div>
 
-<!-- INPUT -->
+<!-- INPUT AREA -->
 
-<div class="input-area">
+<div class="input-area" id="inputArea">
 
+<div class="input-row">
+
+<div class="message-input-wrapper">
 <input
 type="text"
 id="messageInput"
+class="message-input"
 placeholder="Type a message..."
 autocomplete="off"
 />
+<button class="emoji-btn" title="Emojis">😊</button>
+</div>
 
-<button class="send" id="sendBtn">Send</button>
+<button class="btn send" id="sendBtn">Send</button>
 
-<button class="next" id="nextBtn">Next</button>
+<button class="btn next" id="nextBtn2">Skip</button>
 
 </div>
 
 </div>
+
+</div>
+
+</div>
+
+<!-- FOOTER -->
+
+<div class="footer">
+© 2026 CHATGRAM — Random Chat Platform
+</div>
+
+<!-- ===================================================
+JAVASCRIPT
+=================================================== -->
 
 <script>
 
-/* =====================================================
-SOCKET
-===================================================== */
+// =====================================================
+// SOCKET CONNECTION
+// =====================================================
 
 const socket = io();
 
-/* ELEMENTS */
+// =====================================================
+// DOM ELEMENTS
+// =====================================================
 
-const chatBox=document.getElementById("chatBox");
-const messageInput=document.getElementById("messageInput");
-const sendBtn=document.getElementById("sendBtn");
-const nextBtn=document.getElementById("nextBtn");
-const status=document.getElementById("status");
-const typing=document.getElementById("typing");
-const online=document.getElementById("online");
+const chatBox = document.getElementById('chatBox');
+const messageInput = document.getElementById('messageInput');
+const sendBtn = document.getElementById('sendBtn');
+const nextBtn = document.getElementById('nextBtn');
+const nextBtn2 = document.getElementById('nextBtn2');
+const typing = document.getElementById('typing');
+const onlineCount = document.getElementById('online');
+const sidebarOnline = document.getElementById('sidebarOnline');
+const startBtn = document.getElementById('startBtn');
+const welcome = document.getElementById('welcome');
+const inputArea = document.getElementById('inputArea');
+const chatHeader = document.getElementById('chatHeader');
+const strangerName = document.getElementById('strangerName');
+const strangerAvatar = document.getElementById('strangerAvatar');
 
-let typingTimeout;
+// =====================================================
+// STATE
+// =====================================================
 
-/* =====================================================
-MESSAGE FUNCTION
-===================================================== */
+let isConnected = false;
+const strangerNames = ['Alex', 'Jordan', 'Casey', 'Morgan', 'Riley', 'Taylor', 'Jamie', 'Avery', 'Quinn', 'Skylar'];
+const avatars = ['👨', '👩', '🧑', '👤', '🎭', '🎨'];
 
-function addMessage(text,type){
+// =====================================================
+// ADD MESSAGE
+// =====================================================
 
-const msg=document.createElement("div");
-
-msg.classList.add("message");
-msg.classList.add(type);
-
-msg.innerText=text;
-
+function addMessage(text, type) {
+const msg = document.createElement('div');
+msg.classList.add('message', type);
+msg.innerText = text;
 chatBox.appendChild(msg);
-
-chatBox.scrollTop=chatBox.scrollHeight;
-
+chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-/* =====================================================
-SOCKET EVENTS
-===================================================== */
+// =====================================================
+// GET NEW STRANGER
+// =====================================================
 
-socket.on("connect",()=>{
-
-status.innerText="Searching for stranger...";
-
-});
-
-socket.on("waiting",()=>{
-
-status.innerText="Waiting for stranger...";
-
-addMessage("Waiting for stranger...","system");
-
-});
-
-socket.on("matched",()=>{
-
-status.innerText="Connected with stranger";
-
-addMessage("You are now chatting with a stranger","system");
-
-});
-
-/* MESSAGE */
-
-socket.on("message",(msg)=>{
-
-typing.style.display="none";
-
-addMessage("Stranger: "+msg,"stranger");
-
-});
-
-/* TYPING */
-
-socket.on("typing",()=>{
-
-typing.style.display="block";
-
-});
-
-socket.on("stop-typing",()=>{
-
-typing.style.display="none";
-
-});
-
-/* DISCONNECT */
-
-socket.on("stranger-disconnected",()=>{
-
-status.innerText="Stranger disconnected";
-
-addMessage("Stranger disconnected","system");
-
-});
-
-/* ONLINE USERS */
-
-socket.on("online-users",(count)=>{
-
-online.innerText=count;
-
-});
-
-/* =====================================================
-SEND MESSAGE
-===================================================== */
-
-sendBtn.onclick=sendMessage;
-
-function sendMessage(){
-
-const msg=messageInput.value.trim();
-
-if(msg==="")return;
-
-addMessage("You: "+msg,"you");
-
-socket.emit("message",msg);
-
-messageInput.value="";
-
-socket.emit("stop-typing");
-
+function getNewStranger() {
+const name = strangerNames[Math.floor(Math.random() * strangerNames.length)];
+const avatar = avatars[Math.floor(Math.random() * avatars.length)];
+strangerName.innerText = name;
+strangerAvatar.innerText = avatar;
 }
 
-/* ENTER KEY */
+// =====================================================
+// START CHAT
+// =====================================================
 
-messageInput.addEventListener("keypress",(e)=>{
-
-if(e.key==="Enter")sendMessage();
-
-});
-
-/* TYPING */
-
-messageInput.addEventListener("input",()=>{
-
-socket.emit("typing");
-
-clearTimeout(typingTimeout);
-
-typingTimeout=setTimeout(()=>{
-
-socket.emit("stop-typing");
-
-},1000);
-
-});
-
-/* NEXT STRANGER */
-
-nextBtn.onclick=()=>{
-
-chatBox.innerHTML="";
-
-addMessage("Searching for new stranger...","system");
-
-status.innerText="Searching...";
-
-socket.emit("next");
-
+startBtn.onclick = () => {
+welcome.style.display = 'none';
+chatBox.classList.add('active');
+inputArea.classList.add('active');
+chatHeader.classList.add('active');
+isConnected = true;
+getNewStranger();
+chatBox.innerHTML = '';
+addMessage('Searching for a stranger...', 'system');
+socket.emit('start');
+setTimeout(() => messageInput.focus(), 100);
 };
+
+// =====================================================
+// SOCKET EVENTS
+// =====================================================
+
+socket.on('matched', () => {
+addMessage('You are now chatting with a stranger. Say hello! 👋', 'system');
+});
+
+socket.on('message', (msg) => {
+typing.classList.remove('active');
+addMessage(msg, 'stranger');
+});
+
+socket.on('typing', () => {
+typing.classList.add('active');
+});
+
+socket.on('stop-typing', () => {
+typing.classList.remove('active');
+});
+
+socket.on('online-users', (count) => {
+onlineCount.innerText = count;
+sidebarOnline.innerText = count;
+});
+
+socket.on('stranger-disconnected', () => {
+addMessage('Stranger disconnected. Click "Skip" to find a new one.', 'system');
+});
+
+socket.on('connect', () => {
+console.log('Connected to server');
+});
+
+// =====================================================
+// SEND MESSAGE
+// =====================================================
+
+sendBtn.onclick = sendMessage;
+
+function sendMessage() {
+const msg = messageInput.value.trim();
+if (msg === '') return;
+
+addMessage(msg, 'you');
+socket.emit('message', msg);
+messageInput.value = '';
+socket.emit('stop-typing');
+setTimeout(() => messageInput.focus(), 50);
+}
+
+messageInput.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') {
+e.preventDefault();
+sendMessage();
+}
+});
+
+messageInput.addEventListener('input', () => {
+socket.emit('typing');
+});
+
+// =====================================================
+// NEXT STRANGER
+// =====================================================
+
+nextBtn.onclick = skipStranger;
+nextBtn2.onclick = skipStranger;
+
+function skipStranger() {
+if (!isConnected) return;
+chatBox.innerHTML = '';
+addMessage('Searching for a new stranger...', 'system');
+getNewStranger();
+socket.emit('next');
+}
+
+// =====================================================
+// INIT
+// =====================================================
+
+window.addEventListener('load', () => {
+messageInput.focus();
+});
 
 </script>
 
 </body>
+
 </html>
