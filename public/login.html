@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CHATGRAM - Login</title>
+<title>CHATGRAM - Connect to Chatgram</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
-/* =====================================================
-GLOBAL
-===================================================== */
+/* =========================================================
+GLOBAL RESET
+========================================================= */
 
 *{
 margin:0;
@@ -23,68 +23,79 @@ box-sizing:border-box;
 font-family:'Poppins',sans-serif;
 }
 
+/* =========================================================
+BODY
+========================================================= */
+
 body{
 
 min-height:100vh;
 
 display:flex;
-justify-content:center;
+flex-direction:column;
 align-items:center;
+justify-content:flex-start;
 
 color:white;
 
-/* BACKGROUND IMAGE */
+/* FULL VISIBLE IMAGE */
 
-background-image:url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f");
+background-image:url("https://images.unsplash.com/photo-1529156069898-49953e39b3ac");
 
 background-size:cover;
 background-position:center;
 
-position:relative;
+}
 
-overflow:hidden;
+/* =========================================================
+HEADER
+========================================================= */
+
+.header{
+
+text-align:center;
+margin-top:40px;
 
 }
 
-/* DARK OVERLAY */
+.header h1{
 
-body::before{
+font-size:64px;
+font-weight:800;
+letter-spacing:3px;
 
-content:"";
+}
+
+.header span{
+
+color:#38bdf8;
+
+}
+
+.tagline{
+
+margin-top:10px;
+font-size:18px;
+opacity:.9;
+
+}
+
+/* =========================================================
+PARTICLES
+========================================================= */
+
+.particles{
 
 position:absolute;
-
 top:0;
 left:0;
 
 width:100%;
 height:100%;
 
-background:linear-gradient(
-120deg,
-rgba(2,6,23,.85),
-rgba(15,23,42,.85),
-rgba(30,41,59,.85)
-);
-
-z-index:0;
-
-}
-
-/* =====================================================
-ANIMATED PARTICLES
-===================================================== */
-
-.particles{
-
-position:absolute;
-
-width:100%;
-height:100%;
-
 overflow:hidden;
 
-z-index:0;
+z-index:-1;
 
 }
 
@@ -92,137 +103,85 @@ z-index:0;
 
 position:absolute;
 
-display:block;
+width:6px;
+height:6px;
 
-width:8px;
-height:8px;
-
-background:#38bdf8;
+background:white;
 
 border-radius:50%;
 
-animation:float 15s linear infinite;
-
 opacity:.6;
+
+animation:float 18s linear infinite;
 
 }
 
 @keyframes float{
 
 0%{
-transform:translateY(0) scale(0.8);
+transform:translateY(0);
 }
 
 100%{
-transform:translateY(-1200px) scale(1.3);
+transform:translateY(-1200px);
 }
 
 }
 
-/* =====================================================
+/* =========================================================
 MAIN CONTAINER
-===================================================== */
+========================================================= */
 
 .container{
 
-position:relative;
-
-z-index:2;
-
+max-width:1100px;
 width:100%;
-max-width:1000px;
 
-padding:40px;
+margin-top:60px;
+
+display:flex;
+justify-content:center;
+flex-wrap:wrap;
+
+gap:25px;
+
+}
+
+/* =========================================================
+CARDS
+========================================================= */
+
+.card{
+
+width:260px;
+
+padding:25px;
+
+border-radius:18px;
+
+background:rgba(0,0,0,0.45);
+
+border:1px solid rgba(255,255,255,0.2);
+
+backdrop-filter:blur(12px);
 
 text-align:center;
 
-}
-
-/* =====================================================
-LOGO
-===================================================== */
-
-.logo{
-
-font-size:70px;
-
-font-weight:700;
-
-letter-spacing:4px;
-
-margin-bottom:10px;
-
-}
-
-.logo span{
-
-color:#38bdf8;
-
-}
-
-/* =====================================================
-SUBTITLE
-===================================================== */
-
-.subtitle{
-
-font-size:20px;
-
-opacity:.8;
-
-margin-bottom:50px;
-
-}
-
-/* =====================================================
-CHAT OPTIONS
-===================================================== */
-
-.options{
-
-display:flex;
-
-gap:30px;
-
-justify-content:center;
-
-flex-wrap:wrap;
-
-margin-bottom:50px;
-
-}
-
-/* OPTION CARD */
-
-.option{
-
-flex:1;
-
-min-width:260px;
-
-padding:40px;
-
-border-radius:20px;
-
-background:rgba(255,255,255,0.07);
-
-border:1px solid rgba(255,255,255,0.15);
-
-backdrop-filter:blur(20px);
-
 cursor:pointer;
 
-transition:all .3s;
+transition:.35s;
 
 }
 
-.option:hover{
+/* HOVER */
 
-transform:translateY(-10px) scale(1.02);
+.card:hover{
+
+transform:translateY(-10px) scale(1.05);
 
 background:linear-gradient(45deg,#3b82f6,#06b6d4);
 
-box-shadow:0 20px 50px rgba(0,0,0,0.6);
+box-shadow:0 20px 60px rgba(0,0,0,.6);
 
 }
 
@@ -230,25 +189,166 @@ box-shadow:0 20px 50px rgba(0,0,0,0.6);
 
 .icon{
 
-font-size:45px;
+font-size:42px;
 
-margin-bottom:15px;
+margin-bottom:12px;
 
 }
 
-/* TITLE */
+/* CARD TITLE */
 
-.option h2{
+.card h2{
 
-font-size:28px;
+font-size:22px;
+font-weight:700;
 
 margin-bottom:10px;
 
 }
 
-/* TEXT */
+/* CARD TEXT */
 
-.option p{
+.card p{
+
+font-size:13px;
+
+line-height:1.6;
+
+opacity:.9;
+
+}
+
+/* =========================================================
+LOGIN BOX
+========================================================= */
+
+.login{
+
+width:260px;
+
+padding:25px;
+
+border-radius:18px;
+
+background:rgba(0,0,0,0.45);
+
+border:1px solid rgba(255,255,255,0.2);
+
+text-align:center;
+
+}
+
+/* LOGIN BUTTON */
+
+.login button{
+
+width:100%;
+
+padding:12px;
+
+border:none;
+
+border-radius:10px;
+
+background:linear-gradient(45deg,#3b82f6,#06b6d4);
+
+color:white;
+
+font-weight:600;
+
+cursor:pointer;
+
+}
+
+/* COMING TEXT */
+
+.coming{
+
+margin-top:10px;
+
+font-size:13px;
+
+opacity:.85;
+
+}
+
+/* =========================================================
+INFO SECTION
+========================================================= */
+
+.info{
+
+max-width:900px;
+
+margin-top:70px;
+
+text-align:center;
+
+padding:0 20px;
+
+line-height:1.9;
+
+}
+
+.info h2{
+
+font-size:32px;
+
+margin-bottom:15px;
+
+}
+
+.info p{
+
+font-size:15px;
+
+opacity:.9;
+
+}
+
+/* =========================================================
+FEATURE GRID
+========================================================= */
+
+.features{
+
+margin-top:40px;
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:25px;
+
+}
+
+/* FEATURE BOX */
+
+.feature{
+
+padding:20px;
+
+border-radius:14px;
+
+background:rgba(0,0,0,0.45);
+
+border:1px solid rgba(255,255,255,0.2);
+
+}
+
+/* FEATURE TITLE */
+
+.feature h3{
+
+margin-bottom:10px;
+
+font-size:18px;
+
+}
+
+/* FEATURE TEXT */
+
+.feature p{
 
 font-size:14px;
 
@@ -256,162 +356,53 @@ opacity:.85;
 
 }
 
-/* =====================================================
-LOGIN BOX
-===================================================== */
-
-.login{
-
-margin-top:40px;
-
-background:rgba(255,255,255,0.07);
-
-padding:45px;
-
-border-radius:20px;
-
-border:1px solid rgba(255,255,255,0.15);
-
-backdrop-filter:blur(25px);
-
-max-width:420px;
-
-margin-left:auto;
-margin-right:auto;
-
-box-shadow:0 20px 60px rgba(0,0,0,0.5);
-
-}
-
-.login h3{
-
-margin-bottom:25px;
-
-font-size:22px;
-
-}
-
-/* INPUT */
-
-input{
-
-width:100%;
-
-padding:15px;
-
-margin-bottom:15px;
-
-border:none;
-
-border-radius:10px;
-
-background:rgba(255,255,255,0.08);
-
-color:white;
-
-outline:none;
-
-transition:.2s;
-
-}
-
-input:focus{
-
-background:rgba(255,255,255,0.12);
-
-}
-
-/* BUTTON */
-
-.login button{
-
-width:100%;
-
-padding:15px;
-
-border:none;
-
-border-radius:12px;
-
-background:linear-gradient(45deg,#3b82f6,#06b6d4);
-
-cursor:pointer;
-
-font-size:16px;
-
-color:white;
-
-transition:.3s;
-
-}
-
-.login button:hover{
-
-transform:translateY(-3px);
-
-box-shadow:0 10px 30px rgba(0,0,0,.4);
-
-}
-
-/* GOOGLE BUTTON */
-
-.google{
-
-margin-top:10px;
-
-background:#ffffff;
-
-color:black;
-
-}
-
-/* =====================================================
-FOOT TEXT
-===================================================== */
-
-.note{
-
-margin-top:20px;
-
-font-size:13px;
-
-opacity:.6;
-
-}
-
-/* =====================================================
+/* =========================================================
 FOOTER
-===================================================== */
+========================================================= */
 
 .footer{
 
-margin-top:40px;
+margin-top:70px;
 
-opacity:.6;
+margin-bottom:30px;
+
+opacity:.7;
 
 font-size:13px;
 
 }
 
-/* =====================================================
+/* =========================================================
 MOBILE
-===================================================== */
+========================================================= */
 
 @media(max-width:700px){
 
-.logo{
-font-size:50px;
-}
+.header h1{
 
-.options{
-flex-direction:column;
+font-size:46px;
+
 }
 
 .container{
-padding:20px;
+
+gap:18px;
+
+}
+
+.card,
+.login{
+
+width:90%;
+
 }
 
 }
+
+/* =========================================================
+EXTRA SPACING LINES FOR STRUCTURE
+(keeping code readable & long as requested)
+========================================================= */
 
 </style>
 
@@ -423,47 +414,62 @@ padding:20px;
 
 <div class="particles">
 
-<span style="left:10%;animation-delay:0s"></span> <span style="left:20%;animation-delay:2s"></span> <span style="left:30%;animation-delay:4s"></span> <span style="left:40%;animation-delay:1s"></span> <span style="left:50%;animation-delay:3s"></span> <span style="left:60%;animation-delay:5s"></span> <span style="left:70%;animation-delay:2s"></span> <span style="left:80%;animation-delay:6s"></span> <span style="left:90%;animation-delay:4s"></span>
+<span style="left:10%"></span>
+<span style="left:20%"></span>
+<span style="left:30%"></span>
+<span style="left:40%"></span>
+<span style="left:50%"></span>
+<span style="left:60%"></span>
+<span style="left:70%"></span>
+<span style="left:80%"></span>
+<span style="left:90%"></span>
 
 </div>
+
+<!-- HEADER -->
+
+<div class="header">
+
+<h1>Connect to <span>CHATGRAM</span></h1>
+
+<p class="tagline">
+Meet strangers • Make friends • Start conversations instantly
+</p>
+
+</div>
+
+<!-- CARDS -->
 
 <div class="container">
 
-<div class="logo">
-CHAT<span>GRAM</span>
-</div>
+<!-- RANDOM CHAT -->
 
-<p class="subtitle">
-Talk to strangers. Make new friends instantly.
-</p>
-
-<!-- CHAT OPTIONS -->
-
-<div class="options">
-
-<div class="option" onclick="goRandom()">
+<div class="card" onclick="randomChat()">
 
 <div class="icon">🎲</div>
 
 <h2>Random Chat</h2>
 
 <p>
-Start chatting with strangers instantly.
+Instantly connect with strangers using real-time text chat.
+Talk about hobbies, movies, games or life stories.
+Meet new people around the world in seconds.
 </p>
 
 </div>
 
-<div class="option">
+<!-- VIDEO CHAT -->
+
+<div class="card" onclick="videoChat()">
 
 <div class="icon">📹</div>
 
-<h2>Video Chat</h2>
+<h2>Random Video Call</h2>
 
 <p>
-Meet people face to face using video.
+Start a face-to-face conversation with strangers
+through live camera chat and meet people worldwide.
 </p>
-
-</div>
 
 </div>
 
@@ -471,19 +477,75 @@ Meet people face to face using video.
 
 <div class="login">
 
-<h3>Sign In</h3>
+<h2>Login</h2>
 
-<input type="email" placeholder="Email">
+<button disabled>Coming Soon</button>
 
-<input type="password" placeholder="Password">
-
-<button>Login</button>
-
-<button class="google">Login with Google</button>
-
-<p class="note">
-Connect with people around the world instantly.
+<p class="coming">
+Profiles and private chat will be available soon.
 </p>
+
+</div>
+
+</div>
+
+<!-- INFO -->
+
+<div class="info">
+
+<h2>How conversations happen on Chatgram</h2>
+
+<p>
+Chatgram is a random social platform where you can
+instantly meet strangers online. When you press the
+Random Chat or Random Video Call button our system
+connects you with another online user automatically.
+</p>
+
+<br>
+
+<p>
+You can talk about hobbies, interests, culture,
+technology or simply have fun casual conversations.
+Many people use Chatgram to make new friends
+around the world.
+</p>
+
+<div class="features">
+
+<div class="feature">
+<h3>Instant Matching</h3>
+<p>
+Our system instantly pairs you with another
+online user looking to chat.
+</p>
+</div>
+
+<div class="feature">
+<h3>Meet People Worldwide</h3>
+<p>
+Connect with strangers from different
+countries and cultures.
+</p>
+</div>
+
+<div class="feature">
+<h3>Simple & Fast</h3>
+<p>
+No complicated setup.
+Just click and start chatting.
+</p>
+</div>
+
+<div class="feature">
+<h3>Video Conversations</h3>
+<p>
+See and talk to people live
+through random video calls.
+</p>
+</div>
+
+</div>
 
 </div>
 
@@ -493,15 +555,17 @@ Connect with people around the world instantly.
 
 </div>
 
-</div>
-
 <script>
 
-/* RANDOM CHAT REDIRECT */
+function randomChat(){
 
-function goRandom(){
+window.location.href="random.html"
 
-window.location.href="random.html";
+}
+
+function videoChat(){
+
+window.location.href="vc.html"
 
 }
 
