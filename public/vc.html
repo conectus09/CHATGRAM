@@ -4,141 +4,64 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<title>CHATGRAM • Random Video Chat</title>
+<title>CHATGRAM Video Chat</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
 
 <style>
 
-/* ------------------------------------------------ */
-/* GLOBAL RESET */
-/* ------------------------------------------------ */
-
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:'Poppins',sans-serif;
+font-family:Poppins;
 }
 
 body{
 
 height:100vh;
-width:100%;
-
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 
+background:#0f172a;
 color:white;
-overflow:hidden;
-
-background-image:url("https://images.unsplash.com/photo-1515378791036-0648a3ef77b2");
-background-size:cover;
-background-position:center;
 
 }
-
-/* DARK OVERLAY */
-
-body::before{
-
-content:"";
-position:absolute;
-
-top:0;
-left:0;
-
-width:100%;
-height:100%;
-
-background:rgba(0,0,0,0.65);
-z-index:-1;
-
-}
-
-/* ------------------------------------------------ */
-/* HEADER */
-/* ------------------------------------------------ */
 
 .header{
 
 position:absolute;
 top:20px;
-
-font-size:32px;
-font-weight:700;
-letter-spacing:2px;
+font-size:28px;
+font-weight:600;
 
 }
 
 .header span{
-
 color:#38bdf8;
-
 }
 
-/* ------------------------------------------------ */
-/* STATUS BAR */
-/* ------------------------------------------------ */
+.status{
 
-.status-bar{
-
-position:absolute;
-
-top:70px;
-
+margin-top:40px;
 font-size:14px;
-
-padding:6px 16px;
-
-border-radius:20px;
-
-background:rgba(255,255,255,0.1);
-
-backdrop-filter:blur(10px);
+opacity:.8;
 
 }
-
-.online{
-
-color:#4ade80;
-
-}
-
-.searching{
-
-color:#facc15;
-
-}
-
-.offline{
-
-color:#ef4444;
-
-}
-
-/* ------------------------------------------------ */
-/* VIDEO AREA */
-/* ------------------------------------------------ */
 
 .video-container{
 
 display:flex;
-gap:25px;
-
-margin-top:50px;
+gap:20px;
+margin-top:40px;
 
 }
-
-/* ------------------------------------------------ */
-/* VIDEO BOX */
-/* ------------------------------------------------ */
 
 .video-box{
 
@@ -146,113 +69,43 @@ width:420px;
 height:300px;
 
 background:black;
-
-border-radius:16px;
-
+border-radius:12px;
 overflow:hidden;
 
-position:relative;
-
-border:2px solid rgba(255,255,255,0.15);
-
-box-shadow:0 10px 30px rgba(0,0,0,0.6);
-
-transition:.3s;
+border:2px solid rgba(255,255,255,.1);
 
 }
-
-.video-box:hover{
-
-transform:scale(1.02);
-
-}
-
-/* ------------------------------------------------ */
-/* VIDEO ELEMENT */
-/* ------------------------------------------------ */
 
 video{
 
 width:100%;
 height:100%;
-
 object-fit:cover;
 
 }
 
-/* USER LABEL */
-
-.label{
-
-position:absolute;
-
-bottom:10px;
-left:10px;
-
-background:rgba(0,0,0,0.5);
-
-padding:4px 10px;
-
-border-radius:6px;
-
-font-size:13px;
-
-}
-
-/* ------------------------------------------------ */
-/* CONTROLS */
-/* ------------------------------------------------ */
-
 .controls{
 
-margin-top:35px;
-
+margin-top:30px;
 display:flex;
-gap:18px;
+gap:15px;
 
 }
-
-/* BUTTON BASE */
 
 button{
 
-padding:14px 22px;
-
+padding:12px 20px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 
-font-size:16px;
+font-size:15px;
 
 cursor:pointer;
 
 background:#38bdf8;
-
 color:white;
 
-transition:.25s;
-
-font-weight:500;
-
 }
-
-/* BUTTON HOVER */
-
-button:hover{
-
-background:#0ea5e9;
-transform:translateY(-2px);
-
-}
-
-/* BUTTON ACTIVE */
-
-button:active{
-
-transform:scale(.95);
-
-}
-
-/* NEXT BUTTON */
 
 .next{
 
@@ -260,75 +113,11 @@ background:#6366f1;
 
 }
 
-.next:hover{
-
-background:#4f46e5;
-
-}
-
-/* END BUTTON */
-
 .end{
 
 background:#ef4444;
 
 }
-
-.end:hover{
-
-background:#dc2626;
-
-}
-
-/* ------------------------------------------------ */
-/* FOOTER */
-/* ------------------------------------------------ */
-
-.footer{
-
-position:absolute;
-
-bottom:20px;
-
-font-size:13px;
-
-opacity:.8;
-
-}
-
-/* ------------------------------------------------ */
-/* MOBILE RESPONSIVE */
-/* ------------------------------------------------ */
-
-@media(max-width:900px){
-
-.video-container{
-
-flex-direction:column;
-
-align-items:center;
-
-}
-
-.video-box{
-
-width:90vw;
-height:260px;
-
-}
-
-.controls{
-
-flex-wrap:wrap;
-justify-content:center;
-
-}
-
-}
-
-/* ------------------------------------------------ */
-/* LOADING SCREEN */
-/* ------------------------------------------------ */
 
 .loader{
 
@@ -340,40 +129,51 @@ left:0;
 width:100%;
 height:100%;
 
-display:flex;
+display:none;
 
 align-items:center;
 justify-content:center;
 
-background:rgba(0,0,0,0.85);
-
-flex-direction:column;
+background:#000;
 
 z-index:10;
+
+flex-direction:column;
 
 }
 
 .spinner{
 
-width:60px;
-height:60px;
+width:50px;
+height:50px;
 
-border:6px solid rgba(255,255,255,0.2);
-
-border-top:6px solid #38bdf8;
+border:5px solid rgba(255,255,255,.2);
+border-top:5px solid #38bdf8;
 
 border-radius:50%;
 
 animation:spin 1s linear infinite;
 
-margin-bottom:20px;
+margin-bottom:15px;
 
 }
 
 @keyframes spin{
 
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
+0%{transform:rotate(0deg)}
+100%{transform:rotate(360deg)}
+
+}
+
+@media(max-width:900px){
+
+.video-container{
+flex-direction:column;
+}
+
+.video-box{
+width:90vw;
+}
 
 }
 
@@ -383,272 +183,254 @@ margin-bottom:20px;
 
 <body>
 
-<!-- LOADING -->
-
 <div class="loader" id="loader">
 
 <div class="spinner"></div>
-<p>Connecting Camera...</p>
+<p>Starting camera...</p>
 
 </div>
-
-<!-- HEADER -->
 
 <div class="header">
 CHAT<span>GRAM</span>
 </div>
 
-<!-- STATUS -->
-
-<div class="status-bar" id="status">
-Status: <span class="offline">Offline</span>
+<div class="status" id="status">
+Status: Offline
 </div>
-
-<!-- VIDEO AREA -->
 
 <div class="video-container">
 
 <div class="video-box">
-
 <video id="localVideo" autoplay muted></video>
-
-<div class="label">You</div>
-
 </div>
 
 <div class="video-box">
-
 <video id="remoteVideo" autoplay></video>
-
-<div class="label">Stranger</div>
-
 </div>
 
 </div>
-
-<!-- CONTROLS -->
 
 <div class="controls">
 
-<button onclick="startMatch()">Start</button>
-
-<button class="next" onclick="nextUser()">Next</button>
-
-<button class="end" onclick="endCall()">End</button>
-
-</div>
-
-<!-- FOOTER -->
-
-<div class="footer">
-
-CHATGRAM Random Video Chat • Stay Respectful
+<button id="startBtn">Start</button>
+<button class="next" id="nextBtn">Next</button>
+<button class="end" id="endBtn">End</button>
 
 </div>
 
 <script>
 
-/* ------------------------------------------------ */
-/* SOCKET CONNECTION */
-/* ------------------------------------------------ */
+/* SOCKET */
 
-const socket = io();
+const socket = io(window.location.origin)
 
-/* ------------------------------------------------ */
 /* VARIABLES */
-/* ------------------------------------------------ */
 
-let localStream;
-let peerConnection;
+let localStream
+let peerConnection
 
-const localVideo=document.getElementById("localVideo");
-const remoteVideo=document.getElementById("remoteVideo");
+const localVideo = document.getElementById("localVideo")
+const remoteVideo = document.getElementById("remoteVideo")
 
-const loader=document.getElementById("loader");
-const status=document.getElementById("status");
+const loader = document.getElementById("loader")
+const status = document.getElementById("status")
 
-/* ------------------------------------------------ */
+const startBtn = document.getElementById("startBtn")
+const nextBtn = document.getElementById("nextBtn")
+const endBtn = document.getElementById("endBtn")
+
 /* ICE SERVERS */
-/* ------------------------------------------------ */
 
-const servers={
+const config = {
 
 iceServers:[
 {urls:"stun:stun.l.google.com:19302"}
 ]
 
-};
+}
 
-/* ------------------------------------------------ */
-/* CAMERA START */
-/* ------------------------------------------------ */
+/* START CAMERA */
 
 async function startCamera(){
 
+loader.style.display="flex"
+
 try{
 
-localStream=await navigator.mediaDevices.getUserMedia({
+localStream = await navigator.mediaDevices.getUserMedia({
 video:true,
 audio:true
-});
+})
 
-localVideo.srcObject=localStream;
+localVideo.srcObject = localStream
 
-loader.style.display="none";
+loader.style.display="none"
 
-status.innerHTML='Status: <span class="searching">Searching...</span>';
+}catch(err){
 
-}catch(e){
+loader.style.display="none"
 
-alert("Camera access denied");
-
-}
+alert("Camera error: " + err.message)
 
 }
 
-/* ------------------------------------------------ */
+}
+
 /* START MATCH */
-/* ------------------------------------------------ */
 
-async function startMatch(){
+startBtn.onclick = async ()=>{
 
-await startCamera();
+await startCamera()
 
-socket.emit("join-video");
+socket.emit("startChat")
+
+status.innerHTML="Searching stranger..."
 
 }
 
-/* ------------------------------------------------ */
 /* MATCHED */
-/* ------------------------------------------------ */
 
-socket.on("matched",async()=>{
+socket.on("connected", async ()=>{
 
-status.innerHTML='Status: <span class="online">Connected</span>';
+status.innerHTML="Connected"
 
-peerConnection=new RTCPeerConnection(servers);
-
-/* SEND STREAM */
+peerConnection = new RTCPeerConnection(config)
 
 localStream.getTracks().forEach(track=>{
-peerConnection.addTrack(track,localStream);
-});
+peerConnection.addTrack(track,localStream)
+})
 
-/* RECEIVE STREAM */
+peerConnection.ontrack = (event)=>{
+remoteVideo.srcObject = event.streams[0]
+}
 
-peerConnection.ontrack=(event)=>{
-remoteVideo.srcObject=event.streams[0];
-};
-
-/* ICE */
-
-peerConnection.onicecandidate=(event)=>{
+peerConnection.onicecandidate = (event)=>{
 
 if(event.candidate){
 
-socket.emit("ice",event.candidate);
+socket.emit("ice",event.candidate)
 
 }
 
-};
+}
+
+const offer = await peerConnection.createOffer()
+
+await peerConnection.setLocalDescription(offer)
+
+socket.emit("offer",offer)
+
+})
 
 /* OFFER */
 
-const offer=await peerConnection.createOffer();
+socket.on("offer", async (offer)=>{
 
-await peerConnection.setLocalDescription(offer);
-
-socket.emit("offer",offer);
-
-});
-
-/* ------------------------------------------------ */
-/* RECEIVE OFFER */
-/* ------------------------------------------------ */
-
-socket.on("offer",async(offer)=>{
-
-peerConnection=new RTCPeerConnection(servers);
+peerConnection = new RTCPeerConnection(config)
 
 localStream.getTracks().forEach(track=>{
-peerConnection.addTrack(track,localStream);
-});
+peerConnection.addTrack(track,localStream)
+})
 
-peerConnection.ontrack=(event)=>{
-remoteVideo.srcObject=event.streams[0];
-};
-
-peerConnection.onicecandidate=(event)=>{
-if(event.candidate){
-socket.emit("ice",event.candidate);
+peerConnection.ontrack = (event)=>{
+remoteVideo.srcObject = event.streams[0]
 }
-};
 
-await peerConnection.setRemoteDescription(offer);
+peerConnection.onicecandidate = (event)=>{
 
-const answer=await peerConnection.createAnswer();
+if(event.candidate){
 
-await peerConnection.setLocalDescription(answer);
+socket.emit("ice",event.candidate)
 
-socket.emit("answer",answer);
+}
 
-});
+}
 
-/* ------------------------------------------------ */
-/* RECEIVE ANSWER */
-/* ------------------------------------------------ */
+await peerConnection.setRemoteDescription(offer)
 
-socket.on("answer",async(answer)=>{
+const answer = await peerConnection.createAnswer()
 
-await peerConnection.setRemoteDescription(answer);
+await peerConnection.setLocalDescription(answer)
 
-});
+socket.emit("answer",answer)
 
-/* ------------------------------------------------ */
-/* ICE RECEIVE */
-/* ------------------------------------------------ */
+})
 
-socket.on("ice",async(candidate)=>{
+/* ANSWER */
+
+socket.on("answer", async (answer)=>{
+
+await peerConnection.setRemoteDescription(answer)
+
+})
+
+/* ICE */
+
+socket.on("ice", async (candidate)=>{
 
 try{
 
-await peerConnection.addIceCandidate(candidate);
+await peerConnection.addIceCandidate(candidate)
 
-}catch(e){}
+}catch{}
 
-});
+})
 
-/* ------------------------------------------------ */
-/* NEXT USER */
-/* ------------------------------------------------ */
+/* NEXT */
 
-function nextUser(){
+nextBtn.onclick = ()=>{
 
-endCall();
+endCall()
 
-socket.emit("next");
+socket.emit("next")
 
-status.innerHTML='Status: <span class="searching">Searching...</span>';
+status.innerHTML="Searching stranger..."
 
 }
 
-/* ------------------------------------------------ */
+/* END */
+
+endBtn.onclick = ()=>{
+
+endCall()
+
+socket.disconnect()
+
+status.innerHTML="Disconnected"
+
+}
+
+/* STRANGER LEFT */
+
+socket.on("strangerDisconnected",()=>{
+
+endCall()
+
+status.innerHTML="Stranger left"
+
+})
+
+/* WAITING */
+
+socket.on("waiting",()=>{
+
+status.innerHTML="Waiting for stranger..."
+
+})
+
 /* END CALL */
-/* ------------------------------------------------ */
 
 function endCall(){
 
 if(peerConnection){
 
-peerConnection.close();
+peerConnection.close()
 
-peerConnection=null;
+peerConnection = null
 
 }
 
-remoteVideo.srcObject=null;
-
-status.innerHTML='Status: <span class="offline">Disconnected</span>';
+remoteVideo.srcObject = null
 
 }
 
