@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -7,15 +6,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CHATGRAM Contact</title>
+<title>CHATGRAM — Contact & Partnerships</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 
-/* ===============================
+/* =====================================================
 GLOBAL
-=============================== */
+===================================================== */
 
 *{
 margin:0;
@@ -24,9 +23,13 @@ box-sizing:border-box;
 font-family:'Poppins',sans-serif;
 }
 
+html{
+scroll-behavior:smooth;
+}
+
 body{
 
-height:100vh;
+min-height:100vh;
 
 display:flex;
 
@@ -34,219 +37,333 @@ align-items:center;
 
 justify-content:center;
 
-color:white;
+padding:40px;
 
-overflow:hidden;
+background:linear-gradient(120deg,#e0f2fe,#ffffff,#e0f2fe);
 
-}
+background-size:400% 400%;
 
-/* ===============================
-BACKGROUND IMAGES
-=============================== */
+animation:bgmove 12s infinite alternate;
 
-.bg{
+color:#0f172a;
 
-position:fixed;
-
-width:100%;
-height:100%;
-
-display:flex;
-
-z-index:-2;
+overflow-x:hidden;
 
 }
 
-.bg div{
+/* =====================================================
+BACKGROUND ANIMATION
+===================================================== */
 
-flex:1;
+@keyframes bgmove{
 
-background-size:cover;
-
-background-position:center;
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 
 }
 
-/* left vertical image */
+/* =====================================================
+FLOATING GLOW ORBS
+===================================================== */
 
-.left{
-background-image:url("https://images.unsplash.com/photo-1494790108377-be9c29b29330");
-}
+.orb{
 
-/* right vertical image */
+position:absolute;
 
-.right{
-background-image:url("https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e");
-}
+width:350px;
 
-/* overlay */
+height:350px;
 
-.overlay{
+border-radius:50%;
 
-position:fixed;
+filter:blur(120px);
 
-width:100%;
-height:100%;
-
-background:rgba(0,0,0,0.65);
+opacity:.4;
 
 z-index:-1;
 
 }
 
-/* ===============================
-CONTACT CARD
-=============================== */
+.orb1{
 
-.card{
+background:#38bdf8;
 
-width:420px;
+top:10%;
 
-background:rgba(255,255,255,0.06);
-
-padding:40px;
-
-border-radius:20px;
-
-backdrop-filter:blur(20px);
-
-border:1px solid rgba(255,255,255,0.15);
-
-box-shadow:0 20px 60px rgba(0,0,0,0.7);
+left:10%;
 
 }
 
-/* ===============================
-LOGO
-=============================== */
+.orb2{
 
-.logo{
+background:#0ea5e9;
+
+bottom:10%;
+
+right:10%;
+
+}
+
+/* =====================================================
+MAIN CONTAINER
+===================================================== */
+
+.container{
+
+width:850px;
+
+max-width:95%;
+
+background:rgba(255,255,255,0.75);
+
+backdrop-filter:blur(18px);
+
+padding:70px;
+
+border-radius:20px;
+
+box-shadow:0 25px 80px rgba(0,0,0,0.1);
+
+border:1px solid rgba(255,255,255,0.6);
 
 text-align:center;
 
-font-size:28px;
+transition:.4s;
 
-font-weight:700;
+}
 
-margin-bottom:25px;
+/* hover glow */
+
+.container:hover{
+
+transform:translateY(-6px);
+
+box-shadow:0 35px 100px rgba(0,0,0,0.12);
+
+}
+
+/* =====================================================
+LOGO
+===================================================== */
+
+.logo{
+
+font-size:66px;
+
+font-weight:800;
+
+letter-spacing:3px;
+
+margin-bottom:12px;
 
 }
 
 .logo span{
+
 color:#38bdf8;
+
 }
 
-/* ===============================
-TEXT
-=============================== */
+/* =====================================================
+SUBTITLE
+===================================================== */
 
 .subtitle{
 
-text-align:center;
+font-size:18px;
 
-opacity:.85;
+color:#475569;
 
-margin-bottom:25px;
-
-}
-
-/* ===============================
-INPUTS
-=============================== */
-
-input,textarea{
-
-width:100%;
-
-padding:14px;
-
-margin-bottom:14px;
-
-border:none;
-
-border-radius:10px;
-
-background:rgba(255,255,255,0.1);
-
-color:white;
+margin-bottom:35px;
 
 }
 
-textarea{
-resize:none;
-height:110px;
-}
+/* =====================================================
+DESCRIPTION
+===================================================== */
 
-/* ===============================
-BUTTON
-=============================== */
-
-button{
-
-width:100%;
-
-padding:14px;
-
-border:none;
-
-border-radius:10px;
-
-background:linear-gradient(45deg,#3b82f6,#06b6d4);
-
-color:white;
-
-cursor:pointer;
+.description{
 
 font-size:15px;
+
+line-height:1.8;
+
+color:#475569;
+
+margin-bottom:50px;
+
+max-width:640px;
+
+margin-left:auto;
+margin-right:auto;
+
+}
+
+/* =====================================================
+CONTACT BOX
+===================================================== */
+
+.contact-box{
+
+background:#f0f9ff;
+
+padding:35px;
+
+border-radius:14px;
+
+border:1px solid #bae6fd;
+
+margin-bottom:40px;
 
 transition:.3s;
 
 }
 
-button:hover{
-transform:translateY(-3px);
+.contact-box:hover{
+
+transform:scale(1.02);
+
+box-shadow:0 20px 40px rgba(0,0,0,0.08);
+
 }
 
-/* ===============================
-CONTACT INFO
-=============================== */
+/* =====================================================
+CONTACT TITLE
+===================================================== */
 
-.info{
+.contact-title{
 
-margin-top:25px;
+font-size:22px;
+
+font-weight:600;
+
+margin-bottom:20px;
+
+}
+
+/* =====================================================
+EMAIL
+===================================================== */
+
+.email{
+
+font-size:20px;
+
+font-weight:600;
+
+color:#0284c7;
+
+text-decoration:none;
+
+transition:.3s;
+
+}
+
+.email:hover{
+
+color:#0369a1;
+
+}
+
+/* =====================================================
+SOCIAL SECTION
+===================================================== */
+
+.social{
+
+margin-top:35px;
+
+display:flex;
+
+justify-content:center;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+}
+
+/* social buttons */
+
+.social a{
+
+padding:10px 18px;
+
+border-radius:30px;
+
+background:#e0f2fe;
+
+text-decoration:none;
 
 font-size:14px;
 
-opacity:.8;
+color:#0369a1;
 
-text-align:center;
+transition:.3s;
+
+border:1px solid #bae6fd;
 
 }
 
-/* ===============================
+.social a:hover{
+
+background:#bae6fd;
+
+transform:translateY(-3px);
+
+}
+
+/* =====================================================
+DIVIDER
+===================================================== */
+
+.divider{
+
+width:100%;
+
+height:1px;
+
+background:#e2e8f0;
+
+margin:45px 0;
+
+}
+
+/* =====================================================
 FOOTER
-=============================== */
+===================================================== */
 
 .footer{
 
-margin-top:25px;
+font-size:14px;
 
-text-align:center;
-
-font-size:13px;
-
-opacity:.6;
+color:#64748b;
 
 }
 
-/* ===============================
-MOBILE
-=============================== */
+/* =====================================================
+RESPONSIVE
+===================================================== */
 
 @media(max-width:700px){
 
-.bg{
-flex-direction:column;
+.container{
+
+padding:45px;
+
+}
+
+.logo{
+
+font-size:48px;
+
+}
+
+.description{
+
+font-size:14px;
+
 }
 
 }
@@ -257,52 +374,63 @@ flex-direction:column;
 
 <body>
 
-<div class="bg">
-<div class="left"></div>
-<div class="right"></div>
-</div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
 
-<div class="overlay"></div>
-
-<div class="card">
+<div class="container">
 
 <div class="logo">
 CHAT<span>GRAM</span>
 </div>
 
 <p class="subtitle">
+Official Contact & Partnership Information
+</p>
 
-For Sponsorship, Partnerships or Queries
+<p class="description">
+
+CHATGRAM is a modern messaging platform designed to provide fast, secure, and reliable communication for people around the world.
+
+Inspired by the speed and simplicity of today's leading chat applications, CHATGRAM focuses on delivering a smooth, intuitive, and powerful messaging experience.
+
+Our mission is simple — to build a platform where individuals can connect instantly, share ideas, build communities, and communicate freely without limitations.
+
+Whether you're meeting new people, building friendships, or engaging with global communities, CHATGRAM aims to make conversations seamless, meaningful, and accessible to everyone.
+
+For business collaborations, partnerships, sponsorship opportunities, media inquiries, or professional communication, please contact us using the email below. We review all legitimate inquiries carefully and strive to respond as quickly as possible.
 
 </p>
 
-<form>
+<div class="contact-box">
 
-<input type="text" placeholder="Your Name">
+<div class="contact-title">
+Business Inquiries & Sponsorships
+</div>
 
-<input type="email" placeholder="Your Email">
+<a class="email" href="mailto:harsh01del@gmail.com">
+harsh01del@gmail.com
+</a>
 
-<textarea placeholder="Your Message"></textarea>
+<div class="social">
 
-<button type="submit">
-
-Send Message
-
-</button>
-
-</form>
-
-<div class="info">
-
-Sponsorship & Business Queries<br>
-
-📧 [harsh01del@gmail.com](mailto:harsh01del@gmail.com)
+<a href="#">Twitter</a>
+<a href="#">Instagram</a>
+<a href="#">LinkedIn</a>
+<a href="#">Discord</a>
 
 </div>
 
+</div>
+
+<div class="divider"></div>
+
 <div class="footer">
 
-© 2026 CHATGRAM
+© 2026 CHATGRAM  
+All Rights Reserved  
+
+<br><br>
+
 Design & Credits by Harsh
 
 </div>
