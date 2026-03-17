@@ -10,10 +10,7 @@
 
 <style>
 
-/* =====================================================
-RESET
-===================================================== */
-
+/* RESET */
 *{
 margin:0;
 padding:0;
@@ -21,354 +18,366 @@ box-sizing:border-box;
 }
 
 body{
-font-family: Arial, sans-serif;
-background:#eef4ff;
+font-family: 'Segoe UI', Roboto, sans-serif;
+background: #f5f7fa;
 height:100vh;
 display:flex;
 flex-direction:column;
+color:#333;
 }
 
-/* =====================================================
-TOP BAR
-===================================================== */
-
+/* TOP BAR */
 .top-bar{
-background:#2b6cb0;
-padding:15px;
+background:white;
+padding:15px 20px;
 display:flex;
-justify-content:flex-start;
 align-items:center;
-gap:10px;
-color:white;
-border-bottom:2px solid #1e4e8c;
+gap:15px;
+border-bottom:1px solid #e0e0e0;
+box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .top-bar h1{
-font-size:28px;
-font-weight:bold;
-margin-right:auto;
+font-size:24px;
+font-weight:700;
+color:#2563eb;
+margin:0;
+}
+
+.top-bar span{
+font-size:14px;
+color:#666;
+font-weight:500;
 }
 
 .top-bar input{
-padding:10px;
+padding:10px 14px;
+border:1px solid #e0e0e0;
 border-radius:6px;
-border:none;
-width:180px;
+outline:none;
+font-size:14px;
+width:200px;
+transition:0.2s;
+}
+
+.top-bar input:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 3px rgba(37,99,235,0.1);
 }
 
 .top-bar button{
 padding:10px 20px;
-background:#38a169;
+background:#2563eb;
 border:none;
 border-radius:6px;
 color:white;
-font-weight:bold;
 cursor:pointer;
+font-weight:600;
+font-size:14px;
+transition:0.2s;
 }
 
 .top-bar button:hover{
-background:#2f855a;
+background:#1d4ed8;
 }
 
-/* =====================================================
-MAIN CONTAINER (30% LEFT + 70% RIGHT)
-===================================================== */
-
-.main-container{
-display:flex;
+/* MAIN */
+.main{
 flex:1;
-}
-
-/* =====================================================
-LEFT SIDEBAR - ONLINE USERS (30%)
-===================================================== */
-
-.left-sidebar{
-width:30%;
-background:white;
-border-right:2px solid #ddd;
 display:flex;
-flex-direction:column;
+gap:0;
 overflow:hidden;
 }
 
-.sidebar-header{
-background:#e8f4ff;
+/* LEFT SIDEBAR */
+.left{
+width:280px;
+background:white;
+border-right:1px solid #e0e0e0;
+display:flex;
+flex-direction:column;
+}
+
+.left-header{
 padding:15px;
-border-bottom:2px solid #2b6cb0;
-text-align:center;
-color:#2b6cb0;
-font-weight:bold;
+font-size:13px;
+font-weight:600;
+color:#666;
+text-transform:uppercase;
+letter-spacing:0.5px;
+border-bottom:1px solid #f0f0f0;
+}
+
+.left-header strong{
+color:#2563eb;
 font-size:16px;
 }
 
-.online-users{
+.users{
 flex:1;
 overflow-y:auto;
-padding:10px;
+padding:8px;
+display:flex;
+flex-direction:column;
+gap:4px;
 }
 
 .user-item{
 padding:12px;
-margin:8px 0;
-background:#f0f7ff;
-border-left:4px solid #38a169;
-border-radius:6px;
+border-radius:8px;
+cursor:pointer;
+transition:0.2s;
+border:1px solid transparent;
 display:flex;
 align-items:center;
 gap:10px;
-cursor:pointer;
-transition:0.3s;
+font-size:14px;
 }
 
 .user-item:hover{
-background:#e1f0ff;
-transform:translateX(5px);
+background:#f5f7fa;
+border-color:#e0e0e0;
 }
 
 .user-avatar{
-width:40px;
-height:40px;
+width:36px;
+height:36px;
 border-radius:50%;
-background:#2b6cb0;
+background:linear-gradient(135deg, #2563eb, #1d4ed8);
 color:white;
 display:flex;
 align-items:center;
 justify-content:center;
-font-weight:bold;
-}
-
-.user-info{
-flex:1;
+font-weight:700;
+flex-shrink:0;
 }
 
 .user-name{
-font-weight:bold;
+font-weight:500;
 color:#333;
-font-size:14px;
 }
 
 .user-status{
 font-size:12px;
-color:#888;
+color:#999;
 }
 
-.status-dot{
-width:8px;
-height:8px;
-border-radius:50%;
-background:#38a169;
-display:inline-block;
-}
-
-/* =====================================================
-RIGHT CHAT AREA (70%)
-===================================================== */
-
-.right-chat{
-width:70%;
-display:flex;
-flex-direction:column;
-background:white;
-overflow:hidden;
-}
-
-.chat-container{
-display:flex;
-flex-direction:column;
+/* RIGHT CHAT */
+.right{
 flex:1;
-background:white;
-overflow:hidden;
+display:flex;
+flex-direction:column;
+background:#fafbfc;
 }
 
+/* CHAT BOX */
 .chat{
 flex:1;
 overflow-y:auto;
-padding:15px;
+padding:20px;
 display:flex;
 flex-direction:column;
-gap:10px;
+gap:12px;
 }
 
+.chat::-webkit-scrollbar{
+width:6px;
+}
+
+.chat::-webkit-scrollbar-track{
+background:#f5f7fa;
+}
+
+.chat::-webkit-scrollbar-thumb{
+background:#ccc;
+border-radius:3px;
+}
+
+.chat::-webkit-scrollbar-thumb:hover{
+background:#999;
+}
+
+/* MESSAGE */
 .msg{
-margin:6px 0;
-font-size:14px;
 display:flex;
-animation:fadeIn 0.3s ease;
+animation:slideIn 0.3s ease;
 }
 
 .you{
 justify-content:flex-end;
 }
 
-.you .msg-bubble{
-background:#bee3f8;
-color:#2b6cb0;
-}
-
 .stranger{
 justify-content:flex-start;
-}
-
-.stranger .msg-bubble{
-background:#edf2f7;
-color:#333;
 }
 
 .system{
 justify-content:center;
 }
 
-.system .msg-bubble{
-background:#f0f0f0;
-color:#888;
-font-size:12px;
-text-align:center;
-}
-
-.msg-bubble{
-display:inline-block;
-padding:10px 14px;
+.bubble{
+padding:12px 16px;
 border-radius:12px;
-max-width:60%;
+max-width:65%;
+font-size:14px;
+line-height:1.4;
 word-wrap:break-word;
 }
 
-/* =====================================================
-INPUT
-===================================================== */
-
-.input-area{
-display:flex;
-border-top:2px solid #ddd;
+.you .bubble{
+background:#2563eb;
+color:white;
+border-radius:12px 0 12px 12px;
 }
 
-.input-area input{
-flex:1;
-padding:12px;
+.stranger .bubble{
+background:white;
+color:#333;
+border:1px solid #e0e0e0;
+border-radius:0 12px 12px 12px;
+}
+
+.system .bubble{
+background:transparent;
+color:#999;
+font-size:12px;
 border:none;
+}
+
+@keyframes slideIn{
+from{
+opacity:0;
+transform:translateY(8px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* INPUT */
+.input{
+display:flex;
+padding:15px;
+background:white;
+border-top:1px solid #e0e0e0;
+gap:8px;
+}
+
+.input input{
+flex:1;
+padding:12px 14px;
+border:1px solid #e0e0e0;
+border-radius:8px;
 outline:none;
 font-size:14px;
+transition:0.2s;
 }
 
-.input-area button{
-padding:12px 25px;
-background:#2b6cb0;
-color:white;
+.input input:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+}
+
+.input button{
+padding:12px 24px;
+background:#2563eb;
 border:none;
+border-radius:8px;
+color:white;
 cursor:pointer;
-font-weight:bold;
-transition:0.3s;
+font-weight:600;
+font-size:14px;
+transition:0.2s;
 }
 
-.input-area button:hover{
-background:#1e4e8c;
+.input button:hover{
+background:#1d4ed8;
 }
 
-.input-area button:active{
-transform:scale(0.95);
+.input button:active{
+transform:scale(0.98);
 }
 
-/* =====================================================
-BOTTOM BUTTONS
-===================================================== */
-
+/* BOTTOM BUTTONS */
 .bottom{
 display:flex;
-border-top:2px solid #ddd;
+gap:0;
+border-top:1px solid #e0e0e0;
+background:white;
 }
 
 .bottom button{
 flex:1;
 padding:14px;
 border:none;
-color:white;
-font-weight:bold;
 cursor:pointer;
-transition:0.3s;
+color:white;
+font-weight:600;
+font-size:13px;
+text-transform:uppercase;
+letter-spacing:0.5px;
+transition:0.2s;
+border-radius:0;
+}
+
+.bottom button:hover{
+opacity:0.9;
 }
 
 .bottom button:active{
-transform:scale(0.95);
+transform:scale(0.98);
 }
 
-.new{
-background:#3182ce;
-}
+.new{background:#2563eb;}
+.report{background:#dc2626;}
 
-.new:hover{
-background:#2b5aa0;
-}
-
-.photo{
-background:#2c7a7b;
-}
-
-.photo:hover{
-background:#235f60;
-}
-
-.report{
-background:#e53e3e;
-}
-
-.report:hover{
-background:#c53030;
-}
-
-/* =====================================================
-SCROLLBAR
-===================================================== */
-
-.chat::-webkit-scrollbar,
-.online-users::-webkit-scrollbar{
-width:6px;
-}
-
-.chat::-webkit-scrollbar-thumb,
-.online-users::-webkit-scrollbar-thumb{
-background:#90cdf4;
-border-radius:3px;
-}
-
-/* =====================================================
-ANIMATION
-===================================================== */
-
-@keyframes fadeIn{
-from{opacity:0; transform:translateY(5px);}
-to{opacity:1; transform:translateY(0);}
-}
-
-/* =====================================================
-RESPONSIVE (MOBILE)
-===================================================== */
-
+/* RESPONSIVE */
 @media(max-width:1024px){
-.main-container{
+.left{
+width:240px;
+}
+
+.bubble{
+max-width:75%;
+}
+}
+
+@media(max-width:768px){
+.main{
 flex-direction:column;
 }
 
-.left-sidebar{
+.left{
 width:100%;
-height:150px;
+height:140px;
 border-right:none;
-border-bottom:2px solid #ddd;
+border-bottom:1px solid #e0e0e0;
 }
 
-.right-chat{
-width:100%;
-flex:1;
-}
-
-.online-users{
+.users{
 flex-direction:row;
 overflow-x:auto;
+gap:8px;
 }
 
 .user-item{
 flex-shrink:0;
-min-width:120px;
+min-width:110px;
+flex-direction:column;
+text-align:center;
+}
+
+.right{
+flex:1;
+}
+
+.chat{
+padding:15px;
+}
+
+.bubble{
+max-width:80%;
 }
 }
 
@@ -380,15 +389,23 @@ gap:10px;
 
 .top-bar h1{
 font-size:20px;
-margin-right:0;
 }
 
-.top-bar input{
-width:100%;
-}
-
+.top-bar input,
 .top-bar button{
 width:100%;
+}
+
+.top-bar span{
+display:none;
+}
+
+.left-header{
+font-size:12px;
+}
+
+.bubble{
+max-width:90%;
 }
 }
 
@@ -398,52 +415,34 @@ width:100%;
 
 <body>
 
-<!-- =====================================================
-TOP BAR
-===================================================== -->
-
+<!-- TOP -->
 <div class="top-bar">
 <h1>CHATGRAM</h1>
-<span>Name:</span>
-<input type="text" id="name" value="Stranger">
-<button onclick="startChat()">START CHAT</button>
+<span id="myNameDisplay"></span>
+<input id="name" placeholder="Enter your name" value="Stranger">
+<button onclick="startChat()">Start Chat</button>
 </div>
 
-<!-- =====================================================
-MAIN CONTAINER (30% + 70%)
-===================================================== -->
+<div class="main">
 
-<div class="main-container">
-
-<!-- LEFT SIDEBAR - ONLINE USERS (30%) -->
-
-<div class="left-sidebar">
-<div class="sidebar-header">
-<span class="status-dot"></span> Online Users
-</div>
-<div class="online-users" id="online-users">
-<!-- Online users will be populated here -->
-</div>
+<!-- LEFT SIDEBAR -->
+<div class="left">
+<div class="left-header">Online Users <br><strong id="onlineCount">0</strong></div>
+<div class="users" id="users"></div>
 </div>
 
-<!-- RIGHT CHAT AREA (70%) -->
+<!-- RIGHT CHAT -->
+<div class="right">
 
-<div class="right-chat">
-
-<div class="chat-container">
 <div class="chat" id="chat"></div>
 
-<div class="input-area">
-<input type="text" id="msg" placeholder="Type Message Here">
-<button onclick="sendMsg()">SEND</button>
+<div class="input">
+<input id="msg" placeholder="Type your message..." autocomplete="off">
+<button onclick="sendMsg()">Send</button>
 </div>
-</div>
-
-<!-- BOTTOM BUTTONS -->
 
 <div class="bottom">
 <button class="new" onclick="next()">New Chat</button>
-<button class="photo">Req Photo</button>
 <button class="report">Report</button>
 </div>
 
@@ -451,119 +450,135 @@ MAIN CONTAINER (30% + 70%)
 
 </div>
 
-<!-- =====================================================
-JS
-===================================================== -->
-
 <script>
 
 const socket = io();
 
 let started = false;
-const onlineUsers = [];
+let isConnected = false;
+let myName = "";
 
-// START CHAT
-function startChat(){
-if(started) return;
+/* INIT */
+window.onload = () => {
+    myName = prompt("Enter your name") || "Stranger";
+    document.getElementById("name").value = myName;
+    document.getElementById("myNameDisplay").innerText = "👤 " + myName;
+};
 
-started = true;
-addMsg("Connecting to stranger...", "system");
-
-socket.emit("start");
-}
-
-// ADD MESSAGE
+/* ADD MESSAGE */
 function addMsg(text, type){
-const chat = document.getElementById("chat");
+    const chat = document.getElementById("chat");
 
-const div = document.createElement("div");
-div.className = "msg " + type;
+    const div = document.createElement("div");
+    div.className = "msg " + type;
 
-const bubble = document.createElement("div");
-bubble.className = "msg-bubble";
-bubble.innerText = text;
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerText = text;
 
-div.appendChild(bubble);
-chat.appendChild(div);
+    div.appendChild(bubble);
+    chat.appendChild(div);
 
-chat.scrollTop = chat.scrollHeight;
+    chat.scrollTop = chat.scrollHeight;
 }
 
-// SEND MESSAGE
+/* START */
+function startChat(){
+    if(started) return;
+
+    myName = document.getElementById("name").value || "Stranger";
+    document.getElementById("myNameDisplay").innerText = "👤 " + myName;
+
+    started = true;
+
+    addMsg("Connecting...","system");
+
+    socket.emit("join-video", {name: myName});
+}
+
+/* SEND */
 function sendMsg(){
-const input = document.getElementById("msg");
-const text = input.value.trim();
+    if(!isConnected) return;
 
-if(text === "") return;
+    const input = document.getElementById("msg");
+    const text = input.value.trim();
 
-addMsg(text, "you");
-socket.emit("message", text);
+    if(!text) return;
 
-input.value = "";
+    addMsg(text, "you");
+    socket.emit("message", text);
+
+    input.value = "";
+    input.focus();
 }
 
-// NEXT CHAT
+/* NEXT */
 function next(){
-addMsg("Finding new stranger...", "system");
-socket.emit("next");
+    addMsg("Finding new stranger...","system");
+    isConnected = false;
+    socket.emit("next");
 }
 
-// ENTER KEY
-document.getElementById("msg").addEventListener("keypress", (e)=>{
-if(e.key === "Enter") sendMsg();
+/* ENTER KEY */
+document.getElementById("msg").addEventListener("keypress", e => {
+    if(e.key === "Enter") sendMsg();
 });
 
-// SOCKET EVENTS
+/* SOCKET EVENTS */
 
-socket.on("matched", ()=>{
-addMsg("Connected with stranger", "system");
+socket.on("matched", () => {
+    isConnected = true;
+    addMsg("✓ Connected to stranger!", "system");
 });
 
-socket.on("message", (msg)=>{
-addMsg(msg, "stranger");
+socket.on("message", (msg) => {
+    addMsg(msg, "stranger");
 });
 
-socket.on("stranger-disconnected", ()=>{
-addMsg("Stranger disconnected", "system");
+socket.on("stranger-disconnected", () => {
+    isConnected = false;
+    addMsg("⚠ Stranger left chat", "system");
 });
 
-// ONLINE USERS
-socket.on("update-users", (users)=>{
-updateOnlineUsers(users);
+socket.on("waiting", () => {
+    addMsg("Waiting for someone...","system");
 });
 
-function updateOnlineUsers(users){
-const container = document.getElementById("online-users");
-container.innerHTML = "";
-
-users.forEach(user => {
-const userDiv = document.createElement("div");
-userDiv.className = "user-item";
-
-const avatar = document.createElement("div");
-avatar.className = "user-avatar";
-avatar.innerText = user.name.charAt(0).toUpperCase();
-
-const info = document.createElement("div");
-info.className = "user-info";
-
-const name = document.createElement("div");
-name.className = "user-name";
-name.innerText = user.name;
-
-const status = document.createElement("div");
-status.className = "user-status";
-status.innerHTML = '<span class="status-dot"></span> Online';
-
-info.appendChild(name);
-info.appendChild(status);
-
-userDiv.appendChild(avatar);
-userDiv.appendChild(info);
-
-container.appendChild(userDiv);
+socket.on("online-users", (count) => {
+    document.getElementById("onlineCount").innerText = count;
 });
-}
+
+socket.on("update-users", (users) => {
+    const usersContainer = document.getElementById("users");
+    usersContainer.innerHTML = "";
+
+    users.forEach(user => {
+        const userItem = document.createElement("div");
+        userItem.className = "user-item";
+
+        const avatar = document.createElement("div");
+        avatar.className = "user-avatar";
+        avatar.innerText = user.name.charAt(0).toUpperCase();
+
+        const info = document.createElement("div");
+        
+        const name = document.createElement("div");
+        name.className = "user-name";
+        name.innerText = user.name;
+
+        const status = document.createElement("div");
+        status.className = "user-status";
+        status.innerText = "online";
+
+        info.appendChild(name);
+        info.appendChild(status);
+
+        userItem.appendChild(avatar);
+        userItem.appendChild(info);
+
+        usersContainer.appendChild(userItem);
+    });
+});
 
 </script>
 
