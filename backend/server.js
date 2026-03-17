@@ -1,5 +1,5 @@
 /* =========================================
-   CHATGRAM RANDOM CHAT SERVER
+   CHATGRAM RANDOM CHAT SERVER (FINAL)
    ========================================= */
 
 const express = require("express")
@@ -47,8 +47,9 @@ app.get("/", (req, res) => {
    GLOBAL VARIABLES
    ========================================= */
 
-let waitingUser = null
-let users = {}
+let queue = []              // waiting users
+let users = {}              // active pairs
+let userList = []           // sidebar users
 let onlineUsers = 0
 
 /* =========================================
@@ -57,77 +58,108 @@ let onlineUsers = 0
 
 io.on("connection", (socket) => {
 
-    console.log("User connected:", socket.id)
+    console.log("🟢 User connected:", socket.id)
 
     /* =========================================
-       ONLINE USER COUNTER
+       ONLINE USERS
        ========================================= */
 
     onlineUsers++
+
+    const randomName = "User" + Math.floor(Math.random() * 1000)
+
+    userList.push({
+        id: socket.id,
+        name: randomName
+    })
+
     io.emit("online-users", onlineUsers)
+    io.emit("update-users", userList)
 
     /* =========================================
-       JOIN VIDEO CHAT
+       START / MATCH
        ========================================= */
 
-    socket.on("join-video", () => {
+    socket.on("start", () => {
 
-        console.log("Searching partner:", socket.id)
+        console.log("🔍 Searching:", socket.id)
 
-        if (waitingUser && waitingUser !== socket.id) {
+        // remove if already in queue
+        queue = queue.filter(id => id !== socket.id)
 
-            users[socket.id] = waitingUser
-            users[waitingUser] = socket.id
+        if (queue.length > 0) {
+
+            const partnerId = queue.shift()
+
+            users[socket.id] = partnerId
+            users[partnerId] = socket.id
 
             io.to(socket.id).emit("matched")
-            io.to(waitingUser).emit("matched")
+            io.to(partnerId).emit("matched")
 
-            waitingUser = null
+            console.log("✅ Matched:", socket.id, "<->", partnerId)
 
         } else {
 
-            waitingUser = socket.id
+            queue.push(socket.id)
             socket.emit("waiting")
 
+            console.log("⏳ Waiting:", socket.id)
         }
 
     })
 
     /* =========================================
-       TEXT MESSAGE
+       MESSAGE
        ========================================= */
 
     socket.on("message", (msg) => {
-
         const partner = users[socket.id]
-
         if (partner) {
             io.to(partner).emit("message", msg)
         }
-
     })
 
     /* =========================================
-       TYPING INDICATOR
+       TYPING
        ========================================= */
 
     socket.on("typing", () => {
-
         const partner = users[socket.id]
-
         if (partner) {
             io.to(partner).emit("typing")
         }
-
     })
 
     socket.on("stop-typing", () => {
+        const partner = users[socket.id]
+        if (partner) {
+            io.to(partner).emit("stop-typing")
+        }
+    })
+
+    /* =========================================
+       NEXT (SKIP)
+       ========================================= */
+
+    socket.on("next", () => {
 
         const partner = users[socket.id]
 
         if (partner) {
-            io.to(partner).emit("stop-typing")
+            io.to(partner).emit("stranger-disconnected")
+
+            delete users[partner]
+            delete users[socket.id]
         }
+
+        // remove from queue
+        queue = queue.filter(id => id !== socket.id)
+
+        // restart matching
+        setTimeout(() => {
+            socket.emit("start")
+        }, 100)
 
     })
 
@@ -136,74 +168,18 @@ io.on("connection", (socket) => {
        ========================================= */
 
     socket.on("offer", (offer) => {
-
         const partner = users[socket.id]
-
-        if (partner) {
-            io.to(partner).emit("offer", offer)
-        }
-
+        if (partner) io.to(partner).emit("offer", offer)
     })
 
     socket.on("answer", (answer) => {
-
         const partner = users[socket.id]
-
-        if (partner) {
-            io.to(partner).emit("answer", answer)
-        }
-
+        if (partner) io.to(partner).emit("answer", answer)
     })
 
     socket.on("ice", (candidate) => {
-
         const partner = users[socket.id]
-
-        if (partner) {
-            io.to(partner).emit("ice", candidate)
-        }
-
-    })
-
-    /* =========================================
-       NEXT STRANGER
-       ========================================= */
-
-    socket.on("next", () => {
-
-        const partner = users[socket.id]
-
-        if (partner) {
-
-            io.to(partner).emit("stranger-disconnected")
-
-            delete users[partner]
-            delete users[socket.id]
-
-        }
-
-        if (waitingUser === socket.id) {
-            waitingUser = null
-        }
-
-        // Start searching again
-        if (waitingUser && waitingUser !== socket.id) {
-
-            users[socket.id] = waitingUser
-            users[waitingUser] = socket.id
-
-            io.to(socket.id).emit("matched")
-            io.to(waitingUser).emit("matched")
-
-            waitingUser = null
-
-        } else {
-
-            waitingUser = socket.id
-            socket.emit("waiting")
-
-        }
-
+        if (partner) io.to(partner).emit("ice", candidate)
     })
 
     /* =========================================
@@ -212,25 +188,27 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
 
-        console.log("User disconnected:", socket.id)
+        console.log("🔴 User disconnected:", socket.id)
 
         onlineUsers = Math.max(0, onlineUsers - 1)
-        io.emit("online-users", onlineUsers)
 
         const partner = users[socket.id]
 
         if (partner) {
-
             io.to(partner).emit("stranger-disconnected")
 
             delete users[partner]
             delete users[socket.id]
-
         }
 
-        if (waitingUser === socket.id) {
-            waitingUser = null
-        }
+        // remove from queue
+        queue = queue.filter(id => id !== socket.id)
+
+        // remove from user list
+        userList = userList.filter(u => u.id !== socket.id)
+
+        io.emit("online-users", onlineUsers)
+        io.emit("update-users", userList)
 
     })
 
@@ -243,7 +221,5 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 10000
 
 server.listen(PORT, () => {
-
-    console.log("🚀 CHATGRAM server running on port:", PORT)
-
+    console.log("🚀 CHATGRAM running on port:", PORT)
 })
