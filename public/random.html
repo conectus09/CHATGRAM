@@ -1,662 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CHATGRAM — Random Chat</title>
+<title>CHATGRAM - Random Chat</title>
 
 <script src="/socket.io/socket.io.js"></script>
 
 <style>
 
 /* =====================================================
-GLOBAL RESET
+RESET
 ===================================================== */
 
-* {
-margin: 0;
-padding: 0;
-box-sizing: border-box;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 }
 
-body {
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-height: 100vh;
-display: flex;
-flex-direction: column;
-overflow: hidden;
+body{
+font-family: Arial, sans-serif;
+background:#eef4ff;
+height:100vh;
+display:flex;
+flex-direction:column;
 }
 
 /* =====================================================
-HEADER
+TOP BAR
 ===================================================== */
 
-.header {
-background: linear-gradient(90deg, #2d3561 0%, #1a1f35 100%);
-color: white;
-padding: 20px;
-text-align: center;
-font-size: 24px;
-font-weight: 700;
-letter-spacing: 2px;
-box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-border-bottom: 3px solid #667eea;
+.top-bar{
+background:#2b6cb0;
+padding:15px;
+display:flex;
+justify-content:flex-start;
+align-items:center;
+gap:10px;
+color:white;
+border-bottom:2px solid #1e4e8c;
+}
+
+.top-bar h1{
+font-size:28px;
+font-weight:bold;
+margin-right:auto;
+}
+
+.top-bar input{
+padding:10px;
+border-radius:6px;
+border:none;
+width:180px;
+}
+
+.top-bar button{
+padding:10px 20px;
+background:#38a169;
+border:none;
+border-radius:6px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.top-bar button:hover{
+background:#2f855a;
 }
 
 /* =====================================================
-MAIN CONTAINER
+MAIN CONTAINER (30% LEFT + 70% RIGHT)
 ===================================================== */
 
-.main-container {
-display: flex;
-flex: 1;
-overflow: hidden;
-gap: 0;
+.main-container{
+display:flex;
+flex:1;
 }
 
 /* =====================================================
-LEFT SECTION (70%)
+LEFT SIDEBAR - ONLINE USERS (30%)
 ===================================================== */
 
-.chat-section {
-flex: 7;
-display: flex;
-flex-direction: column;
-background: white;
-border-right: 3px solid #667eea;
+.left-sidebar{
+width:30%;
+background:white;
+border-right:2px solid #ddd;
+display:flex;
+flex-direction:column;
+overflow:hidden;
 }
 
-.top-bar {
-background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-color: white;
-padding: 15px 20px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.sidebar-header{
+background:#e8f4ff;
+padding:15px;
+border-bottom:2px solid #2b6cb0;
+text-align:center;
+color:#2b6cb0;
+font-weight:bold;
+font-size:16px;
 }
 
-.stranger-info {
-display: flex;
-align-items: center;
-gap: 15px;
+.online-users{
+flex:1;
+overflow-y:auto;
+padding:10px;
 }
 
-.stranger-avatar {
-width: 45px;
-height: 45px;
-border-radius: 50%;
-background: white;
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 22px;
-font-weight: bold;
-color: #667eea;
-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+.user-item{
+padding:12px;
+margin:8px 0;
+background:#f0f7ff;
+border-left:4px solid #38a169;
+border-radius:6px;
+display:flex;
+align-items:center;
+gap:10px;
+cursor:pointer;
+transition:0.3s;
 }
 
-.stranger-details h3 {
-margin: 0;
-font-size: 16px;
-font-weight: 700;
+.user-item:hover{
+background:#e1f0ff;
+transform:translateX(5px);
 }
 
-.stranger-status {
-font-size: 12px;
-opacity: 0.9;
-display: flex;
-align-items: center;
-gap: 6px;
+.user-avatar{
+width:40px;
+height:40px;
+border-radius:50%;
+background:#2b6cb0;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
 }
 
-.status-dot {
-width: 8px;
-height: 8px;
-background: #4ade80;
-border-radius: 50%;
-animation: pulse 2s infinite;
+.user-info{
+flex:1;
 }
 
-@keyframes pulse {
-0%, 100% { opacity: 1; }
-50% { opacity: 0.5; }
+.user-name{
+font-weight:bold;
+color:#333;
+font-size:14px;
 }
 
-.top-actions {
-display: flex;
-gap: 10px;
+.user-status{
+font-size:12px;
+color:#888;
 }
 
-.icon-btn {
-width: 36px;
-height: 36px;
-border: none;
-border-radius: 50%;
-background: rgba(255, 255, 255, 0.2);
-color: white;
-font-size: 18px;
-cursor: pointer;
-transition: all 0.3s ease;
-display: flex;
-align-items: center;
-justify-content: center;
-}
-
-.icon-btn:hover {
-background: rgba(255, 255, 255, 0.3);
-transform: scale(1.1);
-}
-
-.icon-btn.next {
-background: #ff6b6b;
-}
-
-.icon-btn.next:hover {
-background: #ff5252;
+.status-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:#38a169;
+display:inline-block;
 }
 
 /* =====================================================
-CHAT AREA
+RIGHT CHAT AREA (70%)
 ===================================================== */
 
-.chat-area {
-flex: 1;
-overflow-y: auto;
-padding: 20px;
-background: #f8f9fa;
-display: flex;
-flex-direction: column;
-gap: 12px;
+.right-chat{
+width:70%;
+display:flex;
+flex-direction:column;
+background:white;
+overflow:hidden;
 }
 
-.chat-area::-webkit-scrollbar {
-width: 8px;
+.chat-container{
+display:flex;
+flex-direction:column;
+flex:1;
+background:white;
+overflow:hidden;
 }
 
-.chat-area::-webkit-scrollbar-track {
-background: #f1f1f1;
+.chat{
+flex:1;
+overflow-y:auto;
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:10px;
 }
 
-.chat-area::-webkit-scrollbar-thumb {
-background: #667eea;
-border-radius: 4px;
+.msg{
+margin:6px 0;
+font-size:14px;
+display:flex;
+animation:fadeIn 0.3s ease;
 }
 
-.chat-area::-webkit-scrollbar-thumb:hover {
-background: #764ba2;
+.you{
+justify-content:flex-end;
 }
 
-.msg {
-display: flex;
-gap: 10px;
-animation: slideIn 0.3s ease-out;
+.you .msg-bubble{
+background:#bee3f8;
+color:#2b6cb0;
 }
 
-@keyframes slideIn {
-from {
-opacity: 0;
-transform: translateY(10px);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
+.stranger{
+justify-content:flex-start;
 }
 
-.msg.you {
-justify-content: flex-end;
+.stranger .msg-bubble{
+background:#edf2f7;
+color:#333;
 }
 
-.msg-bubble {
-max-width: 70%;
-padding: 12px 16px;
-border-radius: 16px;
-font-size: 15px;
-line-height: 1.5;
-word-wrap: break-word;
+.system{
+justify-content:center;
 }
 
-.msg.you .msg-bubble {
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-color: white;
-border-bottom-right-radius: 4px;
-box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+.system .msg-bubble{
+background:#f0f0f0;
+color:#888;
+font-size:12px;
+text-align:center;
 }
 
-.msg.stranger .msg-bubble {
-background: #e9ecef;
-color: #333;
-border-bottom-left-radius: 4px;
-}
-
-.msg.system .msg-bubble {
-background: #fff3cd;
-color: #856404;
-align-self: center;
-margin: 10px 0;
-font-size: 13px;
-}
-
-.empty-state {
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-height: 100%;
-color: #999;
-gap: 15px;
-text-align: center;
-}
-
-.empty-icon {
-font-size: 60px;
+.msg-bubble{
+display:inline-block;
+padding:10px 14px;
+border-radius:12px;
+max-width:60%;
+word-wrap:break-word;
 }
 
 /* =====================================================
-INPUT AREA
+INPUT
 ===================================================== */
 
-.input-area {
-display: flex;
-gap: 10px;
-padding: 15px 20px;
-background: white;
-border-top: 1px solid #e9ecef;
+.input-area{
+display:flex;
+border-top:2px solid #ddd;
 }
 
-.input-area input {
-flex: 1;
-padding: 14px 16px;
-border: 2px solid #e9ecef;
-border-radius: 24px;
-font-size: 15px;
-transition: all 0.3s ease;
-font-family: inherit;
+.input-area input{
+flex:1;
+padding:12px;
+border:none;
+outline:none;
+font-size:14px;
 }
 
-.input-area input:focus {
-outline: none;
-border-color: #667eea;
-box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+.input-area button{
+padding:12px 25px;
+background:#2b6cb0;
+color:white;
+border:none;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
 }
 
-.input-area input::placeholder {
-color: #aaa;
+.input-area button:hover{
+background:#1e4e8c;
 }
 
-#send {
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-color: white;
-border: none;
-padding: 12px 28px;
-border-radius: 24px;
-cursor: pointer;
-font-weight: 600;
-transition: all 0.3s ease;
-font-size: 14px;
-}
-
-#send:hover {
-transform: translateY(-2px);
-box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-}
-
-#send:active {
-transform: translateY(0);
+.input-area button:active{
+transform:scale(0.95);
 }
 
 /* =====================================================
 BOTTOM BUTTONS
 ===================================================== */
 
-.bottom-buttons {
-display: flex;
-border-top: 1px solid #e9ecef;
+.bottom{
+display:flex;
+border-top:2px solid #ddd;
 }
 
-.bottom-buttons button {
-flex: 1;
-padding: 16px;
-border: none;
-font-size: 14px;
-font-weight: 600;
-cursor: pointer;
-transition: all 0.3s ease;
-text-transform: uppercase;
-letter-spacing: 0.5px;
+.bottom button{
+flex:1;
+padding:14px;
+border:none;
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:0.3s;
 }
 
-.bottom-buttons button:hover {
-transform: translateY(-2px);
+.bottom button:active{
+transform:scale(0.95);
 }
 
-.new-chat {
-background: #667eea;
-color: white;
+.new{
+background:#3182ce;
 }
 
-.new-chat:hover {
-background: #5568d3;
-box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+.new:hover{
+background:#2b5aa0;
 }
 
-.request-photo {
-background: #f59e0b;
-color: white;
+.photo{
+background:#2c7a7b;
 }
 
-.request-photo:hover {
-background: #d97706;
+.photo:hover{
+background:#235f60;
 }
 
-.report {
-background: #ef4444;
-color: white;
+.report{
+background:#e53e3e;
 }
 
-.report:hover {
-background: #dc2626;
+.report:hover{
+background:#c53030;
 }
 
 /* =====================================================
-RIGHT SECTION (30%)
+SCROLLBAR
 ===================================================== */
 
-.info-section {
-flex: 3;
-background: linear-gradient(180deg, #2d3561 0%, #1a1f35 100%);
-color: white;
-padding: 20px;
-overflow-y: auto;
-display: flex;
-flex-direction: column;
-gap: 20px;
+.chat::-webkit-scrollbar,
+.online-users::-webkit-scrollbar{
+width:6px;
 }
 
-.info-section::-webkit-scrollbar {
-width: 6px;
-}
-
-.info-section::-webkit-scrollbar-track {
-background: transparent;
-}
-
-.info-section::-webkit-scrollbar-thumb {
-background: rgba(255, 255, 255, 0.2);
-border-radius: 3px;
-}
-
-.info-card {
-background: rgba(255, 255, 255, 0.08);
-padding: 16px;
-border-radius: 12px;
-border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.info-card h3 {
-font-size: 16px;
-font-weight: 700;
-margin-bottom: 12px;
-color: #667eea;
-}
-
-.info-card p {
-font-size: 14px;
-opacity: 0.8;
-line-height: 1.6;
-margin-bottom: 8px;
-}
-
-.info-card p:last-child {
-margin-bottom: 0;
-}
-
-.stat-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 10px;
-}
-
-.stat-item {
-background: rgba(102, 126, 234, 0.2);
-padding: 12px;
-border-radius: 10px;
-text-align: center;
-border: 1px solid rgba(102, 126, 234, 0.3);
-}
-
-.stat-label {
-font-size: 12px;
-opacity: 0.7;
-margin-bottom: 6px;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-}
-
-.stat-value {
-font-size: 20px;
-font-weight: 700;
-color: #667eea;
-}
-
-.user-list {
-display: flex;
-flex-direction: column;
-gap: 10px;
-}
-
-.user-item {
-background: rgba(255, 255, 255, 0.08);
-padding: 10px;
-border-radius: 8px;
-display: flex;
-align-items: center;
-gap: 10px;
-border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.user-avatar-small {
-width: 35px;
-height: 35px;
-border-radius: 50%;
-background: linear-gradient(135deg, #667eea, #764ba2);
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: 700;
-color: white;
-flex-shrink: 0;
-}
-
-.user-name {
-font-size: 13px;
-font-weight: 600;
-}
-
-.user-status {
-font-size: 11px;
-opacity: 0.6;
+.chat::-webkit-scrollbar-thumb,
+.online-users::-webkit-scrollbar-thumb{
+background:#90cdf4;
+border-radius:3px;
 }
 
 /* =====================================================
-START SCREEN
+ANIMATION
 ===================================================== */
 
-.start-screen {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.8);
-display: flex;
-align-items: center;
-justify-content: center;
-z-index: 100;
-}
-
-.start-box {
-background: white;
-padding: 40px;
-border-radius: 20px;
-text-align: center;
-max-width: 400px;
-box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-animation: slideInUp 0.5s ease-out;
-}
-
-@keyframes slideInUp {
-from {
-opacity: 0;
-transform: translateY(40px);
-}
-to {
-opacity: 1;
-transform: translateY(0);
-}
-}
-
-.start-box h1 {
-font-size: 28px;
-color: #2d3561;
-margin-bottom: 10px;
-}
-
-.start-box p {
-color: #666;
-font-size: 15px;
-margin-bottom: 30px;
-line-height: 1.6;
-}
-
-.start-btn {
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-color: white;
-border: none;
-padding: 16px 40px;
-border-radius: 24px;
-cursor: pointer;
-font-size: 16px;
-font-weight: 700;
-transition: all 0.3s ease;
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-
-.start-btn:hover {
-transform: translateY(-3px);
-box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+@keyframes fadeIn{
+from{opacity:0; transform:translateY(5px);}
+to{opacity:1; transform:translateY(0);}
 }
 
 /* =====================================================
-POPUP
+RESPONSIVE (MOBILE)
 ===================================================== */
 
-.popup {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background: rgba(0, 0, 0, 0.7);
-display: flex;
-align-items: center;
-justify-content: center;
-z-index: 200;
+@media(max-width:1024px){
+.main-container{
+flex-direction:column;
 }
 
-.popup-box {
-background: white;
-padding: 30px;
-border-radius: 16px;
-text-align: center;
-width: 320px;
-box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-animation: slideInUp 0.4s ease-out;
+.left-sidebar{
+width:100%;
+height:150px;
+border-right:none;
+border-bottom:2px solid #ddd;
 }
 
-.popup-box h2 {
-color: #2d3561;
-margin-bottom: 15px;
-font-size: 20px;
+.right-chat{
+width:100%;
+flex:1;
 }
 
-.popup-box p {
-color: #666;
-font-size: 14px;
-margin-bottom: 20px;
-line-height: 1.6;
+.online-users{
+flex-direction:row;
+overflow-x:auto;
 }
 
-.popup-btn {
-background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-color: white;
-border: none;
-padding: 12px 30px;
-border-radius: 20px;
-cursor: pointer;
-font-weight: 600;
-transition: all 0.3s ease;
+.user-item{
+flex-shrink:0;
+min-width:120px;
+}
 }
 
-.popup-btn:hover {
-transform: translateY(-2px);
-box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+@media(max-width:600px){
+.top-bar{
+flex-direction:column;
+gap:10px;
 }
 
-/* =====================================================
-RESPONSIVE
-===================================================== */
-
-@media (max-width: 1024px) {
-
-.info-section {
-display: none;
+.top-bar h1{
+font-size:20px;
+margin-right:0;
 }
 
-.chat-section {
-flex: 1;
+.top-bar input{
+width:100%;
 }
 
+.top-bar button{
+width:100%;
 }
-
-@media (max-width: 768px) {
-
-.header {
-font-size: 18px;
-padding: 15px;
-}
-
-.msg-bubble {
-max-width: 85%;
-font-size: 14px;
-padding: 10px 14px;
-}
-
-.bottom-buttons button {
-padding: 12px;
-font-size: 12px;
-}
-
-.input-area {
-padding: 12px 15px;
-gap: 8px;
-}
-
-.input-area input {
-padding: 12px 14px;
-font-size: 14px;
-}
-
-#send {
-padding: 10px 20px;
-font-size: 13px;
-}
-
 }
 
 </style>
@@ -666,127 +399,52 @@ font-size: 13px;
 <body>
 
 <!-- =====================================================
-HEADER
-=================================================== -->
-
-<div class="header">
-💬 CHATGRAM — Random Chat
-</div>
-
-<!-- =====================================================
-AGE VERIFICATION POPUP
-=================================================== -->
-
-<div class="popup" id="popup">
-<div class="popup-box">
-<h2>Age Verification</h2>
-<p>To continue, please confirm you are <strong>18 or older</strong></p>
-<button class="popup-btn" onclick="closePopup()">
-Yes, I'm 18 or Older
-</button>
-</div>
-</div>
-
-<!-- =====================================================
-START SCREEN
-=================================================== -->
-
-<div class="start-screen" id="startScreen">
-<div class="start-box">
-<h1>🔥 CHATGRAM</h1>
-<p>Connect with random strangers from around the world. No registration needed!</p>
-<button class="start-btn" onclick="startChat()">
-Start Chatting Now
-</button>
-</div>
-</div>
-
-<!-- =====================================================
-MAIN CONTAINER
-=================================================== -->
-
-<div class="main-container" id="mainContainer" style="display: none;">
-
-<!-- LEFT SECTION (70%) -->
-
-<div class="chat-section">
+TOP BAR
+===================================================== -->
 
 <div class="top-bar">
-<div class="stranger-info">
-<div class="stranger-avatar" id="strangerAvatar">👤</div>
-<div class="stranger-details">
-<h3 id="strangerName">Connecting...</h3>
-<div class="stranger-status">
-<span class="status-dot"></span>
-<span>Online</span>
+<h1>CHATGRAM</h1>
+<span>Name:</span>
+<input type="text" id="name" value="Stranger">
+<button onclick="startChat()">START CHAT</button>
 </div>
+
+<!-- =====================================================
+MAIN CONTAINER (30% + 70%)
+===================================================== -->
+
+<div class="main-container">
+
+<!-- LEFT SIDEBAR - ONLINE USERS (30%) -->
+
+<div class="left-sidebar">
+<div class="sidebar-header">
+<span class="status-dot"></span> Online Users
+</div>
+<div class="online-users" id="online-users">
+<!-- Online users will be populated here -->
 </div>
 </div>
 
-<div class="top-actions">
-<button class="icon-btn" title="Report">🚩</button>
-<button class="icon-btn next" id="nextBtn" title="Next Stranger">⏭️</button>
-</div>
-</div>
+<!-- RIGHT CHAT AREA (70%) -->
 
-<div class="chat-area" id="chat">
-<div class="empty-state">
-<div class="empty-icon">💬</div>
-<div>Searching for stranger...</div>
-</div>
-</div>
+<div class="right-chat">
+
+<div class="chat-container">
+<div class="chat" id="chat"></div>
 
 <div class="input-area">
-<input type="text" id="msg" placeholder="Type message...">
-<button id="send">SEND</button>
-</div>
-
-<div class="bottom-buttons">
-<button class="new-chat" id="nextBtn2">New Chat</button>
-<button class="request-photo">📸 Request Photo</button>
-<button class="report">🚩 Report</button>
-</div>
-
-</div>
-
-<!-- RIGHT SECTION (30%) -->
-
-<div class="info-section">
-
-<div class="info-card">
-<h3>📊 CHATGRAM Stats</h3>
-<div class="stat-grid">
-<div class="stat-item">
-<div class="stat-label">Online</div>
-<div class="stat-value" id="onlineCount">0</div>
-</div>
-<div class="stat-item">
-<div class="stat-label">Chats Today</div>
-<div class="stat-value" id="chatsCount">0</div>
-</div>
-<div class="stat-item">
-<div class="stat-label">Connected</div>
-<div class="stat-value" id="connectedCount">0</div>
-</div>
-<div class="stat-item">
-<div class="stat-label">Countries</div>
-<div class="stat-value">150+</div>
-</div>
+<input type="text" id="msg" placeholder="Type Message Here">
+<button onclick="sendMsg()">SEND</button>
 </div>
 </div>
 
-<div class="info-card">
-<h3>✨ Features</h3>
-<p>✅ Instant matching</p>
-<p>✅ 100% Anonymous</p>
-<p>✅ No registration</p>
-<p>✅ Safe & Secure</p>
-</div>
+<!-- BOTTOM BUTTONS -->
 
-<div class="info-card">
-<h3>👥 Active Users</h3>
-<div class="user-list" id="userList">
-</div>
+<div class="bottom">
+<button class="new" onclick="next()">New Chat</button>
+<button class="photo">Req Photo</button>
+<button class="report">Report</button>
 </div>
 
 </div>
@@ -794,175 +452,120 @@ MAIN CONTAINER
 </div>
 
 <!-- =====================================================
-JAVASCRIPT
-=================================================== -->
+JS
+===================================================== -->
 
 <script>
 
-// =====================================================
-// SOCKET CONNECTION
-// =====================================================
-
 const socket = io();
 
-// =====================================================
-// DOM ELEMENTS
-// =====================================================
+let started = false;
+const onlineUsers = [];
 
-const chat = document.getElementById('chat');
-const msgInput = document.getElementById('msg');
-const sendBtn = document.getElementById('send');
-const nextBtn = document.getElementById('nextBtn');
-const nextBtn2 = document.getElementById('nextBtn2');
-const startScreen = document.getElementById('startScreen');
-const mainContainer = document.getElementById('mainContainer');
-const popup = document.getElementById('popup');
-const strangerName = document.getElementById('strangerName');
-const strangerAvatar = document.getElementById('strangerAvatar');
-const onlineCount = document.getElementById('onlineCount');
-const chatsCount = document.getElementById('chatsCount');
-const connectedCount = document.getElementById('connectedCount');
-const userList = document.getElementById('userList');
+// START CHAT
+function startChat(){
+if(started) return;
 
-// =====================================================
-// STATE
-// =====================================================
+started = true;
+addMsg("Connecting to stranger...", "system");
 
-let connected = false;
-const strangerNames = ['Alex', 'Jordan', 'Casey', 'Morgan', 'Riley', 'Taylor', 'Jamie', 'Avery', 'Quinn', 'Skylar', 'Parker', 'Blake', 'Devon', 'Sage', 'Phoenix', 'River', 'Sky', 'Luna', 'Nova', 'Storm'];
-const avatarEmojis = ['👨', '👩', '🧑', '👤', '🎭', '🎨', '🎪', '🤖'];
-
-// =====================================================
-// FUNCTIONS
-// =====================================================
-
-function closePopup() {
-popup.style.display = 'none';
+socket.emit("start");
 }
 
-function startChat() {
-startScreen.style.display = 'none';
-mainContainer.style.display = 'flex';
-connected = true;
-chat.innerHTML = '';
-addMsg('Searching for stranger...', 'system');
-getNewStranger();
-socket.emit('start');
-setTimeout(() => msgInput.focus(), 100);
-}
+// ADD MESSAGE
+function addMsg(text, type){
+const chat = document.getElementById("chat");
 
-function getNewStranger() {
-const name = strangerNames[Math.floor(Math.random() * strangerNames.length)];
-const avatar = avatarEmojis[Math.floor(Math.random() * avatarEmojis.length)];
-strangerName.innerText = name;
-strangerAvatar.innerText = avatar;
-}
+const div = document.createElement("div");
+div.className = "msg " + type;
 
-function addMsg(text, type) {
-const msgDiv = document.createElement('div');
-msgDiv.className = 'msg ' + type;
-
-const bubble = document.createElement('div');
-bubble.className = 'msg-bubble';
-
-if (type === 'you') {
+const bubble = document.createElement("div");
+bubble.className = "msg-bubble";
 bubble.innerText = text;
-} else if (type === 'stranger') {
-bubble.innerText = text;
-} else if (type === 'system') {
-bubble.innerText = text;
-}
 
-msgDiv.appendChild(bubble);
-chat.appendChild(msgDiv);
+div.appendChild(bubble);
+chat.appendChild(div);
+
 chat.scrollTop = chat.scrollHeight;
 }
 
-function sendMessage() {
-const text = msgInput.value.trim();
-if (text === '') return;
+// SEND MESSAGE
+function sendMsg(){
+const input = document.getElementById("msg");
+const text = input.value.trim();
 
-addMsg(text, 'you');
-socket.emit('message', text);
-msgInput.value = '';
-msgInput.focus();
+if(text === "") return;
+
+addMsg(text, "you");
+socket.emit("message", text);
+
+input.value = "";
 }
 
-function skipStranger() {
-if (!connected) return;
-chat.innerHTML = '';
-addMsg('Searching for new stranger...', 'system');
-getNewStranger();
-socket.emit('next');
+// NEXT CHAT
+function next(){
+addMsg("Finding new stranger...", "system");
+socket.emit("next");
 }
 
-// =====================================================
-// EVENT LISTENERS
-// =====================================================
-
-sendBtn.onclick = sendMessage;
-
-msgInput.addEventListener('keypress', (e) => {
-if (e.key === 'Enter') {
-e.preventDefault();
-sendMessage();
-}
+// ENTER KEY
+document.getElementById("msg").addEventListener("keypress", (e)=>{
+if(e.key === "Enter") sendMsg();
 });
 
-nextBtn.onclick = skipStranger;
-nextBtn2.onclick = skipStranger;
-
-// =====================================================
 // SOCKET EVENTS
-// =====================================================
 
-socket.on('matched', () => {
-addMsg('✅ You are now chatting with a stranger. Say hello! 👋', 'system');
-});
-
-socket.on('message', (msg) => {
-addMsg(msg, 'stranger');
+socket.on("matched", ()=>{
+addMsg("Connected with stranger", "system");
 });
 
-socket.on('stranger-disconnected', () => {
-addMsg('❌ Stranger disconnected. Click "New Chat" to find another.', 'system');
-connected = false;
+socket.on("message", (msg)=>{
+addMsg(msg, "stranger");
 });
 
-socket.on('online-users', (count) => {
-onlineCount.innerText = count;
+socket.on("stranger-disconnected", ()=>{
+addMsg("Stranger disconnected", "system");
 });
 
-socket.on('chats-today', (count) => {
-chatsCount.innerText = count;
+// ONLINE USERS
+socket.on("update-users", (users)=>{
+updateOnlineUsers(users);
 });
 
-socket.on('connected-users', (count) => {
-connectedCount.innerText = count;
-});
+function updateOnlineUsers(users){
+const container = document.getElementById("online-users");
+container.innerHTML = "";
 
-socket.on('active-users', (users) => {
-userList.innerHTML = '';
-users.slice(0, 5).forEach(user => {
-const userItem = document.createElement('div');
-userItem.className = 'user-item';
-userItem.innerHTML = `
-<div class="user-avatar-small">${user.avatar}</div>
-<div>
-<div class="user-name">${user.name}</div>
-<div class="user-status">Online Now</div>
-</div>
-`;
-userList.appendChild(userItem);
-});
-});
+users.forEach(user => {
+const userDiv = document.createElement("div");
+userDiv.className = "user-item";
 
-socket.on('connect', () => {
-console.log('Connected to server');
+const avatar = document.createElement("div");
+avatar.className = "user-avatar";
+avatar.innerText = user.name.charAt(0).toUpperCase();
+
+const info = document.createElement("div");
+info.className = "user-info";
+
+const name = document.createElement("div");
+name.className = "user-name";
+name.innerText = user.name;
+
+const status = document.createElement("div");
+status.className = "user-status";
+status.innerHTML = '<span class="status-dot"></span> Online';
+
+info.appendChild(name);
+info.appendChild(status);
+
+userDiv.appendChild(avatar);
+userDiv.appendChild(info);
+
+container.appendChild(userDiv);
 });
+}
 
 </script>
 
 </body>
-
 </html>
