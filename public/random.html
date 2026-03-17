@@ -1103,28 +1103,6 @@ function simulateBotConversation(){
 
 }
 
-/* =========================================================
-ENGAGEMENT PROMPTS
-========================================================= */
-
-const prompts = [
-    "Ask them their favorite movie 🎬",
-    "Try asking where they are from 🌍",
-    "Share something interesting about yourself 😄",
-    "Ask a random question 🤔"
-];
-
-function showPrompt(){
-
-    if(!isConnected) return;
-
-    const random = prompts[Math.floor(Math.random()*prompts.length)];
-
-    addMessage(random,"system");
-
-}
-
-setInterval(showPrompt, 20000);
 
 /* =========================================================
 AUTO NEXT ON LONG IDLE
