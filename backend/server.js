@@ -1,5 +1,5 @@
 /* =========================================
-   CHATGRAM PRO SERVER (UPGRADED)
+   CHATGRAM PRO SERVER (FIXED VERSION)
 ========================================= */
 
 const express = require("express");
@@ -40,43 +40,47 @@ let users = new Map();           // socketId -> partnerId
 let userNames = new Map();       // socketId -> name
 
 /* =========================================
-   HELPER FUNCTIONS
+   MATCHING SYSTEM (FIXED)
 ========================================= */
 
-// MATCH USERS
-function matchUsers(socket) {
+function processQueue() {
 
-    // remove self if exists
-    queue.delete(socket.id);
+    while (queue.size >= 2) {
 
-    if (queue.size > 0) {
+        const ids = Array.from(queue);
 
-        const partnerId = queue.values().next().value;
-        queue.delete(partnerId);
+        const user1 = ids[0];
+        const user2 = ids[1];
 
-        users.set(socket.id, partnerId);
-        users.set(partnerId, socket.id);
+        // check if sockets still exist (ghost fix)
+        if (!io.sockets.sockets.get(user1) || !io.sockets.sockets.get(user2)) {
+            queue.delete(user1);
+            queue.delete(user2);
+            continue;
+        }
 
-        io.to(socket.id).emit("matched", {
-            name: userNames.get(partnerId)
+        queue.delete(user1);
+        queue.delete(user2);
+
+        users.set(user1, user2);
+        users.set(user2, user1);
+
+        io.to(user1).emit("matched", {
+            name: userNames.get(user2) || "Stranger"
         });
 
-        io.to(partnerId).emit("matched", {
-            name: userNames.get(socket.id)
+        io.to(user2).emit("matched", {
+            name: userNames.get(user1) || "Stranger"
         });
 
-        console.log("✅ Matched:", socket.id, "<->", partnerId);
-
-    } else {
-
-        queue.add(socket.id);
-        socket.emit("waiting");
-
-        console.log("⏳ Waiting:", socket.id);
+        console.log("✅ Matched:", user1, "<->", user2);
     }
 }
 
-// CLEAN DISCONNECT
+/* =========================================
+   CLEAN USER
+========================================= */
+
 function cleanUser(socket) {
 
     const partner = users.get(socket.id);
@@ -86,6 +90,10 @@ function cleanUser(socket) {
 
         users.delete(partner);
         users.delete(socket.id);
+
+        // partner ko queue me daal do (optional but useful)
+        queue.add(partner);
+        io.to(partner).emit("waiting");
     }
 
     queue.delete(socket.id);
@@ -100,7 +108,6 @@ io.on("connection", (socket) => {
 
     console.log("🟢 Connected:", socket.id);
 
-    // SEND ONLINE COUNT
     io.emit("online-users", io.engine.clientsCount);
 
     /* =========================================
@@ -114,7 +121,10 @@ io.on("connection", (socket) => {
 
         console.log("🔍 Searching:", safeName);
 
-        matchUsers(socket);
+        queue.add(socket.id);
+        socket.emit("waiting");
+
+        processQueue(); // 🔥 match instantly
     });
 
     /* =========================================
@@ -157,7 +167,9 @@ io.on("connection", (socket) => {
         cleanUser(socket);
 
         setTimeout(() => {
-            matchUsers(socket);
+            queue.add(socket.id);
+            socket.emit("waiting");
+            processQueue();
         }, 300);
     });
 
