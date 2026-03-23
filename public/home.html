@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUMPY – Chat</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --tg-bg:#17212b;
+  --tg-sidebar:#17212b;
+  --tg-sidebar-hover:#202d3b;
+  --tg-sidebar-active:#2b5278;
+  --tg-header:#1f2d3d;
+  --tg-chat-bg:#0e1621;
+  --tg-input-bg:#1f2d3d;
+  --tg-accent:#3390ec;
+  --tg-accent2:#5eb3f9;
+  --tg-text:#fff;
+  --tg-text2:#8c9aaa;
+  --tg-bubble-out:#2b5278;
+  --tg-bubble-in:#182533;
+  --tg-border:#0d1621;
+  --tg-green:#4dcd5e;
+  --tg-yellow:#f4c842;
+  --tg-divider:#0d1d2e;
+  font-family:'Inter',sans-serif
+}
+body{height:100vh;display:flex;background:var(--tg-bg);overflow:hidden;color:var(--tg-text)}
+
+/* ── SIDEBAR ── */
+.sidebar{width:360px;background:var(--tg-sidebar);display:flex;flex-direction:column;border-right:1px solid var(--tg-border);flex-shrink:0}
+
+.sidebar-header{display:flex;align-items:center;gap:12px;padding:10px 14px;height:56px;background:var(--tg-header);border-bottom:1px solid var(--tg-border)}
+
+.hamburger{width:36px;height:36px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;flex-shrink:0;transition:.2s}
+.hamburger:hover{background:rgba(255,255,255,.07)}
+.hamburger span{display:block;width:18px;height:2px;background:var(--tg-text2);border-radius:2px;transition:.3s}
+
+.search-wrap{flex:1;position:relative}
+.search-wrap input{
+  width:100%;padding:8px 12px 8px 36px;
+  border-radius:20px;border:none;
+  background:rgba(255,255,255,.07);
+  color:var(--tg-text);font-size:14px;outline:none;
+  transition:.2s
+}
+.search-wrap input::placeholder{color:var(--tg-text2)}
+.search-wrap input:focus{background:rgba(255,255,255,.1)}
+.search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);opacity:.5}
+
+.chat-list{flex:1;overflow-y:auto}
+.chat-list::-webkit-scrollbar{width:0}
+
+.chat-item{display:flex;align-items:center;gap:12px;padding:8px 14px;cursor:pointer;transition:.15s;position:relative}
+.chat-item:hover{background:var(--tg-sidebar-hover)}
+.chat-item.active{background:var(--tg-sidebar-active)}
+
+.avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:600;flex-shrink:0;position:relative}
+.online-dot{position:absolute;bottom:2px;right:2px;width:11px;height:11px;border-radius:50%;background:var(--tg-green);border:2px solid var(--tg-sidebar)}
+
+.chat-info{flex:1;min-width:0}
+.chat-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:3px}
+.chat-name{font-size:14px;font-weight:500;color:var(--tg-text)}
+.chat-time{font-size:11px;color:var(--tg-text2);white-space:nowrap}
+
+.chat-bottom{display:flex;justify-content:space-between;align-items:center}
+.chat-preview{font-size:13px;color:var(--tg-text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+.unread-badge{background:var(--tg-accent);color:#fff;font-size:11px;font-weight:600;padding:1px 6px;border-radius:20px;min-width:18px;text-align:center}
+
+.divider{height:1px;background:var(--tg-divider);margin:4px 14px}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+
+.chat-header{height:56px;background:var(--tg-header);display:flex;align-items:center;padding:0 16px;gap:12px;border-bottom:1px solid var(--tg-border);flex-shrink:0}
+.chat-header .avatar{width:38px;height:38px;font-size:15px}
+.header-info{flex:1}
+.header-info .name{font-size:15px;font-weight:600}
+.header-info .sub{font-size:12px;color:var(--tg-text2)}
+.header-info .sub .green{color:var(--tg-green)}
+
+.header-actions{display:flex;gap:4px}
+.hbtn{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.2s;color:var(--tg-text2)}
+.hbtn:hover{background:rgba(255,255,255,.08);color:var(--tg-text)}
+
+/* ── MESSAGES ── */
+.chat-area-wrap{flex:1;position:relative;overflow:hidden}
+
+.wallpaper{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 20% 20%,rgba(51,144,236,.08) 0%,transparent 60%),
+    radial-gradient(ellipse at 80% 80%,rgba(51,144,236,.05) 0%,transparent 60%),
+    url("https://isomer-user-content.by.gov.sg/85/b8be5e01-fb19-4e93-bf94-f4bceac5b5d1/Text_me__Instant_messaging_through_the_years.jpg") center/cover no-repeat;
+  filter:blur(16px) brightness(.35);
+  transform:scale(1.08);
+  z-index:0
+}
+.wallpaper-overlay{position:absolute;inset:0;background:rgba(14,22,33,.6);z-index:1}
+
+.messages{position:relative;z-index:2;height:100%;overflow-y:auto;padding:12px 60px;display:flex;flex-direction:column;gap:2px}
+.messages::-webkit-scrollbar{width:4px}
+.messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:2px}
+
+.date-label{text-align:center;margin:10px 0}
+.date-label span{background:rgba(0,0,0,.4);color:#ffffffb0;font-size:12px;padding:4px 12px;border-radius:14px;backdrop-filter:blur(8px)}
+
+.bubble-wrap{display:flex;flex-direction:column;animation:popIn .18s cubic-bezier(.17,.67,.35,1.2)}
+.bubble-wrap.out{align-items:flex-end}
+.bubble-wrap.in{align-items:flex-start}
+
+@keyframes popIn{from{opacity:0;transform:scale(.9) translateY(6px)}to{opacity:1;transform:none}}
+
+.bubble{
+  max-width:62%;padding:8px 12px;border-radius:16px;
+  font-size:14px;line-height:1.5;position:relative;
+  word-break:break-word
+}
+.bubble-wrap.out .bubble{
+  background:var(--tg-bubble-out);
+  border-bottom-right-radius:4px
+}
+.bubble-wrap.in .bubble{
+  background:var(--tg-bubble-in);
+  border-bottom-left-radius:4px
+}
+
+.bubble-tail-out{
+  position:absolute;bottom:0;right:-6px;
+  width:10px;height:10px;
+  background:var(--tg-bubble-out);
+  clip-path:polygon(0 0,0 100%,100% 100%);
+  border-radius:0 0 3px 0
+}
+.bubble-tail-in{
+  position:absolute;bottom:0;left:-6px;
+  width:10px;height:10px;
+  background:var(--tg-bubble-in);
+  clip-path:polygon(100% 0,0 100%,100% 100%);
+  border-radius:0 0 0 3px
+}
+
+.bubble-meta{display:flex;align-items:center;gap:4px;justify-content:flex-end;margin-top:3px}
+.bubble-time{font-size:11px;color:rgba(255,255,255,.45)}
+.ticks{color:var(--tg-accent2);font-size:13px}
+
+/* typing bubble */
+.typing-bubble{display:none;align-items:flex-end;gap:12px;animation:popIn .2s}
+.typing-bubble.show{display:flex}
+.typing-inner{background:var(--tg-bubble-in);border-radius:16px;border-bottom-left-radius:4px;padding:12px 16px;display:flex;gap:5px}
+.typing-dot{width:7px;height:7px;border-radius:50%;background:var(--tg-text2);animation:bounce 1.2s infinite}
+.typing-dot:nth-child(2){animation-delay:.2s}
+.typing-dot:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+
+.scroll-bottom{
+  position:absolute;bottom:80px;right:20px;z-index:10;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--tg-header);
+  border:1px solid rgba(255,255,255,.1);
+  display:none;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--tg-text2);
+  box-shadow:0 2px 12px rgba(0,0,0,.4);
+  transition:.2s
+}
+.scroll-bottom:hover{color:var(--tg-text)}
+.scroll-bottom.show{display:flex}
+
+/* ── INPUT ── */
+.input-area{
+  background:var(--tg-input-bg);
+  padding:8px 12px;
+  display:flex;align-items:center;gap:8px;
+  border-top:1px solid var(--tg-border);
+  flex-shrink:0
+}
+
+.ibtn{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tg-text2);transition:.2s;flex-shrink:0}
+.ibtn:hover{background:rgba(255,255,255,.07);color:var(--tg-text)}
+
+.msg-input{
+  flex:1;background:rgba(255,255,255,.07);
+  border:none;outline:none;
+  color:var(--tg-text);font-size:14px;
+  padding:9px 14px;border-radius:22px;
+  font-family:'Inter',sans-serif;
+  transition:.2s
+}
+.msg-input:focus{background:rgba(255,255,255,.1)}
+.msg-input::placeholder{color:var(--tg-text2)}
+
+.send-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--tg-accent);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  transition:.15s;
+  box-shadow:0 2px 8px rgba(51,144,236,.35)
+}
+.send-btn:hover{background:var(--tg-accent2);transform:scale(1.05)}
+.send-btn:active{transform:scale(.95)}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:100%;color:var(--tg-text2);gap:12px;
+  position:relative;z-index:2
+}
+.empty-state svg{opacity:.3}
+.empty-state p{font-size:15px;font-weight:500;opacity:.5}
+
+/* AVATARS COLOR */
+.av-blue{background:#3390ec}.av-purple{background:#7b68ee}
+.av-green{background:#4dcd5e}.av-orange{background:#f48c42}
+.av-pink{background:#e75480}.av-teal{background:#2ec4b6}
+.av-bumpy{background:linear-gradient(135deg,#3390ec,#7b68ee)}
+
+/* responsive */
+@media(max-width:640px){.sidebar{width:100%;display:none}.sidebar.open{display:flex}}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+
+  <div class="sidebar-header">
+    <div class="hamburger" title="Menu">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="search-wrap">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>
+      <input id="searchInput" placeholder="Search" oninput="filterChats()">
+    </div>
+  </div>
+
+  <div class="chat-list" id="chatList"></div>
+</div>
+
+<!-- MAIN -->
+<div class="main" id="main">
+
+  <div class="chat-header" id="chatHeader" style="display:none">
+    <div class="avatar av-bumpy" id="hAvatar">B</div>
+    <div class="header-info">
+      <div class="name" id="hName">BUMPY</div>
+      <div class="sub" id="hSub"><span class="green">online</span></div>
+    </div>
+    <div class="header-actions">
+      <div class="hbtn" title="Voice call">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+      </div>
+      <div class="hbtn" title="Video call">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M15 8v8H5V8h10m1-2H4c-.6 0-1 .4-1 1v10c0 .6.4 1 1 1h12c.6 0 1-.4 1-1v-3.5l4 4v-11l-4 4V7c0-.6-.4-1-1-1z"/></svg>
+      </div>
+      <div class="hbtn" title="Search">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="hbtn" title="More">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="chat-area-wrap">
+    <div class="wallpaper"></div>
+    <div class="wallpaper-overlay"></div>
+
+    <div id="emptyState" class="empty-state">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/>
+      </svg>
+      <p>Select a chat to start messaging</p>
+    </div>
+
+    <div class="messages" id="messages" style="display:none" onscroll="onScroll()">
+      <!-- messages here -->
+    </div>
+
+    <div class="scroll-bottom" id="scrollBtn" onclick="scrollToBottom()">
+      <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+    </div>
+  </div>
+
+  <div class="input-area" id="inputArea" style="display:none">
+    <div class="ibtn" title="Emoji">
+      <svg width="22" height="22" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10.5" r="1" fill="currentColor"/><circle cx="15" cy="10.5" r="1" fill="currentColor"/><path d="M8.5 14.5s1 2 3.5 2 3.5-2 3.5-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </div>
+    <input class="msg-input" id="msgInput" placeholder="Message" onkeypress="enterSend(event)" oninput="onTyping()">
+    <div class="ibtn" title="Attach">
+      <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 16.41a2 2 0 0 1-2.83-2.83l8.49-8.48" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="send-btn" id="sendBtn" onclick="send()">
+      <svg width="20" height="20" fill="white" viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </div>
+  </div>
+</div>
+
+<script>
+const contacts=[
+  {name:"Harsh",   color:"av-blue",  online:true,  badge:3,  preview:"Bhai kab aayega?",   time:"12:45"},
+  {name:"Aman",    color:"av-purple", online:true,  badge:0,  preview:"Ok done 👍",           time:"12:30"},
+  {name:"Rohit",   color:"av-green",  online:false, badge:1,  preview:"Send me the file bro",time:"11:58"},
+  {name:"Sita",    color:"av-orange", online:true,  badge:0,  preview:"Hahaha 😂😂",           time:"Yesterday"},
+  {name:"Anjali",  color:"av-pink",   online:false, badge:7,  preview:"Miss you ❤️",          time:"Yesterday"},
+  {name:"Dev",     color:"av-teal",   online:true,  badge:0,  preview:"Meeting at 3?",        time:"Monday"},
+];
+
+const defaultMsgs={
+  "Harsh":[
+    {type:"in",  text:"Bhai kab aayega?",         time:"12:30"},
+    {type:"out", text:"Abhi nikal raha hoon 🏃",   time:"12:32"},
+    {type:"in",  text:"Jaldi aa, sab wait kar rahe hain 😤",time:"12:35"},
+    {type:"out", text:"10 min bro 🙏",             time:"12:36"},
+    {type:"in",  text:"Okay okay 😅",              time:"12:40"},
+    {type:"in",  text:"Bhai kab aayega?",          time:"12:45"},
+  ],
+  "Aman":[
+    {type:"out", text:"Assignment ho gaya?",       time:"12:00"},
+    {type:"in",  text:"Haan bhai kar liya!",       time:"12:10"},
+    {type:"out", text:"Share kar na",              time:"12:20"},
+    {type:"in",  text:"Ok done 👍",                time:"12:30"},
+  ],
+  "Rohit":[
+    {type:"in",  text:"Hey bro!",                  time:"11:40"},
+    {type:"out", text:"Bol bhai",                  time:"11:42"},
+    {type:"in",  text:"Send me the file bro",      time:"11:58"},
+  ],
+  "Sita":[
+    {type:"out", text:"Kya hua aaj?",              time:"Yesterday"},
+    {type:"in",  text:"Kuch nahi bas masti 😜",    time:"Yesterday"},
+    {type:"in",  text:"Hahaha 😂😂",               time:"Yesterday"},
+  ],
+  "Anjali":[
+    {type:"in",  text:"Miss you ❤️",               time:"Yesterday"},
+    {type:"out", text:"Miss you too! 😊",           time:"Yesterday"},
+  ],
+  "Dev":[
+    {type:"in",  text:"Hey, meeting at 3?",        time:"Monday"},
+    {type:"out", text:"Yes sure!",                 time:"Monday"},
+  ],
+};
+
+let chats={};
+contacts.forEach(c=>{ chats[c.name]=JSON.parse(JSON.stringify(defaultMsgs[c.name]||[])) });
+
+let currentUser=null;
+let typingTimer=null;
+
+function getTime(){
+  const d=new Date();
+  return d.getHours()+":"+String(d.getMinutes()).padStart(2,'0');
+}
+
+function renderChatList(list){
+  const el=document.getElementById("chatList");
+  el.innerHTML="";
+  list.forEach(c=>{
+    const div=document.createElement("div");
+    div.className="chat-item"+(currentUser===c.name?" active":"");
+    div.onclick=()=>openChat(c.name);
+    div.innerHTML=`
+      <div class="avatar ${c.color}" style="position:relative">
+        ${c.name[0]}
+        ${c.online?'<div class="online-dot"></div>':''}
+      </div>
+      <div class="chat-info">
+        <div class="chat-top">
+          <span class="chat-name">${c.name}</span>
+          <span class="chat-time">${c.time}</span>
+        </div>
+        <div class="chat-bottom">
+          <span class="chat-preview">${c.preview}</span>
+          ${c.badge?`<span class="unread-badge">${c.badge}</span>`:''}
+        </div>
+      </div>`;
+    el.appendChild(div);
+  });
+}
+
+function filterChats(){
+  const q=document.getElementById("searchInput").value.toLowerCase();
+  renderChatList(contacts.filter(c=>c.name.toLowerCase().includes(q)));
+}
+
+function getContact(name){return contacts.find(c=>c.name===name)}
+
+function openChat(name){
+  currentUser=name;
+  const c=getContact(name);
+
+  // clear badge
+  c.badge=0;
+
+  document.getElementById("chatHeader").style.display="flex";
+  document.getElementById("inputArea").style.display="flex";
+  document.getElementById("emptyState").style.display="none";
+  document.getElementById("messages").style.display="flex";
+
+  const avClasses="avatar "+c.color;
+  document.getElementById("hAvatar").className=avClasses;
+  document.getElementById("hAvatar").textContent=name[0];
+  document.getElementById("hName").textContent=name;
+  document.getElementById("hSub").innerHTML=c.online
+    ?'<span class="green">online</span>'
+    :'last seen recently';
+
+  renderChatList(contacts.filter(n=>{
+    const q=document.getElementById("searchInput").value.toLowerCase();
+    return n.name.toLowerCase().includes(q);
+  }));
+
+  renderMessages();
+  document.getElementById("msgInput").focus();
+}
+
+function renderMessages(){
+  const area=document.getElementById("messages");
+  if(!currentUser){return;}
+  const msgs=chats[currentUser]||[];
+  area.innerHTML='<div class="date-label"><span>Today</span></div>';
+
+  msgs.forEach(m=>{
+    const wrap=document.createElement("div");
+    wrap.className="bubble-wrap "+m.type;
+    wrap.innerHTML=`
+      <div class="bubble">
+        ${m.type==="out"?'<div class="bubble-tail-out"></div>':'<div class="bubble-tail-in"></div>'}
+        ${m.text}
+        <div class="bubble-meta">
+          <span class="bubble-time">${m.time}</span>
+          ${m.type==="out"?'<span class="ticks">✓✓</span>':''}
+        </div>
+      </div>`;
+    area.appendChild(wrap);
+  });
+
+  // typing indicator (hidden by default)
+  const typing=document.createElement("div");
+  typing.className="typing-bubble";
+  typing.id="typingIndicator";
+  const avEl=getContact(currentUser);
+  typing.innerHTML=`
+    <div class="avatar ${avEl.color}" style="width:30px;height:30px;font-size:12px">${currentUser[0]}</div>
+    <div class="typing-inner">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  area.appendChild(typing);
+
+  scrollToBottom();
+}
+
+function scrollToBottom(){
+  const area=document.getElementById("messages");
+  area.scrollTop=area.scrollHeight;
+  document.getElementById("scrollBtn").classList.remove("show");
+}
+
+function onScroll(){
+  const area=document.getElementById("messages");
+  const atBottom=area.scrollHeight-area.scrollTop-area.clientHeight < 60;
+  document.getElementById("scrollBtn").classList.toggle("show",!atBottom);
+}
+
+function send(){
+  const input=document.getElementById("msgInput");
+  const text=input.value.trim();
+  if(!text||!currentUser)return;
+
+  chats[currentUser].push({text,type:"out",time:getTime()});
+
+  // update preview
+  const c=getContact(currentUser);
+  c.preview=text;c.time=getTime();
+
+  input.value="";
+  renderMessages();
+  renderChatList(contacts);
+
+  // fake reply
+  setTimeout(()=>showTyping(),800);
+  setTimeout(()=>fakeReply(),2400+Math.random()*800);
+}
+
+const replies=["Haan bhai 😄","Okay!","Got it 👍","Lol 😂","Interesting...","Sure sure","😊","Bhai chill kar 🤣","Ek second","On it!","👀","Arre yaar!","Haha okay","Theek hai"];
+
+function showTyping(){
+  const t=document.getElementById("typingIndicator");
+  if(t){t.classList.add("show");document.getElementById("messages").scrollTop=99999;}
+}
+function hideTyping(){
+  const t=document.getElementById("typingIndicator");
+  if(t) t.classList.remove("show");
+}
+
+function fakeReply(){
+  if(!currentUser)return;
+  hideTyping();
+  const reply=replies[Math.floor(Math.random()*replies.length)];
+  chats[currentUser].push({text:reply,type:"in",time:getTime()});
+  const c=getContact(currentUser);
+  c.preview=reply;c.time=getTime();
+  renderMessages();
+  renderChatList(contacts);
+}
+
+function onTyping(){
+  // mic ↔ send swap could go here
+}
+
+function enterSend(e){if(e.key==="Enter")send();}
+
+// init
+renderChatList(contacts);
+</script>
+</body>
+</html>
