@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUMPY</title>
+<style>
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background: url("https://isomer-user-content.by.gov.sg/85/b8be5e01-fb19-4e93-bf94-f4bceac5b5d1/Text_me__Instant_messaging_through_the_years.jpg") no-repeat center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 20, 40, 0.78);
+    backdrop-filter: blur(12px);
+}
+
+.glow1, .glow2 {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    filter: blur(140px);
+    border-radius: 50%;
+    animation: floatGlow 12s infinite alternate ease-in-out;
+    pointer-events: none;
+}
+
+.glow1 {
+    background: rgba(0, 255, 200, 0.25);
+    top: -120px;
+    left: -120px;
+}
+
+.glow2 {
+    background: rgba(0, 150, 255, 0.25);
+    bottom: -120px;
+    right: -120px;
+}
+
+@keyframes floatGlow {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(120px, 120px); }
+}
+
+.main {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 40px 60px;
+    gap: 40px;
+}
+
+/* ── LEFT ── */
+.center {
+    text-align: center;
+    color: white;
+    max-width: 520px;
+    flex: 1;
+}
+
+.logo {
+    font-size: 88px;
+    font-weight: 900;
+    letter-spacing: 8px;
+    background: linear-gradient(90deg, #00c6ff, #00ff9d);
+    
+    -webkit-text-fill-color: transparent;
+}
+
+.tagline {
+    font-size: 22px;
+    margin-top: 14px;
+    font-weight: 700;
+    color: #e0f7fa;
+}
+
+.desc {
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #b0bec5;
+    font-weight: 400;
+}
+
+.btn-group {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 36px;
+    flex-wrap: wrap;
+}
+
+.google-btn {
+    padding: 14px 28px;
+    border-radius: 14px;
+    border: none;
+    background: rgb(25, 251, 0);
+    color: #111;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.25s;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    white-space: nowrap;
+}
+
+.google-btn:hover {
+    transform: scale(1.06);
+    background: #f5f5f5;
+}
+
+/* ── RIGHT CHAT ── */
+.chat-container {
+    width: 380px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.07);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.chat-header {
+    font-weight: 700;
+    color: white;
+    margin-bottom: 18px;
+    font-size: 17px;
+    letter-spacing: .3px;
+}
+
+.message {
+    max-width: 78%;
+    padding: 12px 15px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    animation: fadeIn 0.5s ease;
+}
+
+.left-msg {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+}
+
+.right-msg {
+    background: linear-gradient(90deg, #00c6ff, #00ff9d);
+    color: #111;
+    margin-left: auto;
+}
+
+.time {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: 5px;
+}
+
+/* typing dots */
+.typing {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 14px;
+    width: fit-content;
+    margin-bottom: 12px;
+}
+.typing span {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #00ff9d;
+    animation: bounce 1.2s infinite;
+}
+.typing span:nth-child(2){ animation-delay:.2s }
+.typing span:nth-child(3){ animation-delay:.4s }
+
+@keyframes bounce {
+    0%,60%,100%{ transform:translateY(0) }
+    30%{ transform:translateY(-6px) }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+    .main {
+        flex-direction: column;
+        align-items: center;
+        padding: 30px 20px;
+    }
+    .chat-container {
+        width: 100%;
+        max-width: 420px;
+    }
+    .logo { font-size: 64px; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="glow1"></div>
+<div class="glow2"></div>
+
+<div class="main">
+
+    <!-- LEFT -->
+    <div class="center">
+        <div class="logo">BUMPY</div>
+
+        <div class="tagline">The Future of Messaging 🚀</div>
+
+        <div class="desc">
+            BUMPY is a powerful real-time messaging platform designed for speed, security, and simplicity.
+            Connect instantly with friends, share moments, and experience next-level communication.
+        </div>
+
+        <div class="btn-group">
+            <button class="google-btn" onclick="goGoogle()">🔵 Continue with Google</button>
+            <button class="google-btn" onclick="goPhone()">📱 Login with Phone</button>
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="chat-container">
+        <div class="chat-header">💬 Live Chat Preview</div>
+
+        <div class="message left-msg">
+            Bro BUMPY try kiya kya?
+            <div class="time">10:21</div>
+        </div>
+
+        <div class="message right-msg">
+            Haan bhai 🔥 mast chal raha hai!
+            <div class="time">10:22</div>
+        </div>
+
+        <div class="message left-msg">
+            Fast hai kya?
+            <div class="time">10:22</div>
+        </div>
+
+        <div class="message right-msg">
+            Bilkul lightning fast ⚡
+            <div class="time">10:23</div>
+        </div>
+
+        <div class="message left-msg">
+            UI bhi smooth lag raha 👀
+            <div class="time">10:23</div>
+        </div>
+
+        <div class="message right-msg" id="lastMsg" style="display:none">
+            Real chatting site bana diya 😎
+            <div class="time">10:24</div>
+        </div>
+
+        <div class="typing" id="typing" style="display:none">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
+
+</div>
+
+<script>
+// Typing animation loop for demo
+function typingLoop() {
+    const typing = document.getElementById("typing");
+    const lastMsg = document.getElementById("lastMsg");
+
+    lastMsg.style.display = "none";
+    typing.style.display = "flex";
+
+    setTimeout(() => {
+        typing.style.display = "none";
+        lastMsg.style.display = "block";
+        setTimeout(typingLoop, 3000);
+    }, 1800);
+}
+
+setTimeout(typingLoop, 1500);
+
+function goGoogle() {
+    alert("Google login — coming soon! 🚀");
+}
+
+function goPhone() {
+    alert("Phone login — coming soon! 📱");
+}
+</script>
+
+</body>
+</html>
