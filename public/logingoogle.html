@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUMPY Google Login</title>
+
+<style>
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* BODY */
+body {
+    height: 100vh;
+    background: url("https://isomer-user-content.by.gov.sg/85/b8be5e01-fb19-4e93-bf94-f4bceac5b5d1/Text_me__Instant_messaging_through_the_years.jpg") no-repeat center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* OVERLAY */
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(10,20,40,0.80);
+    backdrop-filter: blur(16px);
+}
+
+/* SCALE WRAPPER */
+.scale-wrapper {
+    transform: scale(1.2);
+    transform-origin: center;
+}
+
+/* CONTAINER */
+.container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 460px;
+    text-align: center;
+    color: white;
+}
+
+/* LOGO */
+.logo {
+    font-size: 100px;
+    font-weight: 900;
+    letter-spacing: 6px;
+    background: linear-gradient(90deg, #00c6ff, #00ff9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* TITLE */
+.title {
+    margin-top: 10px;
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+/* CARD */
+.card {
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+}
+
+/* GOOGLE BUTTON */
+.google-btn {
+    margin-top: 25px;
+    padding: 16px;
+    width: 100%;
+    border-radius: 14px;
+    border: none;
+    background: white;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: 0.3s;
+}
+
+.google-btn:hover {
+    transform: scale(1.05);
+}
+
+/* GOOGLE ICON */
+.google-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, red, yellow, green, blue);
+}
+
+/* ACCOUNT LIST */
+.account {
+    margin-top: 15px;
+    padding: 14px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.account:hover {
+    background: rgba(0,255,200,0.2);
+}
+
+/* EMAIL */
+.email {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+/* HIDE */
+.hidden {
+    display: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="scale-wrapper">
+
+<div class="container">
+
+    <div class="logo">BUMPY</div>
+    <div class="title" id="mainTitle">Continue with Google</div>
+
+    <div class="card" id="googleCard">
+
+        <button class="google-btn" onclick="showAccounts()">
+            <div class="google-icon"></div>
+            Continue with Google
+        </button>
+
+        <div id="accounts" class="hidden">
+
+            <div class="account" onclick="login()">
+                Harsh Kumar
+                <div class="email">harsh@gmail.com</div>
+            </div>
+
+            <div class="account" onclick="login()">
+                Guest User
+                <div class="email">guest@gmail.com</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<script>
+
+function showAccounts() {
+    document.getElementById("accounts").classList.remove("hidden");
+    document.getElementById("mainTitle").innerText =
+    "Choose an account to continue";
+}
+
+function login() {
+    document.getElementById("mainTitle").innerText =
+    "Signing in...";
+
+    setTimeout(() => {
+        window.location.href = "home.html";
+    }, 800);
+}
+
+</script>
+
+</body>
+</html>
