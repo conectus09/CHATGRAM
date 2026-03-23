@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BUMPY Login</title>
+
+<style>
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+/* BODY */
+body {
+    height: 100vh;
+    background: url("https://isomer-user-content.by.gov.sg/85/b8be5e01-fb19-4e93-bf94-f4bceac5b5d1/Text_me__Instant_messaging_through_the_years.jpg") no-repeat center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+/* OVERLAY */
+body::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(10,20,40,0.80);
+    backdrop-filter: blur(16px);
+}
+
+/* CONTAINER */
+.container {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 480px; /* bigger */
+    text-align: center;
+    color: white;
+}
+
+/* LOGO */
+.logo {
+    font-size: 105px; /* bigger */
+    font-weight: 900;
+    letter-spacing: 6px;
+    background: linear-gradient(90deg, #00c6ff, #00ff9d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* TITLE */
+.title {
+    margin-top: 10px;
+    font-size: 18px; /* bigger */
+    opacity: 0.9;
+}
+
+/* CARD */
+.card {
+    margin-top: 28px;
+    padding: 32px; /* bigger */
+    border-radius: 24px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+}
+
+/* LABEL */
+.label {
+    text-align: left;
+    font-size: 14px;
+    opacity: 0.75;
+    margin-bottom: 8px;
+}
+
+/* ROW */
+.row {
+    display: flex;
+    gap: 12px;
+}
+
+/* INPUT BOX */
+.input-box {
+    flex: 1;
+    background: rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 14px; /* bigger */
+    transition: 0.25s;
+}
+
+.input-box:focus-within {
+    background: rgba(0,255,200,0.25);
+    transform: scale(1.03);
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: white;
+    font-size: 17px; /* bigger */
+}
+
+/* BUTTON */
+.btn {
+    margin-top: 22px;
+    width: 100%;
+    padding: 16px; /* bigger */
+    border-radius: 14px;
+    border: none;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #00c6ff, #00ff9d);
+    transition: 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+/* OTP */
+.otp-box {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+}
+
+.otp-box input {
+    width: 58px; /* bigger */
+    height: 62px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 24px;
+    background: rgba(255,255,255,0.12);
+    transition: 0.2s;
+}
+
+.otp-box input:focus {
+    background: rgba(0,255,200,0.35);
+    transform: scale(1.1);
+}
+
+/* HIDE */
+.hidden {
+    display: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">BUMPY</div>
+    <div class="title" id="mainTitle">Enter the phone number to login in BUMPY</div>
+
+    <!-- PHONE -->
+    <div class="card" id="phoneCard">
+
+        <div class="label">Phone Number</div>
+
+        <div class="row">
+            <div class="input-box" style="max-width: 100px;">
+                <input type="text" value="+91" readonly>
+            </div>
+
+            <div class="input-box">
+                <input type="text" id="phone" placeholder="Enter phone number"
+                inputmode="numeric"
+                oninput="this.value=this.value.replace(/[^0-9]/g,'')">
+            </div>
+        </div>
+
+        <button class="btn" onclick="sendOTP()">Continue</button>
+
+    </div>
+
+    <!-- OTP -->
+    <div class="card hidden" id="otpCard">
+
+        <div class="label">Verification Code</div>
+
+        <div class="otp-box">
+            <input maxlength="1" inputmode="numeric" oninput="move(this,0)">
+            <input maxlength="1" inputmode="numeric" oninput="move(this,1)">
+            <input maxlength="1" inputmode="numeric" oninput="move(this,2)">
+            <input maxlength="1" inputmode="numeric" oninput="move(this,3)">
+            <input maxlength="1" inputmode="numeric" oninput="move(this,4)">
+            <input maxlength="1" inputmode="numeric" oninput="move(this,5)">
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function sendOTP() {
+    let phone = document.getElementById("phone").value;
+
+    if(phone.length < 10){
+        alert("Enter valid Indian number");
+        return;
+    }
+
+    document.getElementById("phoneCard").classList.add("hidden");
+    document.getElementById("otpCard").classList.remove("hidden");
+
+    document.getElementById("mainTitle").innerText =
+    "Enter the OTP to login in BUMPY";
+}
+
+function move(input, index) {
+    input.value = input.value.replace(/[^0-9]/g,'');
+
+    let inputs = document.querySelectorAll(".otp-box input");
+
+    if(input.value.length === 1 && index < 5){
+        inputs[index + 1].focus();
+    }
+
+    let otp = "";
+    inputs.forEach(i => otp += i.value);
+
+    if(otp.length === 6){
+        setTimeout(() => {
+            window.location.href = "home.html";
+        }, 300);
+    }
+}
+
+</script>
+
+</body>
+</html>
