@@ -84,8 +84,9 @@ body::before {
     font-weight: 900;
     letter-spacing: 8px;
     background: linear-gradient(90deg, #00c6ff, #00ff9d);
-    
+    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .tagline {
@@ -307,14 +308,136 @@ function typingLoop() {
 
 setTimeout(typingLoop, 1500);
 
+// ✅ FIX: Google login page pe redirect
 function goGoogle() {
-    alert("Google login — coming soon! 🚀");
+    window.location.href = "/logingoogle.html";
 }
 
+// ✅ FIX: Phone login page pe redirect
 function goPhone() {
-    alert("Phone login — coming soon! 📱");
+    window.location.href = "/loginphone.html";
 }
 </script>
+<!-- ✅ BUMPY Security Script — index.html ke <head> mein paste karo -->
+<script>
+(function () {
 
+  // ── 1. RIGHT CLICK BAND ──
+  document.addEventListener("contextmenu", function (e) {
+    e.preventDefault();
+  });
+
+  // ── 2. KEYBOARD SHORTCUTS BAND ──
+  document.addEventListener("keydown", function (e) {
+    // F12
+    if (e.key === "F12") { e.preventDefault(); return false; }
+
+    // Ctrl+Shift+I (Inspect)
+    if (e.ctrlKey && e.shiftKey && e.key === "I") { e.preventDefault(); return false; }
+
+    // Ctrl+Shift+J (Console)
+    if (e.ctrlKey && e.shiftKey && e.key === "J") { e.preventDefault(); return false; }
+
+    // Ctrl+Shift+C (Elements)
+    if (e.ctrlKey && e.shiftKey && e.key === "C") { e.preventDefault(); return false; }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && e.key === "u") { e.preventDefault(); return false; }
+
+    // Ctrl+S (Save Page)
+    if (e.ctrlKey && e.key === "s") { e.preventDefault(); return false; }
+
+    // Ctrl+A (Select All)
+    if (e.ctrlKey && e.key === "a") { e.preventDefault(); return false; }
+
+    // Ctrl+C (Copy)
+    if (e.ctrlKey && e.key === "c") { e.preventDefault(); return false; }
+
+    // Ctrl+P (Print)
+    if (e.ctrlKey && e.key === "p") { e.preventDefault(); return false; }
+  });
+
+  // ── 3. TEXT SELECT BAND ──
+  document.addEventListener("selectstart", function (e) {
+    e.preventDefault();
+  });
+
+  // ── 4. DRAG BAND ──
+  document.addEventListener("dragstart", function (e) {
+    e.preventDefault();
+  });
+
+  // ── 5. DEVTOOLS OPEN DETECT + REDIRECT ──
+  var devtoolsOpen = false;
+
+  setInterval(function () {
+    var threshold = 160;
+    if (
+      window.outerWidth - window.innerWidth > threshold ||
+      window.outerHeight - window.innerHeight > threshold
+    ) {
+      if (!devtoolsOpen) {
+        devtoolsOpen = true;
+        document.body.innerHTML = `
+          <div style="
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            height:100vh;
+            background:#0a1428;
+            color:white;
+            font-family:sans-serif;
+            text-align:center;
+            gap:16px;
+          ">
+            <div style="font-size:60px;">🚫</div>
+            <div style="font-size:28px;font-weight:800;color:#ff4444;">Access Denied</div>
+            <div style="font-size:16px;color:#90a4ae;">Developer Tools detected.<br>This activity is not allowed.</div>
+          </div>
+        `;
+      }
+    } else {
+      devtoolsOpen = false;
+    }
+  }, 1000);
+
+  // ── 6. CONSOLE WARN ──
+  console.log = function () {};
+  console.warn = function () {};
+  console.error = function () {};
+  console.info = function () {};
+  console.clear();
+
+  // ── 7. DEBUGGER LOOP (console open hone pe slow karta hai) ──
+  setInterval(function () {
+    (function () {
+      var d = new Date();
+      debugger;
+      if (new Date() - d > 100) {
+        document.body.innerHTML = `
+          <div style="
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            height:100vh;
+            background:#0a1428;
+            color:white;
+            font-family:sans-serif;
+            text-align:center;
+            gap:16px;
+          ">
+            <div style="font-size:60px;">🚫</div>
+            <div style="font-size:28px;font-weight:800;color:#ff4444;">Access Denied</div>
+            <div style="font-size:16px;color:#90a4ae;">Debugging detected.<br>This activity is not allowed.</div>
+          </div>
+        `;
+      }
+    })();
+  }, 3000);
+
+})();
+</script>
 </body>
 </html>
