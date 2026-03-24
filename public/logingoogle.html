@@ -251,10 +251,10 @@ body::before {
 
             // User-friendly error messages
             const messages = {
-                "auth/popup-closed-by-user":    "Popup band ho gaya. Dobara try karo.",
-                "auth/cancelled-popup-request": "Request cancel ho gayi.",
-                "auth/network-request-failed":  "Network error. Internet check karo.",
-                "auth/unauthorized-domain":     "Ye domain Firebase mein authorized nahi hai. Console mein add karo.",
+                "auth/popup-closed-by-user":    "TRY AGAIN",
+                "auth/cancelled-popup-request": "Request cancel.",
+                "auth/network-request-failed":  "Network error",
+                "auth/unauthorized-domain":     "NO DOMAIN REGISTER WITH FIREBASE",
             };
             errorEl.innerText = messages[err.code] || `Error: ${err.message}`;
             errorEl.style.display = "block";
