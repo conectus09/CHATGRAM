@@ -3,19 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BUMPY Google Login</title>
-
+<title>BUMPY – Login</title>
 <style>
-
-/* RESET */
 * {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     box-sizing: border-box;
     font-family: "Segoe UI", sans-serif;
 }
-
-/* BODY */
 body {
     height: 100vh;
     background: url("https://isomer-user-content.by.gov.sg/85/b8be5e01-fb19-4e93-bf94-f4bceac5b5d1/Text_me__Instant_messaging_through_the_years.jpg") no-repeat center/cover;
@@ -24,8 +18,6 @@ body {
     justify-content: center;
     position: relative;
 }
-
-/* OVERLAY */
 body::before {
     content: "";
     position: absolute;
@@ -34,14 +26,10 @@ body::before {
     background: rgba(10,20,40,0.80);
     backdrop-filter: blur(16px);
 }
-
-/* SCALE WRAPPER */
 .scale-wrapper {
     transform: scale(1.2);
     transform-origin: center;
 }
-
-/* CONTAINER */
 .container {
     position: relative;
     z-index: 2;
@@ -50,8 +38,6 @@ body::before {
     text-align: center;
     color: white;
 }
-
-/* LOGO */
 .logo {
     font-size: 100px;
     font-weight: 900;
@@ -60,15 +46,13 @@ body::before {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-
-/* TITLE */
 .title {
     margin-top: 10px;
     font-size: 18px;
     opacity: 0.9;
+    min-height: 28px;
+    transition: 0.3s;
 }
-
-/* CARD */
 .card {
     margin-top: 30px;
     padding: 30px;
@@ -77,10 +61,8 @@ body::before {
     backdrop-filter: blur(18px);
     box-shadow: 0 25px 70px rgba(0,0,0,0.5);
 }
-
-/* GOOGLE BUTTON */
 .google-btn {
-    margin-top: 25px;
+    margin-top: 10px;
     padding: 16px;
     width: 100%;
     border-radius: 14px;
@@ -96,101 +78,204 @@ body::before {
     gap: 12px;
     transition: 0.3s;
 }
-
 .google-btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.04);
+    box-shadow: 0 6px 30px rgba(0,198,255,0.3);
 }
-
-/* GOOGLE ICON */
-.google-icon {
+.google-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+.google-icon img {
     width: 22px;
     height: 22px;
+}
+.user-info {
+    margin-top: 20px;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+.user-info img {
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    background: linear-gradient(45deg, red, yellow, green, blue);
+    border: 3px solid #00ff9d;
 }
-
-/* ACCOUNT LIST */
-.account {
-    margin-top: 15px;
-    padding: 14px;
-    border-radius: 12px;
-    background: rgba(255,255,255,0.1);
-    cursor: pointer;
-    transition: 0.2s;
+.user-info .name {
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
 }
-
-.account:hover {
-    background: rgba(0,255,200,0.2);
+.user-info .email-text {
+    font-size: 13px;
+    opacity: 0.7;
+    color: white;
 }
-
-/* EMAIL */
-.email {
-    font-size: 14px;
-    opacity: 0.8;
+.status {
+    margin-top: 16px;
+    font-size: 13px;
+    opacity: 0.7;
+    min-height: 18px;
+    color: #00ff9d;
 }
-
-/* HIDE */
-.hidden {
+.error-msg {
+    color: #ff6b6b;
+    font-size: 13px;
+    margin-top: 10px;
     display: none;
 }
 
+/* ── SETUP NOTICE ── */
+.setup-notice {
+    background: rgba(255,200,50,0.15);
+    border: 1px solid rgba(255,200,50,0.4);
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: #ffd86e;
+    text-align: left;
+    line-height: 1.7;
+    margin-bottom: 18px;
+}
+.setup-notice code {
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    color: #00ff9d;
+}
 </style>
 </head>
-
 <body>
 
 <div class="scale-wrapper">
-
 <div class="container">
-
     <div class="logo">BUMPY</div>
     <div class="title" id="mainTitle">Continue with Google</div>
 
     <div class="card" id="googleCard">
 
-        <button class="google-btn" onclick="showAccounts()">
-            <div class="google-icon"></div>
+        <!-- ⚠️ SETUP NOTICE — remove after configuring Firebase -->
+        <div class="setup-notice" id="setupNotice">
+            ⚠️ <strong>Firebase Setup Required</strong><br>
+            Neeche script mein apni Firebase config fill karo:<br>
+            <code>apiKey</code>, <code>authDomain</code>, <code>projectId</code> etc.<br>
+            Firebase Console → Project Settings → Your Apps → Web App
+        </div>
+
+        <button class="google-btn" id="googleBtn" onclick="signInWithGoogle()">
+            <span class="google-icon">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+            </span>
             Continue with Google
         </button>
 
-        <div id="accounts" class="hidden">
-
-            <div class="account" onclick="login()">
-                Harsh Kumar
-                <div class="email">harsh@gmail.com</div>
-            </div>
-
-            <div class="account" onclick="login()">
-                Guest User
-                <div class="email">guest@gmail.com</div>
-            </div>
-
+        <div class="user-info" id="userInfo">
+            <img id="userPhoto" src="" alt="User Photo" />
+            <div class="name" id="userName"></div>
+            <div class="email-text" id="userEmail"></div>
         </div>
 
+        <div class="status" id="statusMsg"></div>
+        <div class="error-msg" id="errorMsg"></div>
     </div>
-
+</div>
 </div>
 
-</div>
+<!-- ══════════════════════════════════════════════════════
+     FIREBASE SDK (v10 modular via CDN)
+     ══════════════════════════════════════════════════════ -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged }
+        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-<script>
+    // ╔══════════════════════════════════════════════════╗
+    // ║   🔥 APNI FIREBASE CONFIG YAHAN DAALO           ║
+    // ║   Firebase Console → Project Settings →         ║
+    // ║   Your Apps → Web App → SDK setup               ║
+    // ╚══════════════════════════════════════════════════╝
+    const firebaseConfig = {
+        apiKey:            "AIzaSyAkyuA8xY3LyBdNn9_l9aniAfJ7fjMS__0",
+        authDomain:        "bumpy-c0feb.firebaseapp.com",
+        projectId:         "bumpy-c0feb",
+        storageBucket:     "bumpy-c0feb.firebasestorage.app",
+        messagingSenderId: "1007047112567",
+        appId:             "1:1007047112567:web:a14858e9d4c2d6de579372"
+    };
 
-function showAccounts() {
-    document.getElementById("accounts").classList.remove("hidden");
-    document.getElementById("mainTitle").innerText =
-    "Choose an account to continue";
-}
+    // ── Init ──────────────────────────────────────────
+    const app      = initializeApp(firebaseConfig);
+    const auth     = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-function login() {
-    document.getElementById("mainTitle").innerText =
-    "Signing in...";
+    // ── UI refs ───────────────────────────────────────
+    const btn       = document.getElementById("googleBtn");
+    const titleEl   = document.getElementById("mainTitle");
+    const statusEl  = document.getElementById("statusMsg");
+    const errorEl   = document.getElementById("errorMsg");
+    const userInfo  = document.getElementById("userInfo");
+    const setupNote = document.getElementById("setupNotice");
 
-    setTimeout(() => {
-        window.location.href = "home.html";
-    }, 800);
-}
+    // ── Auth state listener ───────────────────────────
+    // Agar user pehle se logged in hai → seedha home.html
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            showUser(user);
+            titleEl.innerText = "Welcome back!";
+            statusEl.innerText = "Redirecting...";
+            setTimeout(() => { window.location.href = "home.html"; }, 900);
+        }
+    });
 
+    // ── Google Sign-In ────────────────────────────────
+    window.signInWithGoogle = async function () {
+        btn.disabled = true;
+        errorEl.style.display = "none";
+        titleEl.innerText = "Signing in...";
+        statusEl.innerText = "Google account choose karo...";
+
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user   = result.user;
+
+            showUser(user);
+            titleEl.innerText  = `Hey, ${user.displayName.split(" ")[0]}! 👋`;
+            statusEl.innerText = "Login successful! Redirecting...";
+            setupNote.style.display = "none";
+
+            setTimeout(() => { window.location.href = "home.html"; }, 900);
+
+        } catch (err) {
+            btn.disabled = false;
+            titleEl.innerText  = "Continue with Google";
+            statusEl.innerText = "";
+
+            // User-friendly error messages
+            const messages = {
+                "auth/popup-closed-by-user":    "Popup band ho gaya. Dobara try karo.",
+                "auth/cancelled-popup-request": "Request cancel ho gayi.",
+                "auth/network-request-failed":  "Network error. Internet check karo.",
+                "auth/unauthorized-domain":     "Ye domain Firebase mein authorized nahi hai. Console mein add karo.",
+            };
+            errorEl.innerText = messages[err.code] || `Error: ${err.message}`;
+            errorEl.style.display = "block";
+        }
+    };
+
+    // ── Show user card ────────────────────────────────
+    function showUser(user) {
+        document.getElementById("userPhoto").src = user.photoURL || "";
+        document.getElementById("userName").innerText  = user.displayName || "User";
+        document.getElementById("userEmail").innerText = user.email || "";
+        userInfo.style.display = "flex";
+        btn.style.display = "none";
+        setupNote.style.display = "none";
+    }
 </script>
-
 </body>
 </html>
