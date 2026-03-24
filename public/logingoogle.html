@@ -78,19 +78,9 @@ body::before {
     gap: 12px;
     transition: 0.3s;
 }
-.google-btn:hover {
-    transform: scale(1.04);
-    box-shadow: 0 6px 30px rgba(0,198,255,0.3);
-}
-.google-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-}
-.google-icon img {
-    width: 22px;
-    height: 22px;
-}
+.google-btn:hover { transform: scale(1.04); box-shadow: 0 6px 30px rgba(0,198,255,0.3); }
+.google-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+.google-icon img { width: 22px; height: 22px; }
 .user-info {
     margin-top: 20px;
     display: none;
@@ -98,78 +88,53 @@ body::before {
     align-items: center;
     gap: 12px;
 }
-.user-info img {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 3px solid #00ff9d;
-}
-.user-info .name {
-    font-size: 18px;
-    font-weight: bold;
-    color: white;
-}
-.user-info .email-text {
-    font-size: 13px;
-    opacity: 0.7;
-    color: white;
-}
-.status {
-    margin-top: 16px;
-    font-size: 13px;
-    opacity: 0.7;
-    min-height: 18px;
-    color: #00ff9d;
-}
-.error-msg {
-    color: #ff6b6b;
-    font-size: 13px;
-    margin-top: 10px;
-    display: none;
-}
+.user-info img { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #00ff9d; }
+.user-info .name { font-size: 18px; font-weight: bold; color: white; }
+.user-info .email-text { font-size: 13px; opacity: 0.7; color: white; }
+.status { margin-top: 16px; font-size: 13px; min-height: 18px; color: #00ff9d; }
+.error-msg { color: #ff6b6b; font-size: 13px; margin-top: 10px; display: none; }
 
-/* ── SETUP NOTICE ── */
-.setup-notice {
-    background: rgba(255,200,50,0.15);
-    border: 1px solid rgba(255,200,50,0.4);
-    border-radius: 12px;
-    padding: 14px 16px;
-    font-size: 13px;
-    color: #ffd86e;
-    text-align: left;
-    line-height: 1.7;
-    margin-bottom: 18px;
-}
-.setup-notice code {
-    background: rgba(0,0,0,0.3);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 12px;
-    color: #00ff9d;
+/* ── Devtools overlay — body replace nahi karta ── */
+#dt-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0a1428;
+    z-index: 99999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: sans-serif;
+    text-align: center;
+    gap: 16px;
 }
 </style>
 </head>
 <body>
+
+<!-- Devtools blocked screen — overlay hai, body replace nahi -->
+<div id="dt-overlay">
+    <div style="font-size:60px">🚫</div>
+    <div style="font-size:28px;font-weight:800;color:#ff4444">Access Denied</div>
+    <div style="font-size:16px;color:#90a4ae">Developer Tools detected.<br>This activity is not allowed.</div>
+</div>
 
 <div class="scale-wrapper">
 <div class="container">
     <div class="logo">BUMPY</div>
     <div class="title" id="mainTitle">Continue with Google</div>
 
-    <div class="card" id="googleCard">
-
-    
-
+    <div class="card">
         <button class="google-btn" id="googleBtn" onclick="signInWithGoogle()">
             <span class="google-icon">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
             </span>
             Continue with Google
         </button>
 
         <div class="user-info" id="userInfo">
-            <img id="userPhoto" src="" alt="User Photo" />
+            <img id="userPhoto" src="" alt="">
             <div class="name" id="userName"></div>
             <div class="email-text" id="userEmail"></div>
         </div>
@@ -180,19 +145,13 @@ body::before {
 </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
-     FIREBASE SDK (v10 modular via CDN)
-     ══════════════════════════════════════════════════════ -->
+<!-- ══ FIREBASE ══ -->
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { initializeApp }
+        from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged }
         from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    // ╔══════════════════════════════════════════════════╗
-    // ║   🔥 APNI FIREBASE CONFIG YAHAN DAALO           ║
-    // ║   Firebase Console → Project Settings →         ║
-    // ║   Your Apps → Web App → SDK setup               ║
-    // ╚══════════════════════════════════════════════════╝
     const firebaseConfig = {
         apiKey:            "AIzaSyAkyuA8xY3LyBdNn9_l9aniAfJ7fjMS__0",
         authDomain:        "bumpy-c0feb.firebaseapp.com",
@@ -202,119 +161,114 @@ body::before {
         appId:             "1:1007047112567:web:a14858e9d4c2d6de579372"
     };
 
-    // ── Init ──────────────────────────────────────────
     const app      = initializeApp(firebaseConfig);
     const auth     = getAuth(app);
     const provider = new GoogleAuthProvider();
 
-    // ── UI refs ───────────────────────────────────────
-    const btn       = document.getElementById("googleBtn");
-    const titleEl   = document.getElementById("mainTitle");
-    const statusEl  = document.getElementById("statusMsg");
-    const errorEl   = document.getElementById("errorMsg");
-    const userInfo  = document.getElementById("userInfo");
-    const setupNote = document.getElementById("setupNotice");
+    const btn      = document.getElementById("googleBtn");
+    const titleEl  = document.getElementById("mainTitle");
+    const statusEl = document.getElementById("statusMsg");
+    const errorEl  = document.getElementById("errorMsg");
+    const userInfo = document.getElementById("userInfo");
 
-    // ── Auth state listener ───────────────────────────
-    // Agar user pehle se logged in hai → seedha home.html
+    // ✅ Yeh flag devtools protection ko batata hai — "ab redirect ho raha hai, rok mat"
+    window.isRedirecting = false;
+
+    // Pehle se logged in? → seedha home.html
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            window.isRedirecting = true;
             showUser(user);
-            titleEl.innerText = "Welcome back!";
+            titleEl.innerText  = "Welcome back!";
             statusEl.innerText = "Redirecting...";
             setTimeout(() => { window.location.href = "home.html"; }, 900);
         }
     });
 
-    // ── Google Sign-In ────────────────────────────────
     window.signInWithGoogle = async function () {
-        btn.disabled = true;
+        btn.disabled          = true;
         errorEl.style.display = "none";
-        titleEl.innerText = "Signing in...";
-        statusEl.innerText = "Google account choose karo...";
+        titleEl.innerText     = "Signing in...";
+        statusEl.innerText    = "Google account choose karo...";
 
         try {
             const result = await signInWithPopup(auth, provider);
             const user   = result.user;
 
+            window.isRedirecting = true;   // ✅ Devtools block band
             showUser(user);
             titleEl.innerText  = `Hey, ${user.displayName.split(" ")[0]}! 👋`;
             statusEl.innerText = "Login successful! Redirecting...";
-            setupNote.style.display = "none";
-
             setTimeout(() => { window.location.href = "home.html"; }, 900);
 
         } catch (err) {
-            btn.disabled = false;
-            titleEl.innerText  = "Continue with Google";
-            statusEl.innerText = "";
-
-            // User-friendly error messages
-            const messages = {
-                "auth/popup-closed-by-user":    "TRY AGAIN",
-                "auth/cancelled-popup-request": "Request cancel.",
-                "auth/network-request-failed":  "Network error",
-                "auth/unauthorized-domain":     "NO DOMAIN REGISTER WITH FIREBASE",
+            btn.disabled          = false;
+            titleEl.innerText     = "Continue with Google";
+            statusEl.innerText    = "";
+            const msgs = {
+                "auth/popup-closed-by-user":     "Popup band ho gaya, dobara try karo.",
+                "auth/cancelled-popup-request":  "Request cancel ho gayi.",
+                "auth/network-request-failed":   "Network error. Internet check karo.",
+                "auth/unauthorized-domain":      "Ye domain Firebase mein register nahi.",
             };
-            errorEl.innerText = messages[err.code] || `Error: ${err.message}`;
+            errorEl.innerText     = msgs[err.code] || `Error: ${err.message}`;
             errorEl.style.display = "block";
         }
     };
 
-    // ── Show user card ────────────────────────────────
     function showUser(user) {
-        document.getElementById("userPhoto").src = user.photoURL || "";
+        document.getElementById("userPhoto").src      = user.photoURL || "";
         document.getElementById("userName").innerText  = user.displayName || "User";
         document.getElementById("userEmail").innerText = user.email || "";
         userInfo.style.display = "flex";
-        btn.style.display = "none";
-        setupNote.style.display = "none";
+        btn.style.display      = "none";
     }
 </script>
+
+<!-- ══ DEVTOOLS PROTECTION ══ -->
 <script>
 (function () {
+    var overlay = document.getElementById("dt-overlay");
 
-  // ── 1. RIGHT CLICK BAND ──
-  document.addEventListener("contextmenu", function (e) {
-    e.preventDefault();
-  });
+    // Right click band
+    document.addEventListener("contextmenu", function(e){ e.preventDefault(); });
 
-  // ── 2. KEYBOARD SHORTCUTS BAND ──
-  document.addEventListener("keydown", function (e) {
-    // F12
-    if (e.key === "F12") { e.preventDefault(); return false; }
+    // Keyboard shortcuts band
+    document.addEventListener("keydown", function(e){
+        if (e.key === "F12") { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) { e.preventDefault(); return false; }
+        if (e.ctrlKey && ["u","s","a","c","p"].includes(e.key)) { e.preventDefault(); return false; }
+    });
 
-    // Ctrl+Shift+I (Inspect)
-    if (e.ctrlKey && e.shiftKey && e.key === "I") { e.preventDefault(); return false; }
+    // Select + drag band
+    document.addEventListener("selectstart", function(e){ e.preventDefault(); });
+    document.addEventListener("dragstart",   function(e){ e.preventDefault(); });
 
-    // Ctrl+Shift+J (Console)
-    if (e.ctrlKey && e.shiftKey && e.key === "J") { e.preventDefault(); return false; }
+    // Console silence
+    console.log = console.warn = console.error = console.info = function(){};
+    console.clear();
 
-    // Ctrl+Shift+C (Elements)
-    if (e.ctrlKey && e.shiftKey && e.key === "C") { e.preventDefault(); return false; }
+    // ✅ FIXED: body.innerHTML replace nahi — overlay show/hide
+    // ✅ FIXED: isRedirecting true ho toh kuch nahi karo
+    setInterval(function(){
+        if (window.isRedirecting) { overlay.style.display = "none"; return; }
+        var open = window.outerWidth  - window.innerWidth  > 160 ||
+                   window.outerHeight - window.innerHeight > 160;
+        overlay.style.display = open ? "flex" : "none";
+    }, 1000);
 
-    // Ctrl+U (View Source)
-    if (e.ctrlKey && e.key === "u") { e.preventDefault(); return false; }
+    // ✅ FIXED: Debugger trap — isRedirecting check, body replace nahi
+    setInterval(function(){
+        if (window.isRedirecting) return;
+        var d = new Date();
+        debugger;
+        if (new Date() - d > 100) {
+            overlay.style.display = "flex";
+        }
+    }, 3000);
 
-    // Ctrl+S (Save Page)
-    if (e.ctrlKey && e.key === "s") { e.preventDefault(); return false; }
-
-    // Ctrl+A (Select All)
-    if (e.ctrlKey && e.key === "a") { e.preventDefault(); return false; }
-
-    // Ctrl+C (Copy)
-    if (e.ctrlKey && e.key === "c") { e.preventDefault(); return false; }
-
-    // Ctrl+P (Print)
-    if (e.ctrlKey && e.key === "p") { e.preventDefault(); return false; }
-  });
-
-  // ── 3. TEXT SELECT BAND ──
-  document.addEventListener("selectstart", function (e) {
-    e.preventDefault();
-  });
-
-
+})();
 </script>
+
 </body>
 </html>
