@@ -326,8 +326,6 @@ io.on('connection', (socket) => {
     }
   });
 });
-app.get('/', (req, res) => {
-  res.send('🚀 BUMPY Backend is Running Successfully');
-});
+app.use(express.static('public'));
 const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
