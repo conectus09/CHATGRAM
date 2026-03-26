@@ -5,55 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram Clone</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ======================= AUTH SCREEN ======================= -->
-<div id="authScreen" class="screen active">
+<!-- ======================= PROFILE SETUP SCREEN ======================= -->
+<div id="profileScreen" class="screen active">
     <div class="auth-container">
         <div class="auth-logo">
             <i class="fas fa-paper-plane"></i>
             <h1>Telegram</h1>
         </div>
 
-        <!-- Phone Number Screen -->
-        <div id="phoneScreen" class="auth-form">
-            <h2>Enter Your Phone Number</h2>
-            <p>We will send you an SMS to confirm your number</p>
-            <div class="form-group">
-                <select id="countryCode">
-                    <option value="+1">🇺🇸 +1</option>
-                    <option value="+44">🇬🇧 +44</option>
-                    <option value="+91">🇮🇳 +91</option>
-                    <option value="+86">🇨🇳 +86</option>
-                </select>
-                <input type="tel" id="phoneNumber" placeholder="Enter phone number">
-            </div>
-            <button class="btn-primary" onclick="sendOTP()">Next</button>
-            <p class="auth-toggle">Have an account? <span onclick="switchToLogin()">Login</span></p>
-        </div>
-
-        <!-- OTP Screen -->
-        <div id="otpScreen" class="auth-form hidden">
-            <h2>Verify Your Phone</h2>
-            <p id="otpPhoneDisplay"></p>
-            <div class="otp-inputs">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-                <input type="text" class="otp-input" maxlength="1">
-            </div>
-            <button class="btn-primary" onclick="verifyOTP()">Verify</button>
-            <p><span onclick="switchToPhoneScreen()" style="cursor: pointer; color: #0084ff;">Change Number</span></p>
-        </div>
-
-        <!-- Profile Setup Screen -->
-        <div id="profileScreen" class="auth-form hidden">
-            <h2>Your Information</h2>
-            <p>Please provide your name and photo</p>
+        <div class="profile-form">
+            <h2>Complete Your Profile</h2>
+            <p>Add your profile picture and information</p>
+            
             <div class="form-group">
                 <div class="avatar-upload">
                     <div id="avatarPreview" class="avatar-placeholder">
@@ -63,33 +30,28 @@
                     <label for="avatarFile">Upload Photo</label>
                 </div>
             </div>
+
             <div class="form-group">
                 <input type="text" id="firstName" placeholder="First Name" required>
             </div>
+
             <div class="form-group">
                 <input type="text" id="lastName" placeholder="Last Name (optional)">
             </div>
+
             <div class="form-group">
                 <input type="text" id="username" placeholder="@username (unique)" required>
-                <small id="usernameStatus"></small>
+                <small id="usernameStatus" class="status-text"></small>
             </div>
-            <button class="btn-primary" onclick="completeProfile()">Done</button>
-        </div>
 
-        <!-- Login Screen -->
-        <div id="loginScreen" class="auth-form hidden">
-            <h2>Login</h2>
             <div class="form-group">
-                <input type="email" id="loginEmail" placeholder="Email">
+                <textarea id="bio" placeholder="Bio (optional)" rows="3"></textarea>
             </div>
-            <div class="form-group">
-                <input type="password" id="loginPassword" placeholder="Password">
-            </div>
-            <button class="btn-primary" onclick="loginUser()">Login</button>
-            <p class="auth-toggle">Don't have an account? <span onclick="switchToPhone()">Sign Up</span></p>
-        </div>
 
-        <div id="authError" class="error-message"></div>
+            <button class="btn-primary" onclick="completeProfile()">Continue</button>
+            
+            <div id="authError" class="error-message"></div>
+        </div>
     </div>
 </div>
 
@@ -198,7 +160,7 @@
         <div class="modal-body">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" id="userSearch" placeholder="Search users...">
+                <input type="text" id="userSearch" placeholder="Search users by @username...">
             </div>
             <div id="usersSearchResults" class="users-list">
                 <!-- Results dynamically added -->
@@ -231,29 +193,6 @@
     </div>
 </div>
 
-<!-- Group Creation Modal -->
-<div id="groupModal" class="modal hidden">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>New Group</h2>
-            <button class="close-btn" onclick="closeModal('groupModal')">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <input type="text" id="groupName" placeholder="Group name">
-            </div>
-            <div class="form-group">
-                <textarea id="groupDescription" placeholder="Group description"></textarea>
-            </div>
-            <h3>Add Members</h3>
-            <div id="groupMembers" class="group-members">
-                <!-- Members selection -->
-            </div>
-            <button class="btn-primary" onclick="createGroup()">Create Group</button>
-        </div>
-    </div>
-</div>
-
 <!-- Settings Modal -->
 <div id="settingsModal" class="modal hidden">
     <div class="modal-content">
@@ -271,6 +210,10 @@
                 <div class="setting-item">
                     <label>Username</label>
                     <input type="text" id="settingUsername" readonly>
+                </div>
+                <div class="setting-item">
+                    <label>Email</label>
+                    <input type="email" id="settingEmail" readonly>
                 </div>
                 <div class="setting-item">
                     <label>Bio</label>
@@ -315,15 +258,6 @@
             <button class="btn-danger" onclick="logoutUser()" style="width: 100%; margin-top: 10px;">Logout</button>
         </div>
     </div>
-</div>
-
-<!-- Context Menu -->
-<div id="contextMenu" class="context-menu hidden">
-    <div class="context-item" onclick="replyMessage()">Reply</div>
-    <div class="context-item" onclick="forwardMessage()">Forward</div>
-    <div class="context-item" onclick="reactMessage()">React</div>
-    <div class="context-item" onclick="editMessage()">Edit</div>
-    <div class="context-item" onclick="deleteMessage()" style="color: red;">Delete</div>
 </div>
 
 <!-- Loading Spinner -->
