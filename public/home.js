@@ -2,12 +2,12 @@
 // FIREBASE CONFIG
 // ============================================
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyAkyuA8xY3LyBdNn9_l9aniAfJ7fjMS__0",
+    authDomain: "bumpy-c0feb.firebaseapp.com",
+    projectId: "bumpy-c0feb",
+    storageBucket: "bumpy-c0feb.firebasestorage.app",
+    messagingSenderId: "1007047112567",
+    appId: "1:1007047112567:web:a14858e9d4c2d6de579372"
 };
 
 firebase.initializeApp(firebaseConfig);
