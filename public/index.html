@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickChat — Login</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="login-card">
+      <div class="logo-wrap">
+        <img src="logo.jpg" alt="QuickChat logo" class="logo" />
+      </div>
+
+      <p class="eyebrow">WELCOME TO</p>
+      <h1>QuickChat</h1>
+      <p class="subtitle">
+        Fast, simple, real-time chatting. Sign in with Google to continue.
+      </p>
+
+      <button id="googleLoginBtn" class="google-btn">
+        <span class="google-icon">G</span>
+        <span>Continue with Google</span>
+      </button>
+
+      <p id="statusMessage" class="status">Not signed in</p>
+
+      <div id="userCard" class="user-card hidden">
+        <img id="userPhoto" class="user-photo" alt="User photo" />
+        <div class="user-info">
+          <h3 id="userName">User Name</h3>
+          <p id="userEmail">user@email.com</p>
+        </div>
+      </div>
+
+      <button id="logoutBtn" class="logout-btn hidden">Logout</button>
+
+      <div class="note">
+        <strong>Setup:</strong> Open <code>index.js</code> and paste your Firebase config.
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="index.js"></script>
+</body>
+</html>
